@@ -74,7 +74,7 @@ const unslothSidebar = [
 const kienThucNenSidebar = [
   {
     text: 'Tổng quan',
-    items: [{ text: 'Đọc route này khi nào', link: '/kien-thuc-nen/' }]
+    items: [{ text: 'Giới thiệu', link: '/kien-thuc-nen/' }]
   },
   {
     text: 'A. Cấu tạo mô hình',
