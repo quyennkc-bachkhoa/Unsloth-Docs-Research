@@ -102,8 +102,11 @@ Catalog **không** có nhóm FP8 riêng. Trang Gemma 4 và GLM-5.3 có nhắc th
 
 **Nguồn:** https://unsloth.ai/docs/get-started/unsloth-model-catalog, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-vl-how-to-run-and-fine-tune, https://unsloth.ai/docs/models/mistral-3.5, https://unsloth.ai/docs/models/ibm-granite-4.1
 
-## Qwen3.8
+## Chi tiết từng họ model
 
+Mỗi họ model bên dưới được thu gọn. Bấm vào tên họ model để mở phần chi tiết: các bản, context, sampling, bộ nhớ và chỗ docs chưa thống nhất.
+
+:::: details Qwen3.8
 Qwen3.8 là họ model mới nhất của Qwen trong catalog, gồm 27B, 2.4T-A95B và Max. [Nhận định] Bản 27B chạy được trên máy cá nhân; bản 2.4T cần máy rất nhiều RAM.
 
 - **Bản 27B:** có vision và reasoning. Đây là model **hybrid thinking**, tức có cả chế độ thinking và non-thinking. GGUF dùng Unsloth Dynamic V3.0.
@@ -132,9 +135,9 @@ Nếu chép nguyên hai lệnh này, thư mục tải về sẽ khác với đư
 :::
 
 **Nguồn:** https://unsloth.ai/docs/models/qwen3.8
+::::
 
-## Qwen3.5
-
+:::: details Qwen3.5
 Qwen3.5 là họ model đa phương thức (multimodal: nhận cả text và ảnh) với hybrid reasoning. Họ này có nhiều cỡ, từ bản nhỏ chạy trên laptop tới bản rất lớn, và trang docs có mục riêng để fine-tune Qwen3.5 với Unsloth.
 
 Họ model chia hai nhóm:
@@ -162,9 +165,9 @@ Qwen3.5 hỗ trợ 201 ngôn ngữ.
 :::
 
 **Nguồn:** https://unsloth.ai/docs/models/qwen3.5
+::::
 
-## Gemma 4
-
+:::: details Gemma 4
 Gemma 4 là họ model mở của Google DeepMind (giấy phép Apache-2.0). Họ này có nhiều cỡ, từ bản nhỏ nhận được cả audio tới bản 31B mạnh nhất, và trang docs hướng dẫn fine-tune Gemma 4 trong Unsloth Studio.
 
 Gemma 4 là model hybrid thinking, hỗ trợ hơn 140 ngôn ngữ, có cả dense lẫn MoE. Các bản và đầu vào mỗi bản nhận:
@@ -191,9 +194,9 @@ Gemma 4 là model hybrid thinking, hỗ trợ hơn 140 ngôn ngữ, có cả den
 :::
 
 **Nguồn:** https://unsloth.ai/docs/models/gemma-4
+::::
 
-## gpt-oss
-
+:::: details gpt-oss
 gpt-oss gồm hai model mở của OpenAI (Apache 2.0): gpt-oss-20b và gpt-oss-120b. Cả hai đều là MoE, chuyên về reasoning và function calling. [Nhận định] Đây là họ có số liệu fine-tune khá đầy đủ trong docs.
 
 Unsloth đã sửa lỗi chat template (định dạng Harmony) và hỗ trợ ba cách fine-tune: QLoRA, LoRA BF16 và RL (GRPO).
@@ -218,9 +221,9 @@ QLoRA, LoRA là gì? Xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora). GRPO: xem
 :::
 
 **Nguồn:** https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune
+::::
 
-## DeepSeek-V4
-
+:::: details DeepSeek-V4
 DeepSeek-V4 là họ model MoE rất lớn, context 1M. Ngay cả bản nhỏ nhất trong bảng bên dưới (3-bit `UD-IQ3_XXS`) cũng cần ≥ 110 GB RAM.
 
 Họ này gồm ba bản:
@@ -246,9 +249,9 @@ Trọng số gốc của Flash lưu các routed expert (96% model) ở MXFP4. V�
 :::
 
 **Nguồn:** https://unsloth.ai/docs/models/deepseek-v4
+::::
 
-## GLM-5.3
-
+:::: details GLM-5.3
 GLM-5.3 là model MoE lớn của Z.ai, luôn bật thinking. Model có 744B tham số tổng, 40B kích hoạt, context 1M, và dùng chung base model với GLM-5.2.
 
 GLM-5.3 có ba mức thinking: Low, High, Max. Thinking **không tắt được**. Nếu muốn chạy bản nhỏ hơn, hãy xem trang riêng của GLM-5.3-Flash.
@@ -261,9 +264,9 @@ GLM-5.3 có ba mức thinking: Low, High, Max. Thinking **không tắt được*
 - Phần cứng: `UD-IQ2_M` (239 GB) chạy tốt trên máy 256 GB RAM, như 2× DGX Spark hoặc Mac Studio.
 
 **Nguồn:** https://unsloth.ai/docs/models/glm-5.3
+::::
 
-## Kimi K3
-
+:::: details Kimi K3
 Kimi K3 là model MoE rất lớn của Moonshot AI, chỉ có chế độ thinking. Model có 2.8T tham số tổng, 104B kích hoạt, vision gốc, context 1M, trọng số MoE ở MXFP4.
 
 Kimi K3 là model **thinking-only**: luôn bật `preserve_thinking`, mặc định ở mức thinking max, và không có chế độ instant. Muốn dùng vision, bạn cần bản fork llama.cpp của Unsloth.
@@ -283,9 +286,9 @@ Kimi K3 là model **thinking-only**: luôn bật `preserve_thinking`, mặc đ�
 :::
 
 **Nguồn:** https://unsloth.ai/docs/models/kimi-k3
+::::
 
-## NVIDIA Nemotron 3
-
+:::: details NVIDIA Nemotron 3
 Nemotron 3 là họ model của NVIDIA, hướng đến coding, math và agent. Bản nhỏ nhất vừa GPU Colab miễn phí khi fine-tune. [Nhận định] Vì vậy đây là lựa chọn dễ thử cho người mới.
 
 Họ này gồm Nano-4B, Nano-30B-A3B và Super-120B-A12B, context 1M. Docs gọi Nano-4B là "hybrid MoE". Unsloth hỗ trợ fine-tune mọi model Nemotron, gồm cả Super và Nano, và hỗ trợ RL qua NeMo Gym.
@@ -308,9 +311,9 @@ Họ này gồm Nano-4B, Nano-30B-A3B và Super-120B-A12B, context 1M. Docs gọ
 :::
 
 **Nguồn:** https://unsloth.ai/docs/models/nemotron-3
+::::
 
-## Mistral 3.5
-
+:::: details Mistral 3.5
 Mistral-Medium-3.5-128B là một model **dense** lớn. Bản 3-bit đã cần 64 GB bộ nhớ (xem dòng Phần cứng bên dưới). Docs khuyên bạn bắt đầu với GGUF Dynamic 4-bit.
 
 Model này đa phương thức: nhận text và ảnh, trả về text. Model có hybrid reasoning và context 256K.
@@ -331,9 +334,9 @@ Model này đa phương thức: nhận text và ảnh, trả về text. Model c�
 :::
 
 **Nguồn:** https://unsloth.ai/docs/models/mistral-3.5
+::::
 
-## IBM Granite 4.1
-
+:::: details IBM Granite 4.1
 Granite 4.1 là họ model **dense** cỡ nhỏ và vừa của IBM, gồm 3B, 8B và 30B. Unsloth hỗ trợ fine-tune cả ba cỡ, và docs gọi 3B, 8B là điểm khởi đầu tốt.
 
 Các model được train trên 15T token. Chúng nhắm tới instruction following, tool calling, chat, RAG (tra cứu tài liệu rồi trả lời) và coding. Notebook mẫu train một trợ lý hỗ trợ khách hàng. Notebook này viết cho Granite-4.0; bạn đổi tên model sang 4.1 là dùng được.
@@ -343,9 +346,9 @@ Các model được train trên 15T token. Chúng nhắm tới instruction follo
 - Docs không ghi yêu cầu bộ nhớ.
 
 **Nguồn:** https://unsloth.ai/docs/models/ibm-granite-4.1
+::::
 
-## Llama 4
-
+:::: details Llama 4
 Llama 4 gồm hai model của Meta: Scout (109B) và Maverick (402B). Cả hai đều hỗ trợ text và vision.
 
 GGUF Dynamic của Unsloth chỉ hạ bit mạnh ở các lớp MoE, còn attention được giữ ở 4 hoặc 6-bit. Maverick xen kẽ lớp dense và lớp MoE.
@@ -367,9 +370,9 @@ GGUF Dynamic của Unsloth chỉ hạ bit mạnh ở các lớp MoE, còn attent
 :::
 
 **Nguồn:** https://unsloth.ai/docs/models/tutorials/llama-4-how-to-run-and-fine-tune
+::::
 
-## Qwen3-VL
-
+:::: details Qwen3-VL
 Qwen3-VL là họ model vision của Qwen: đọc được ảnh, video và làm OCR. Unsloth hỗ trợ fine-tune và RL cho họ này, kèm notebook Colab miễn phí.
 
 Họ này có bản instruct và bản thinking. Về kiến trúc, 2B, 4B, 8B, 32B là dense; 30B và 235B là MoE. Context 256K (mở rộng tới 1M). Phần hỗ trợ fine-tune gồm cả 32B, 235B, fine-tune cho video và cho object detection (nhận diện vật thể).
@@ -381,9 +384,9 @@ Họ này có bản instruct và bản thinking. Về kiến trúc, 2B, 4B, 8B, 
 - Bản thinking từng bị lỗi chat template sau lượt hội thoại thứ hai. Unsloth đã sửa và upload lại quant.
 
 **Nguồn:** https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-vl-how-to-run-and-fine-tune
+::::
 
-## DeepSeek-OCR 2
-
+:::: details DeepSeek-OCR 2
 DeepSeek-OCR 2 là model 3B của DeepSeek để đọc ảnh và tài liệu, phát hành 27/1/2026. Model hợp với tài liệu có bố cục phức tạp như nhiều cột hoặc bảng.
 
 Bộ mã hóa DeepEncoder V2 đọc ảnh theo thứ tự logic giống người, nhờ vậy đọc tốt hơn các bố cục phức tạp. Bạn fine-tune được qua notebook miễn phí. Docs ghi train nhanh hơn 1.4×, tốn ít VRAM hơn 40%, context dài hơn 5×.
@@ -393,6 +396,7 @@ Bộ mã hóa DeepEncoder V2 đọc ảnh theo thứ tự logic giống người
 - Docs không ghi yêu cầu bộ nhớ.
 
 **Nguồn:** https://unsloth.ai/docs/models/tutorials/deepseek-ocr-2
+::::
 
 ## Chọn model thế nào
 

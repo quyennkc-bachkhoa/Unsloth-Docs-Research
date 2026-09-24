@@ -278,6 +278,50 @@
   border-bottom-color: color-mix(in srgb, var(--mark-conflict) 50%, var(--ink));
 }
 
+/* Khối gập (::: details): danh sách kẻ dòng, bấm tên để mở */
+.vp-doc .custom-block.details {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  margin: 0;
+  padding: 0 0 0 2px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.vp-doc .custom-block.details p {
+  line-height: 1.7;
+}
+
+.vp-doc :not(.details) + .custom-block.details {
+  border-top: 1px solid var(--rule);
+  margin-top: 16px;
+}
+
+.vp-doc .custom-block.details + :not(.details) {
+  margin-top: 24px;
+}
+
+.vp-doc .custom-block.details > summary {
+  font-family: var(--font-ui);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 12px 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.vp-doc .custom-block.details > summary:hover {
+  color: var(--vp-c-brand-1);
+}
+
+.vp-doc .custom-block.details[open] {
+  padding-bottom: 16px;
+}
+
 /* ---------- Khung ---------- */
 
 .VPNavBarTitle .title {
