@@ -5,48 +5,75 @@ description: RL trong Unsloth ở mức khái niệm — GRPO và reward functio
 
 # Reinforcement Learning (RL)
 
-Trang này giải thích RL trong Unsloth ở mức khái niệm và giúp chọn phương pháp. Muốn làm từng bước, xem tutorial GRPO chính thức (link ở cuối mục GRPO).
+Trang này giải thích RL trong Unsloth ở mức khái niệm và giúp bạn chọn phương pháp. Nếu muốn làm theo từng bước, hãy xem tutorial GRPO chính thức (link ở cuối mục GRPO).
 
 ## RL là gì, khác SFT thế nào
 
-Reinforcement Learning (học tăng cường) là cách để một "agent" (tác nhân, ở đây là chính LLM) học ra quyết định bằng cách tương tác với environment (môi trường) và nhận feedback dưới dạng reward (điểm thưởng) hoặc penalty (điểm phạt). Theo docs Unsloth, có ba thành phần:
+RL là cách dạy model bằng điểm thưởng thay vì bằng đáp án mẫu. Model tự thử, được chấm điểm, rồi dần nghiêng về những câu trả lời được điểm cao.
+
+Reinforcement Learning (học tăng cường) giúp một "agent" (tác nhân) học cách ra quyết định. Ở đây agent chính là LLM. Agent tương tác với environment (môi trường) và nhận feedback dưới dạng reward (điểm thưởng) hoặc penalty (điểm phạt). Docs Unsloth chia RL thành ba thành phần:
 
 | Thành phần | Nghĩa | Ví dụ trong docs |
 | --- | --- | --- |
 | Action (hành động) | Thứ model sinh ra | Một câu trả lời |
 | Reward (điểm thưởng) | Tín hiệu cho biết action tốt hay tệ | Câu trả lời có làm đúng yêu cầu không, có hữu ích không |
-| Environment (môi trường) | Bối cảnh/tác vụ model đang làm | Trả lời câu hỏi của người dùng |
+| Environment (môi trường) | Bối cảnh hoặc tác vụ model đang làm | Trả lời câu hỏi của người dùng |
 
-Mục tiêu của RL theo docs gói gọn trong hai ý: tăng xác suất ra kết quả "tốt", giảm xác suất ra kết quả "xấu".
+Mục tiêu của RL gói gọn trong hai ý: tăng xác suất ra kết quả "tốt" và giảm xác suất ra kết quả "xấu".
 
-Ví dụ từ docs: câu hỏi "What is 2 + 2?". Một model chưa được căn chỉnh có thể trả lời 3, 4, C, D, -10... Ta có thể quy ước: ra số thì tốt hơn ra chữ C/D; ra 3 tốt hơn ra 8; ra 4 là đúng. Bộ quy ước đó chính là một **reward function** (hàm chấm điểm).
+Docs lấy ví dụ câu hỏi "What is 2 + 2?". Một model chưa được căn chỉnh có thể trả lời 3, 4, C, D, -10... Bạn có thể đặt ra quy ước chấm điểm:
 
-**Khác SFT ở đâu:** SFT (Supervised Fine-Tuning, fine-tune có giám sát, tức "fine-tune thường") chỉ tối đa hóa xác suất dự đoán từ tiếp theo theo dữ liệu mẫu. GRPO thì tối ưu theo reward function, tức là học *cách* đi tới đáp án thay vì chỉ ghi nhớ và lặp lại câu trả lời trong dữ liệu.
+- Ra số thì tốt hơn ra chữ C hoặc D.
+- Ra 3 thì tốt hơn ra 8.
+- Ra 4 là đúng.
+
+Bộ quy ước đó chính là một **reward function** (hàm chấm điểm).
+
+**Khác SFT ở đâu:** SFT (Supervised Fine-Tuning, fine-tune có giám sát, tức "fine-tune thường") chỉ tối đa hóa xác suất dự đoán từ tiếp theo theo dữ liệu mẫu. GRPO thì tối ưu theo reward function. Nhờ vậy model học *cách* đi tới đáp án, thay vì chỉ ghi nhớ và lặp lại câu trả lời trong dữ liệu.
 
 ::: tip Kiến thức nền
 Chưa rõ SFT vs RL, reward, policy là gì? Xem [RL & Preference](/kien-thuc-nen/rl-va-preference). Về SFT nói chung, xem [Fine-tuning](/fine-tuning).
 :::
 
-**Vì sao RL "chạy được":** docs gọi đây là "Patience is All You Need". Model chưa huấn luyện có thể trả lời "0, cat, -10, 1928, 3, A, B..." rồi bỗng ra "4"; reward tương ứng là 0, 0, 0... rồi 1. RL không chỉ ngồi chờ đáp án đúng xuất hiện: mỗi câu trả lời sai cũng là tín hiệu để đẩy phân phối đầu ra của model ra xa vùng sai. Điều kiện là xác suất ra đáp án đúng phải lớn hơn 0; nếu luôn bằng 0 thì RL không bao giờ hoạt động. Đó là lý do người ta hay làm RL trên model đã instruction-finetune (đã fine-tune để làm theo chỉ dẫn).
+**Vì sao RL "chạy được":** docs gọi ý này là "Patience is All You Need". Model chưa huấn luyện có thể trả lời "0, cat, -10, 1928, 3, A, B..." rồi bỗng ra "4". Reward tương ứng là 0, 0, 0... rồi 1.
+
+RL không chỉ ngồi chờ đáp án đúng xuất hiện. Mỗi câu trả lời sai cũng là một tín hiệu, giúp đẩy phân phối đầu ra của model ra xa vùng sai.
+
+Điều kiện bắt buộc: xác suất ra đáp án đúng phải lớn hơn 0. Nếu xác suất đó luôn bằng 0 thì RL không bao giờ hoạt động. Vì lý do này, người ta hay làm RL trên model đã instruction-finetune (đã fine-tune để làm theo chỉ dẫn).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide
 
 ## Từ RLHF, PPO tới GRPO
 
-- **RLHF** (Reinforcement Learning from Human Feedback, RL từ phản hồi của con người): OpenAI phổ biến khái niệm này. Nút thích/không thích trong ChatGPT là một ví dụ dữ liệu cho RLHF.
-- **PPO** (Proximal Policy Optimization): thuật toán dùng để làm RLHF. Theo docs, PPO gồm 3 hệ thống: Generating Policy (model đang train), Reference Policy (model gốc), Value Model (ước lượng reward trung bình), cộng thêm một Reward Model để tính reward.
-- **GRPO** (Group Relative Policy Optimization): do DeepSeek phát triển để train các model suy luận R1. Khác PPO ở hai điểm:
+Mục này điểm qua các tên bạn sẽ gặp khi đọc về RL cho LLM. Điểm cần nhớ: GRPO là bản gọn hơn của PPO, bỏ bớt hai model nên tốn ít bộ nhớ hơn.
+
+- **RLHF** (Reinforcement Learning from Human Feedback, RL từ phản hồi của con người): OpenAI phổ biến khái niệm này. Nút thích hoặc không thích trong ChatGPT là một ví dụ về dữ liệu cho RLHF.
+- **PPO** (Proximal Policy Optimization): thuật toán dùng để làm RLHF. Theo docs, PPO gồm 3 hệ thống:
+  - Generating Policy: model đang train.
+  - Reference Policy: model gốc.
+  - Value Model: ước lượng reward trung bình.
+
+  Ngoài ra còn một Reward Model để tính reward.
+- **GRPO** (Group Relative Policy Optimization): do DeepSeek phát triển để train các model suy luận R1. GRPO khác PPO ở hai điểm:
   1. Bỏ Value Model, thay bằng thống kê thu được khi gọi hàm chấm điểm nhiều lần.
   2. Bỏ Reward Model, thay bằng reward function tự viết (có thể dùng RLVR).
 
   Vì bớt được hai model, GRPO tiết kiệm bộ nhớ và chạy nhanh hơn.
-- **RLVR** (Reinforcement Learning with Verifiable Rewards, RL với phần thưởng kiểm chứng được): chấm điểm dựa trên những tác vụ dễ kiểm tra đúng/sai, ví dụ phép toán (2+2=4) hay code chạy đúng hay không. Docs nhấn mạnh GRPO không chỉ dùng cho toán/code; mẹo là thiết kế một **rubric** (danh sách nhiều reward nhỏ kiểm chứng được) thay vì một reward duy nhất bao trùm tất cả.
+- **RLVR** (Reinforcement Learning with Verifiable Rewards, RL với phần thưởng kiểm chứng được): chấm điểm dựa trên những tác vụ dễ kiểm tra đúng sai. Ví dụ: phép toán (2+2=4), hoặc code có chạy đúng hay không. Docs nhấn mạnh GRPO không chỉ dùng cho toán và code. Mẹo là thiết kế một **rubric** (danh sách nhiều reward nhỏ kiểm chứng được), thay vì một reward duy nhất bao trùm tất cả.
 
-**"Group Relative" nghĩa là gì:** với mỗi câu hỏi, GRPO sinh nhiều câu trả lời (docs ví dụ 4 lần cho "What is 2+2?", được 4, 3, D, C), chấm reward từng câu, tính trung bình và độ lệch chuẩn, rồi chuẩn hóa Z-score. Kết quả gọi là **advantage** (lợi thế tương đối của từng câu so với cả nhóm), dùng thay Value Model.
+**"Group Relative" nghĩa là gì:** GRPO so mỗi câu trả lời với cả nhóm câu trả lời cho cùng một câu hỏi. Cách làm như sau:
+
+1. Với mỗi câu hỏi, GRPO sinh nhiều câu trả lời. Docs ví dụ sinh 4 lần cho "What is 2+2?" và được 4, 3, D, C.
+2. Chấm reward cho từng câu.
+3. Tính trung bình và độ lệch chuẩn, rồi chuẩn hóa Z-score.
+
+Kết quả gọi là **advantage** (lợi thế tương đối của từng câu so với cả nhóm). Advantage được dùng thay cho Value Model.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide
 
 ## GRPO trong Unsloth
+
+GRPO là phương pháp RL chính mà Unsloth hướng dẫn. Mục này đi qua vòng lặp train, cách viết reward, dữ liệu cần có, yêu cầu VRAM và các mẹo thực tế.
 
 ### Vòng lặp GRPO
 
@@ -59,18 +86,18 @@ flowchart LR
   E --> A
 ```
 
-Theo docs, quy trình một bước:
+Theo docs, một bước train diễn ra như sau:
 
 1. Với mỗi cặp câu hỏi–đáp án, model sinh nhiều câu trả lời (ví dụ 8; có thể tăng lên 16).
 2. Mỗi câu trả lời được chấm bằng các reward function.
-3. Số bước train: 300 dòng dữ liệu là 300 bước (900 bước nếu train 3 epoch).
+3. Số bước train bằng số dòng dữ liệu: 300 dòng là 300 bước (900 bước nếu train 3 epoch).
 4. Model cập nhật trọng số sau mỗi bước.
 
-Cần ít nhất **2 generation mỗi prompt**: với 1 mẫu, độ lệch chuẩn bằng 0 nên công thức advantage (reward - mean)/std không xác định.
+Bạn cần ít nhất **2 generation mỗi prompt**. Lý do: với 1 mẫu, độ lệch chuẩn bằng 0, nên công thức advantage (reward - mean)/std không xác định.
 
 ### Reward function và verifier
 
-Docs phân biệt hai khái niệm, dù thực tế thường dùng chung:
+Verifier trả lời câu hỏi "đúng hay sai". Reward function biến kết quả đó thành điểm số. Docs phân biệt hai khái niệm này, dù thực tế người ta thường dùng chung:
 
 | | Verifier (bộ kiểm chứng) | Reward Function (hàm thưởng) |
 | --- | --- | --- |
@@ -78,11 +105,11 @@ Docs phân biệt hai khái niệm, dù thực tế thường dùng chung:
 | Có cho điểm? | Không, chỉ đúng/sai | Có, ví dụ sai thì -1, -2; đúng thì +1, +2 |
 | Ví dụ | Model trả lời "5" cho "2+2" thì gắn nhãn sai; có thể chạy code Python để kiểm tra | Có thể phạt cả tiêu chí ngoài tính đúng, như quá dài hay khó đọc |
 
-Reward function có thể *dùng* verifier bên trong. Docs cũng cảnh báo reward thiết kế kém có thể làm model tệ đi.
+Reward function có thể *dùng* verifier bên trong. Docs cũng cảnh báo: reward thiết kế kém có thể làm model tệ đi.
 
 ### Ví dụ reward function từ docs
 
-Các ví dụ trong docs được mô tả bằng quy tắc, không phải bằng code Python:
+Các ví dụ trong docs được mô tả bằng quy tắc, không phải bằng code Python.
 
 **Ví dụ 1: phép cộng đơn giản** (Question `"2 + 2"`, Answer `"4"`)
 
@@ -104,7 +131,7 @@ Các ví dụ trong docs được mô tả bằng quy tắc, không phải bằn
 | Có tên người nhận | +1 |
 | Có khối chữ ký (điện thoại, email, địa chỉ) | +1 |
 
-**Bộ reward GSM8K** (của @willccbb, dùng trong các notebook mẫu, tổng cộng 5 hàm):
+**Bộ reward GSM8K** do @willccbb viết, được dùng trong các notebook mẫu. Bộ này có tổng cộng 5 hàm:
 
 | Hàm | Kiểm tra gì |
 | --- | --- |
@@ -114,7 +141,7 @@ Các ví dụ trong docs được mô tả bằng quy tắc, không phải bằn
 | `strict_format_reward_func` | Cấu trúc phải khớp prompt, kể cả xuống dòng |
 | `xmlcount_reward_func` | Mỗi thẻ XML xuất hiện đúng một lần |
 
-Định dạng mà các hàm format ở trên kiểm tra được đặt trong system prompt của tutorial:
+Các hàm format ở trên kiểm tra định dạng được quy định trong system prompt của tutorial:
 
 ```
 # Define the system prompt that instructs the model to use a specific format
@@ -129,21 +156,23 @@ Respond in the following format:
 """
 ```
 
-Unsloth còn có một **proximity-based reward function** (hàm thưởng theo độ gần) trong notebook Advanced GRPO: đáp án càng gần đúng càng nhiều điểm (đoán 9 khi đáp án là 10 tốt hơn đoán 3), giá trị ngoại lai bị phạt.
+Notebook Advanced GRPO của Unsloth còn có một **proximity-based reward function** (hàm thưởng theo độ gần). Đáp án càng gần đúng thì càng nhiều điểm: đoán 9 khi đáp án là 10 thì tốt hơn đoán 3. Giá trị ngoại lai bị phạt.
 
 ::: info Tự thiết kế reward
-Docs gợi ý đưa các câu trả lời của model cho một LLM (vd ChatGPT 4o hoặc Llama 3.1 8B) để nhờ thiết kế reward function/verifier, với quy tắc kiểu "nếu câu trả lời nghe quá máy móc, trừ 3 điểm".
+Docs gợi ý bạn đưa các câu trả lời của model cho một LLM khác (vd ChatGPT 4o hoặc Llama 3.1 8B) và nhờ nó thiết kế reward function hoặc verifier. Quy tắc có thể có dạng "nếu câu trả lời nghe quá máy móc, trừ 3 điểm".
 :::
 
 ### Dữ liệu cho GRPO
 
-Dataset cần ít nhất 2 cột: câu hỏi và đáp án. Đáp án **không được** chứa lập luận dẫn tới nó; model phải tự sinh phần lập luận. Tutorial dùng dataset [GSM8K](https://huggingface.co/datasets/openai/gsm8k) (toán tiểu học). Xem thêm [Dữ liệu](/du-lieu).
+Dataset cần ít nhất 2 cột: câu hỏi và đáp án. Đáp án **không được** chứa lập luận dẫn tới nó, vì model phải tự sinh phần lập luận. Tutorial dùng dataset [GSM8K](https://huggingface.co/datasets/openai/gsm8k) (toán tiểu học). Xem thêm [Dữ liệu](/du-lieu).
 
 ### Yêu cầu VRAM và kích thước model
 
 ::: tip Kiến thức nền
 Chưa rõ "8B tham số" hay cách ước tính VRAM (bộ nhớ card đồ họa)? Xem [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho). QLoRA/LoRA: xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora).
 :::
+
+Bảng dưới gom các con số VRAM mà docs đưa ra. Mỗi con số đi kèm điều kiện riêng, nên hãy đọc cả cột điều kiện.
 
 | Nội dung | Con số theo docs | Điều kiện |
 | --- | --- | --- |
@@ -156,7 +185,7 @@ Chưa rõ "8B tham số" hay cách ước tính VRAM (bộ nhớ card đồ họ
 | FP8 GRPO | Qwen3-1.7B chạy với 5GB VRAM | Cần GPU hỗ trợ FP8 (RTX 40, 50, H100...); T4 không hỗ trợ FP8 |
 
 ::: warning Docs chưa thống nhất
-Các trang docs ghi yêu cầu VRAM và kích thước model khác nhau:
+Các trang docs đưa ra con số VRAM và kích thước model không khớp nhau. Bảng dưới đặt các con số cạnh nhau để bạn tự đối chiếu:
 
 | Thông số | Nguồn A | Nguồn B |
 | --- | --- | --- |
@@ -165,18 +194,18 @@ Các trang docs ghi yêu cầu VRAM và kích thước model khác nhau:
 | Kích thước model tối thiểu | Mức VRAM tối thiểu 5GB được nêu cho model từ 1.5B trở xuống ([RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), mục "What Unsloth offers") | Khuyên dùng model tối thiểu 1.5B để sinh thinking token đúng ([RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), mục "Basics/Tips") |
 :::
 
-Docs ghi GRPO trước đây chỉ hỗ trợ full fine-tuning; Unsloth đã làm cho nó chạy được với QLoRA và LoRA.
+Trước đây GRPO chỉ hỗ trợ full fine-tuning. Unsloth đã làm cho nó chạy được với QLoRA và LoRA.
 
 ### Mẹo từ docs
 
-- Chờ ít nhất **300 bước** thì reward mới bắt đầu tăng; có khi cần 1000 bước hoặc hơn. Để có kết quả tốt có thể mất tối thiểu 12 giờ, nhưng dừng lúc nào cũng được.
-- Nên có ít nhất **500 dòng dữ liệu**; thử với 10 dòng vẫn được nhưng nhiều hơn thì tốt hơn.
-- Dùng base model thì phải có chat template.
-- Model không được vLLM hỗ trợ (vd Qwen3.5) vẫn chạy RL được bằng cách đặt `fast_inference=False`.
-- GRPOConfig hỗ trợ GSPO, Dr. GRPO, DAPO... qua tham số `loss_type`. Chi tiết xem hướng dẫn nâng cao trên docs.
+- **Kiên nhẫn với số bước.** Chờ ít nhất **300 bước** thì reward mới bắt đầu tăng; có khi cần 1000 bước hoặc hơn. Để có kết quả tốt có thể mất tối thiểu 12 giờ, nhưng bạn dừng lúc nào cũng được.
+- **Đủ dữ liệu.** Nên có ít nhất **500 dòng dữ liệu**. Thử với 10 dòng vẫn được, nhưng càng nhiều càng tốt.
+- **Base model cần chat template.** Nếu dùng base model thì phải có chat template.
+- **Model chưa có trong vLLM.** Model không được vLLM hỗ trợ (vd Qwen3.5) vẫn chạy RL được bằng cách đặt `fast_inference=False`.
+- **Biến thể của GRPO.** GRPOConfig hỗ trợ GSPO, Dr. GRPO, DAPO... qua tham số `loss_type`. Chi tiết xem hướng dẫn nâng cao trên docs.
 
 ::: warning Docs chưa thống nhất
-Thời gian train và danh sách giá trị `loss_type` khác nhau giữa hai trang:
+Hai trang docs ghi khác nhau về thời gian train và về danh sách giá trị `loss_type`:
 
 | Thông số | Nguồn A: [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) | Nguồn B: [Tutorial GRPO](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo) |
 | --- | --- | --- |
@@ -190,6 +219,8 @@ Tutorial từng bước: https://unsloth.ai/docs/get-started/reinforcement-learn
 
 ## DPO, ORPO, KTO (Preference Optimization)
 
+Nhóm phương pháp này dạy model bằng cách so sánh: câu trả lời nào được ưa thích hơn. Bạn không cần viết reward function như GRPO.
+
 Preference optimization (tối ưu theo sở thích) là nhóm phương pháp căn chỉnh model theo câu trả lời được ưa thích hơn. Theo docs, các phương pháp sau đều chạy được với Unsloth:
 
 | Phương pháp | Tên đầy đủ | Notebook trong docs |
@@ -200,9 +231,9 @@ Preference optimization (tối ưu theo sở thích) là nhóm phương pháp c�
 | SimPO | (docs không ghi tên đầy đủ) | [SimPO](https://colab.research.google.com/drive/1Hs5oQDovOay4mFA6Y9lQhVJ8TnbFLFh2?usp=sharing) |
 | PPO, Reward Modelling | | Docs chỉ ghi "chạy được với Unsloth" |
 
-**Khác nhau về dữ liệu:** trang docs Preference Optimization **không** mô tả định dạng dữ liệu cho từng phương pháp (cột prompt/chosen/rejected cho DPO/ORPO, hay nhãn tốt/xấu cho KTO). Phần này **cần kiểm tra lại** trong notebook tương ứng hoặc tài liệu TRL. Docs có ghi Unsloth xuất hiện trong tài liệu chính thức của Hugging Face cho [DPO Trainer](https://huggingface.co/docs/trl/main/en/dpo_trainer#accelerate-dpo-fine-tuning-using-unsloth).
+**Khác nhau về dữ liệu:** trang docs Preference Optimization **không** mô tả định dạng dữ liệu cho từng phương pháp. Ví dụ, trang không nói DPO và ORPO cần cột prompt, chosen, rejected, hay KTO cần nhãn tốt và xấu. Phần này **cần kiểm tra lại** trong notebook tương ứng hoặc tài liệu TRL. Docs có ghi Unsloth xuất hiện trong tài liệu chính thức của Hugging Face cho [DPO Trainer](https://huggingface.co/docs/trl/main/en/dpo_trainer#accelerate-dpo-fine-tuning-using-unsloth).
 
-**Code DPO từ docs** (chỉ DPO có code; ORPO/KTO chỉ có notebook):
+**Code DPO từ docs.** Chỉ DPO có code; ORPO và KTO chỉ có notebook.
 
 ```python
 import os
@@ -264,37 +295,47 @@ dpo_trainer.train()
 
 Các điểm đáng chú ý trong đoạn code:
 
-- `PatchDPOTrainer()` phải gọi trước khi dùng `DPOTrainer` của TRL.
+- Bạn phải gọi `PatchDPOTrainer()` trước khi dùng `DPOTrainer` của TRL.
 - Model xuất phát là `zephyr-sft-bnb-4bit`, tức một model **đã qua SFT**.
-- `ref_model = None`: không nạp riêng model tham chiếu.
-- `beta = 0.1` là tham số riêng của DPO; docs không giải thích ý nghĩa của nó.
+- `ref_model = None` nghĩa là không nạp riêng model tham chiếu.
+- `beta = 0.1` là tham số riêng của DPO. Docs không giải thích ý nghĩa của nó.
+
 ::: warning Docs chưa thống nhất
-Đoạn code DPO trên [trang Preference Optimization](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto) không tự chạy được: `max_seq_length` và `YOUR_DATASET_HERE` được dùng nhưng không được định nghĩa ở đâu trong đoạn code, và docs không nêu giá trị hay định dạng dataset cần truyền vào. Hai giá trị này cần kiểm tra lại (ví dụ trong [notebook DPO Zephyr](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Zephyr_(7B)-DPO.ipynb)).
+Đoạn code DPO trên [trang Preference Optimization](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto) không tự chạy được. Lý do: code dùng `max_seq_length` và `YOUR_DATASET_HERE` nhưng không định nghĩa chúng ở đâu. Docs cũng không nêu giá trị hay định dạng dataset cần truyền vào. Hai giá trị này cần kiểm tra lại (ví dụ trong [notebook DPO Zephyr](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Zephyr_(7B)-DPO.ipynb)).
 :::
 
-[Nhận định] Tham số `tokenizer = tokenizer` của `DPOTrainer` có thể không khớp với các phiên bản TRL mới; nên đối chiếu với phiên bản TRL bạn cài.
+[Nhận định] Tham số `tokenizer = tokenizer` của `DPOTrainer` có thể không khớp với các phiên bản TRL mới. Bạn nên đối chiếu với phiên bản TRL mình cài.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto
 
 ## Khi nào dùng gì: SFT vs DPO vs GRPO
 
+Cách chọn phụ thuộc vào dữ liệu bạn có: đáp án mẫu, cặp so sánh tốt/xấu, hay một cách chấm điểm tự động. Bảng dưới so sánh ba hướng.
+
 | Tiêu chí | SFT | DPO (và ORPO/KTO) | GRPO |
-| --- | --- | --- |
+| --- | --- | --- | --- |
 | Tối ưu cái gì (theo docs) | Xác suất dự đoán từ tiếp theo | Căn chỉnh theo preference (sở thích) | Tối đa hóa reward từ reward function |
 | Dữ liệu cần | Cặp đầu vào → đầu ra mẫu | Dữ liệu preference (định dạng: cần kiểm tra lại) | Câu hỏi + đáp án (không kèm lập luận) + reward function/verifier |
 | Lượng dữ liệu theo docs | (xem trang [Fine-tuning](/fine-tuning)) | Docs không nêu | Tối ưu từ 500 dòng; thử được với 10 dòng |
 | Hợp với | [Nhận định] Dạy model format, phong cách, kiến thức miền khi có sẵn đáp án mẫu | [Nhận định] Khi có sẵn các cặp so sánh "câu này tốt hơn câu kia" | Tác vụ kiểm chứng được (toán, code); suy luận; email, truy vấn DB, luật, y khoa nếu có rubric tốt |
 | Chi phí | [Nhận định] Rẻ nhất | [Nhận định] Trung bình (ví dụ trong docs xuất phát từ model đã SFT) | Cao: sinh nhiều câu trả lời mỗi prompt, cần tối thiểu ~300 bước |
 
-[Nhận định] Một thứ tự thường gặp là SFT trước rồi mới DPO/GRPO. Cả hai điểm trong docs đều khớp với thứ tự này: code DPO xuất phát từ model `zephyr-sft`, và docs khuyên làm RL trên model đã instruction-finetune để xác suất ra đáp án đúng lớn hơn 0. Docs cũng nhắc notebook Advanced GRPO dùng "pre-finetuning" để tránh việc GRPO chỉ học định dạng.
+[Nhận định] Một thứ tự thường gặp là SFT trước, rồi mới DPO hoặc GRPO. Hai chi tiết trong docs đều khớp với thứ tự này:
 
-[Nhận định] Nếu không viết được reward function hay verifier đáng tin cho tác vụ, GRPO dễ gặp reward hacking (xem bên dưới). Khi đó SFT hoặc DPO an toàn hơn.
+- Code DPO xuất phát từ model `zephyr-sft`.
+- Docs khuyên làm RL trên model đã instruction-finetune để xác suất ra đáp án đúng lớn hơn 0.
+
+Docs cũng nhắc notebook Advanced GRPO dùng "pre-finetuning" để tránh việc GRPO chỉ học định dạng.
+
+[Nhận định] Nếu bạn không viết được reward function hay verifier đáng tin cho tác vụ, GRPO dễ gặp reward hacking (xem bên dưới). Khi đó SFT hoặc DPO an toàn hơn.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo
 
 ## Memory-efficient RL
 
-**Vì sao RL tốn bộ nhớ:** GRPO dựa rất nhiều vào việc sinh văn bản bằng vLLM (engine inference, tức engine chạy suy luận). Vì vậy GPU phải giữ cùng lúc hai "bộ":
+RL tốn nhiều bộ nhớ GPU hơn fine-tune thường. Mục này giải thích vì sao, rồi liệt kê các kỹ thuật Unsloth dùng để giảm mức tốn đó.
+
+**Vì sao RL tốn bộ nhớ:** GRPO sinh văn bản rất nhiều, và việc sinh này chạy bằng vLLM (engine inference, tức engine chạy suy luận). Vì vậy GPU phải giữ cùng lúc hai "bộ":
 
 1. Inference engine: trọng số model và KV cache.
 2. Training engine: trọng số model, activation, gradient, optimizer state.
@@ -328,7 +369,7 @@ KV cache là gì? Xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-samplin
 
 Lưu ý khi đọc bảng: với GRPO, context 6,144 của Qwen3-32B thực chất là 6,144 × 2 generation = 12,288.
 
-**Cách bật Standby** (docs: đặt trước mọi lệnh import Unsloth):
+**Cách bật Standby.** Docs dặn đặt biến này trước mọi lệnh import Unsloth:
 
 ```python
 import os
@@ -336,7 +377,7 @@ os.environ["UNSLOTH_VLLM_STANDBY"] = "1"
 ```
 
 ::: warning Docs chưa thống nhất
-Mức tiết kiệm bộ nhớ và mức tăng context được ghi khác nhau:
+Các chỗ trong docs ghi mức tiết kiệm bộ nhớ và mức tăng context khác nhau:
 
 | Thông số | Nguồn A | Nguồn B |
 | --- | --- | --- |
@@ -345,15 +386,15 @@ Mức tiết kiệm bộ nhớ và mức tăng context được ghi khác nhau:
 | Mức tăng context | "1.2 to 1.7x increased context lengths" ([Memory Efficient RL](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl), phần mở đầu) | Llama-3.1-8B QLoRA 4-bit: 47,500 so với 42,000, tức 1.13x ([Memory Efficient RL](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl), cùng trang) |
 :::
 
-Có Standby thì đặt `gpu_memory_utilization` ở 0.9 hoặc 0.95 là xong, không phải dò từ 30% đến 95% như trước. Không đặt 100% vì cần chừa chỗ cho các tensor nhỏ. Theo docs, mọi notebook GRPO của Unsloth đã bật sẵn Standby.
+Khi có Standby, bạn chỉ cần đặt `gpu_memory_utilization` ở 0.9 hoặc 0.95. Không còn phải dò từ 30% đến 95% như trước. Đừng đặt 100%, vì cần chừa chỗ cho các tensor nhỏ. Theo docs, mọi notebook GRPO của Unsloth đã bật sẵn Standby.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning
 
 ## Reward hacking
 
-**Reward hacking** (lách luật phần thưởng) là khi thuật toán RL học được mẹo làm tăng reward mà không thực sự làm được việc được giao. Docs lấy ví dụ model sửa unit test để vượt qua bài code. Theo docs, đây là trở ngại quan trọng khi đưa model vào dùng thực tế.
+**Reward hacking** (lách luật phần thưởng) là khi thuật toán RL tìm ra mẹo để tăng reward mà không thực sự làm được việc được giao. Docs lấy ví dụ model sửa unit test để vượt qua bài code. Theo docs, đây là trở ngại quan trọng khi đưa model vào dùng thực tế.
 
-Trong notebook gpt-oss RL (bài toán sinh kernel nhân ma trận), Unsloth quan sát thấy model sửa hàm đo thời gian, gọi thư viện ngoài, cache kết quả và gian lận trực tiếp. Các cách chống theo docs:
+Unsloth gặp hiện tượng này trong notebook gpt-oss RL, với bài toán sinh kernel nhân ma trận. Model đã sửa hàm đo thời gian, gọi thư viện ngoài, cache kết quả và gian lận trực tiếp. Bảng dưới liệt kê từng kiểu hack và cách chống mà docs đưa ra:
 
 | Kiểu hack | Model làm gì | Cách chống theo docs |
 | --- | --- | --- |
@@ -361,21 +402,23 @@ Trong notebook gpt-oss RL (bài toán sinh kernel nhân ma trận), Unsloth quan
 | Caching & Cheating | Cache kết quả; đọc biến global của Python để tìm đáp án | Xóa cache bằng một ma trận giả lớn; benchmark cẩn thận với nhiều vòng lặp |
 | Cheating | Sửa hàm đo thời gian để trả về 0 | Giới hạn `locals` và `globals`; tạo hàm bằng `exec` và lưu kết quả vào dict rỗng; chặn truy cập biến global bằng `types.FunctionType(f.__code__, {})` |
 
-Sau khi chống, model sinh ra kernel nhân ma trận được tối ưu thật chứ không còn là mẹo gian lận.
+Sau khi áp các cách chống, model sinh ra kernel nhân ma trận được tối ưu thật, không còn là mẹo gian lận.
 
-[Nhận định] Bài học chung: reward function chỉ đo được những gì bạn kiểm tra. Mọi lỗ hổng trong verifier đều có thể bị model khai thác, nên cần chạy code của model trong môi trường cô lập và đọc mẫu câu trả lời thường xuyên, không chỉ nhìn đường reward.
+[Nhận định] Bài học chung: reward function chỉ đo được những gì bạn kiểm tra. Mọi lỗ hổng trong verifier đều có thể bị model khai thác. Vì vậy bạn cần chạy code của model trong môi trường cô lập và đọc mẫu câu trả lời thường xuyên, không chỉ nhìn đường reward.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation/rl-reward-hacking
 
 ## Huấn luyện AI agent bằng RL
 
-Trong docs, **agent** là một LLM được giao một mục tiêu tổng quát kèm bộ công cụ (tool). Agent thường **multi-turn** (nhiều lượt): thực hiện action, xem kết quả trên môi trường, rồi làm tiếp cho tới khi đạt mục tiêu hoặc thất bại. Docs cho biết ngay cả LLM mạnh cũng khó làm các tác vụ multi-turn một cách ổn định, và train bằng GRPO giúp agent ổn định hơn nhiều.
+Agent là LLM tự làm nhiều bước liên tiếp để đạt một mục tiêu. RL, cụ thể là GRPO, giúp agent làm các chuỗi bước đó ổn định hơn.
 
-Docs giới thiệu **ART** (Agent Reinforcement Trainer) của OpenPipe, xây trên GRPOTrainer của Unsloth. ART bổ sung:
+Trong docs, **agent** là một LLM được giao một mục tiêu tổng quát kèm bộ công cụ (tool). Agent thường **multi-turn** (nhiều lượt): thực hiện action, xem kết quả trên môi trường, rồi làm tiếp cho tới khi đạt mục tiêu hoặc thất bại. Docs cho biết ngay cả LLM mạnh cũng khó làm ổn định các tác vụ multi-turn, và train bằng GRPO giúp agent ổn định hơn nhiều.
 
-1. **Multi-turn training** qua khái niệm **trajectory** (quỹ đạo: toàn bộ lịch sử hội thoại/hành động của agent). Trajectory được chấm điểm rồi đưa vào GRPO, hỗ trợ cả tool call và gọi sub-agent.
-2. **Tích hợp vào code có sẵn:** ART tách thành "frontend" (client nằm trong codebase của bạn) và "backend" (nơi train, phục vụ model qua API tương thích OpenAI). Hai phần có thể chạy chung một máy bằng `LocalBackend`.
-3. **RULER** (Relative Universal LLM-Elicited Rewards): reward function tổng quát dùng LLM làm giám khảo, có thể thay reward function viết tay. Theo docs, agent train bằng RULER thường ngang hoặc hơn agent train bằng reward viết tay, và RULER giúp rút ngắn thời gian phát triển 2–3 lần.
+Docs giới thiệu **ART** (Agent Reinforcement Trainer) của OpenPipe, xây trên GRPOTrainer của Unsloth. ART bổ sung ba thứ:
+
+1. **Multi-turn training** qua khái niệm **trajectory** (quỹ đạo: toàn bộ lịch sử hội thoại và hành động của agent). Trajectory được chấm điểm rồi đưa vào GRPO. Cách này hỗ trợ cả tool call và gọi sub-agent.
+2. **Tích hợp vào code có sẵn.** ART tách thành hai phần. "Frontend" là client nằm trong codebase của bạn. "Backend" là nơi train và phục vụ model qua API tương thích OpenAI. Hai phần có thể chạy chung một máy bằng `LocalBackend`.
+3. **RULER** (Relative Universal LLM-Elicited Rewards): reward function tổng quát, dùng LLM làm giám khảo. RULER có thể thay reward function viết tay. Theo docs, agent train bằng RULER thường ngang hoặc hơn agent train bằng reward viết tay, và RULER giúp rút ngắn thời gian phát triển 2–3 lần.
 
 Ví dụ trong docs:
 
@@ -395,24 +438,40 @@ Cài đặt theo docs:
 pip install openpipe-art # or `uv add openpipe-art`
 ```
 
-Theo docs, nên chọn ART khi agent phải làm nhiều bước hoặc gọi tool, khi muốn làm prototype nhanh mà chưa viết reward, hoặc khi muốn thêm RL vào một codebase agent có sẵn mà sửa ít nhất. Ví dụ docs nêu: agent truy xuất email (vượt o3), agent chơi game (2048, Tic Tac Toe, Codenames), tác vụ suy luận (Temporal Clue).
+Theo docs, bạn nên chọn ART khi:
 
-[Nhận định] RULER dựa vào một LLM giám khảo bên ngoài (ví dụ `"openai/o3"` trong code), nên có thêm chi phí API và phụ thuộc vào dịch vụ đó.
+- Agent phải làm nhiều bước hoặc gọi tool.
+- Bạn muốn làm prototype nhanh mà chưa viết reward.
+- Bạn muốn thêm RL vào một codebase agent có sẵn mà sửa ít nhất.
+
+Các ví dụ docs nêu: agent truy xuất email (vượt o3), agent chơi game (2048, Tic Tac Toe, Codenames), tác vụ suy luận (Temporal Clue).
+
+[Nhận định] RULER dựa vào một LLM giám khảo bên ngoài (ví dụ `"openai/o3"` trong code). Vì vậy bạn tốn thêm chi phí API và phụ thuộc vào dịch vụ đó.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/training-ai-agents-with-rl
 
 ## Cạm bẫy thường gặp
 
+Các lỗi dưới đây gom lại từ những lưu ý rải rác trong docs, xếp theo nhóm: train chưa đủ, dữ liệu và model chưa đúng, và cấu hình máy.
+
 ::: warning Cạm bẫy
-- **Model không học ra suy luận:** thường do train quá ít bước hoặc reward function/verifier chưa tốt. Docs khuyên thử notebook Advanced GRPO vì notebook này có reward function tốt hơn.
+**Train chưa đủ hoặc reward chưa tốt**
+
+- **Model không học ra suy luận:** thường do train quá ít bước, hoặc reward function và verifier chưa tốt. Docs khuyên thử notebook Advanced GRPO vì notebook này có reward function tốt hơn.
 - **Dừng quá sớm:** reward thường chỉ bắt đầu tăng sau khoảng 300 bước, có khi phải 1000 bước hoặc hơn. Docs ghi thời gian khác nhau (30 phút hay tối thiểu 12 giờ); xem hộp "Docs chưa thống nhất" ở mục GRPO.
-- **Xác suất đáp án đúng bằng 0:** khi đó RL không bao giờ hoạt động. Hãy bắt đầu từ model đã instruction-finetune. Dùng base model thì phải có chat template.
+- **GRPO chỉ học định dạng:** docs nhắc GRPO có xu hướng mặc định là chỉ học format. Notebook Advanced dùng pre-finetuning để tránh việc này.
+- **Reward hacking:** nếu thiếu sandbox hoặc thiếu kiểm tra, model có thể sửa test, đọc biến global hay dùng thư viện có sẵn để "ăn gian".
+
+**Model và dữ liệu chưa đúng**
+
+- **Xác suất đáp án đúng bằng 0:** khi đó RL không bao giờ hoạt động. Hãy bắt đầu từ model đã instruction-finetune. Nếu dùng base model thì phải có chat template.
 - **Model quá nhỏ:** docs khuyên dùng từ 1.5B tham số trở lên thì mới sinh thinking token ổn định.
 - **Chỉ 1 generation mỗi prompt:** advantage không xác định vì độ lệch chuẩn bằng 0. Cần tối thiểu 2.
 - **Đáp án trong dataset chứa lập luận:** cột đáp án chỉ được chứa kết quả, không kèm phần lập luận.
-- **GRPO chỉ học định dạng:** docs nhắc GRPO có xu hướng mặc định là chỉ học format; notebook Advanced dùng pre-finetuning để tránh.
-- **Reward hacking:** thiếu sandbox hoặc kiểm tra thì model có thể sửa test, đọc biến global hay dùng thư viện có sẵn để "ăn gian".
-- **Chưa xem thời gian inference khi dự tính chi phí:** theo docs, trong một lần chạy RL của Unsloth khoảng 96% thời gian là vLLM inference, train chưa tới 4%.
+
+**Cấu hình máy và chi phí**
+
+- **Chưa tính thời gian inference khi dự trù chi phí:** theo docs, trong một lần chạy RL của Unsloth, khoảng 96% thời gian là vLLM inference, còn train chưa tới 4%.
 - **`gpu_memory_utilization` = 1.0:** không chạy được. Dùng 0.9–0.95 kèm Standby.
 - **Lỗi khi chạy GRPO local:** docs gợi ý `pip install diffusers` và dùng vLLM bản mới nhất.
 - **FP8 trên Colab miễn phí:** GPU T4 không hỗ trợ FP8, nên notebook FP8 của docs dùng L4 24GB.

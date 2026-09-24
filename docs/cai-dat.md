@@ -7,7 +7,7 @@ description: Yêu cầu phần cứng/phần mềm và lệnh cài Unsloth Deskt
 
 ## Ba cách dùng Unsloth, ba bộ yêu cầu
 
-Unsloth có ba "sản phẩm" dùng chung một lõi, nhưng cài đặt và yêu cầu hệ thống khác nhau (xem thêm [Tổng quan](/tong-quan)):
+Trước khi cài, bạn cần chọn dùng Unsloth theo cách nào. Unsloth có ba "sản phẩm" dùng chung một lõi. Mỗi sản phẩm có cách cài và yêu cầu hệ thống riêng. Phần giới thiệu chung nằm ở trang [Tổng quan](/tong-quan).
 
 | Sản phẩm | Là gì | Cách cài | Ghi chú yêu cầu |
 |---|---|---|---|
@@ -15,7 +15,10 @@ Unsloth có ba "sản phẩm" dùng chung một lõi, nhưng cài đặt và yê
 | **Unsloth Studio** | Web UI (giao diện chạy trong trình duyệt), mặc định ở cổng 8888 | Script `install.sh` / `install.ps1` | Có bảng yêu cầu theo OS: Python 3.11 đến dưới 3.14, NVIDIA driver để train trên Windows/Linux… |
 | **Unsloth Core** | Thư viện Python gốc, dùng bằng code (notebook, script) | `pip` / `uv` / Conda / Docker | Linux và Windows; GPU NVIDIA từ 2018+, CUDA Capability tối thiểu 7.0; AMD/Intel theo hướng dẫn riêng |
 
-Bản Desktop được docs gọi là cách dễ nhất để có Studio. Studio cài thủ công cho phép chỉnh tùy chọn nâng cao; Core dành cho người muốn viết code train.
+Cách chọn:
+- Muốn bắt đầu nhanh: dùng Desktop. Docs gọi đây là cách dễ nhất để có Studio.
+- Muốn chỉnh tùy chọn nâng cao: cài Studio thủ công.
+- Muốn tự viết code để train: dùng Core.
 
 ```mermaid
 flowchart TD
@@ -31,7 +34,9 @@ flowchart TD
 
 ## Bảng tóm tắt theo nền tảng
 
-"—" = trang nguồn không nói rõ.
+Bảng này giúp bạn tra nhanh: máy của bạn chạy được gì, train được không, và nên cài theo cách nào. Chi tiết từng nền tảng nằm ở các mục bên dưới.
+
+Ô ghi "—" nghĩa là trang nguồn không nói rõ. Ô ghi "Docs chưa thống nhất" nghĩa là các trang docs nói khác nhau; các hộp cảnh báo ngay sau bảng liệt kê từng chỗ.
 
 | Nền tảng | OS / phiên bản | GPU / driver | Python | Chạy (chat/inference)? | Train? | Sản phẩm hỗ trợ | Cách cài khuyến nghị |
 |---|---|---|---|---|---|---|---|
@@ -56,6 +61,8 @@ GGUF, MLX, quantization là gì? Xem [Độ chính xác & lượng tử hóa](/k
 :::
 
 ::: warning Docs chưa thống nhất — Studio có train trên AMD/Intel không
+Có trang nói Studio train được trên AMD và Intel. Có trang chỉ nhắc GPU NVIDIA, hoặc chỉ hướng dẫn Core. Bảng sau giữ nguyên lời từng trang:
+
 | Nguồn | Nội dung |
 |---|---|
 | [unsloth-requirements](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements) (mục Training) | "Unsloth Studio Training currently works on NVIDIA, AMD, MLX, Intel devices" |
@@ -75,6 +82,8 @@ GGUF, MLX, quantization là gì? Xem [Độ chính xác & lượng tử hóa](/k
 :::
 
 ::: warning Docs chưa thống nhất — phiên bản Python
+Mỗi trang docs ghi một mức Python khác nhau, tùy sản phẩm và cách cài. Bảng sau liệt kê đủ để bạn đối chiếu với trường hợp của mình:
+
 | Nguồn | Giá trị | Ngữ cảnh |
 |---|---|---|
 | [unsloth-requirements](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements) | "version 3.11 up to, but not including, 3.14" | Yêu cầu Windows, MacOS, Linux & WSL |
@@ -93,7 +102,13 @@ GGUF, MLX, quantization là gì? Xem [Độ chính xác & lượng tử hóa](/k
 
 ## Yêu cầu VRAM cho fine-tuning
 
-VRAM (bộ nhớ card đồ họa) tối thiểu theo số tham số model và phương pháp. QLoRA (LoRA trên model nén 4-bit) dùng 4-bit, LoRA dùng 16-bit. Docs nhấn mạnh đây là **mức tối thiểu tuyệt đối**; tùy model có thể cần nhiều hơn. Nguồn không ghi rõ độ dài context hay batch size dùng để đo.
+Bảng này cho biết card đồ họa của bạn cần ít nhất bao nhiêu VRAM (bộ nhớ card đồ họa) để fine-tune một model. Mức VRAM phụ thuộc vào hai thứ: model lớn cỡ nào (số tham số) và bạn dùng phương pháp nào.
+
+Hai phương pháp trong bảng:
+- QLoRA (LoRA trên model nén 4-bit): dùng 4-bit, tốn ít VRAM hơn.
+- LoRA: dùng 16-bit.
+
+Docs nhấn mạnh đây là **mức tối thiểu tuyệt đối**. Tùy model, bạn có thể cần nhiều hơn. Nguồn cũng không ghi rõ độ dài context hay batch size đã dùng khi đo.
 
 | Số tham số model | QLoRA (4-bit) VRAM | LoRA (16-bit) VRAM |
 |---|---|---|
@@ -111,31 +126,35 @@ VRAM (bộ nhớ card đồ họa) tối thiểu theo số tham số model và p
 | 90B | 53 GB | 212 GB |
 | 405B | 237 GB | 950 GB |
 
-Ví dụ: model 8B với QLoRA cần tối thiểu 6 GB, còn LoRA 16-bit cần 22 GB, tức gấp khoảng 3,7 lần.
+Cách đọc bảng: model 8B với QLoRA cần tối thiểu 6 GB. Cùng model đó với LoRA 16-bit cần 22 GB, tức gấp khoảng 3,7 lần.
 
 ::: tip Mẹo tránh OOM
-OOM (out of memory, hết bộ nhớ) thường do batch size quá cao. Docs khuyên đặt 1, 2 hoặc 3 để giảm VRAM.
+OOM (out of memory, hết bộ nhớ) thường xảy ra khi batch size quá cao. Để giảm VRAM, docs khuyên đặt batch size là 1, 2 hoặc 3.
 :::
 
 ::: tip Kiến thức nền
 Muốn hiểu "8B" nghĩa là gì và cách ước tính VRAM? Xem [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho). LoRA/QLoRA: xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora). Batch size: xem [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen).
 :::
 
-**[Nhận định]** Bảng có bước nhảy lạ: 14B QLoRA 8.5 GB nhưng 27B lên 22 GB (gần gấp 2,6), trong khi số tham số chỉ gấp 1,9. Nên coi số liệu các model lớn là tham khảo.
+**[Nhận định]** Bảng có một bước nhảy lạ. Với QLoRA, 14B cần 8.5 GB nhưng 27B lên tới 22 GB, tức gần gấp 2,6. Trong khi đó số tham số chỉ gấp 1,9. Vì vậy bạn nên coi số liệu của các model lớn là để tham khảo.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements
 
 ## Windows
 
+Trên Windows, bạn có ba lựa chọn: Desktop (dễ nhất), Studio cài bằng một lệnh PowerShell, hoặc Core cho người viết code. Core lại có ba cách cài: Conda, Docker hoặc WSL. Mục này đi lần lượt từng cách, rồi đến các lỗi hay gặp và cách gỡ cài đặt.
+
 ### Yêu cầu (Studio, để train)
 
-- Windows 10 hoặc 11 (64-bit), GPU NVIDIA đã cài driver.
-- App Installer (có sẵn `winget`), Git (`winget install --id Git.Git -e --source winget`).
-- Python 3.11 đến dưới 3.14, làm việc trong môi trường ảo (virtual environment) như uv, venv hoặc conda/mamba.
-- Studio chạy thẳng trên Windows, **không cần WSL** (Windows Subsystem for Linux, lớp chạy Linux trong Windows). Script cài tự cài Git, CMake (qua `winget`), và CUDA Toolkit khớp với driver; C++ compiler là Visual Studio Build Tools 2022.
+- Hệ điều hành: Windows 10 hoặc 11 (64-bit).
+- GPU: GPU NVIDIA đã cài driver.
+- Công cụ: App Installer (có sẵn `winget`) và Git. Cài Git bằng `winget install --id Git.Git -e --source winget`.
+- Python: 3.11 đến dưới 3.14. Bạn nên làm việc trong môi trường ảo (virtual environment) như uv, venv, conda hoặc mamba.
+
+Studio chạy thẳng trên Windows, **không cần WSL** (Windows Subsystem for Linux, lớp chạy Linux trong Windows). Script cài tự lo phần lớn công cụ: Git, CMake (qua `winget`) và CUDA Toolkit khớp với driver. C++ compiler là Visual Studio Build Tools 2022.
 
 ::: warning Docs chưa thống nhất — Git/CUDA trên Windows
-Cả hai trên [unsloth-requirements](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements):
+Cùng trang [unsloth-requirements](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements) nhưng hai chỗ nói khác nhau. Một chỗ bảo bạn tự cài Git, chỗ kia nói script cài lo việc này:
 
 | Thông số | Danh sách "Requirements" (Windows) | Bảng mục Training (Windows) |
 |---|---|---|
@@ -146,24 +165,28 @@ Cả hai trên [unsloth-requirements](https://unsloth.ai/docs/get-started/fine-t
 ### Desktop
 
 1. Tải bản Windows: https://unsloth.ai/download/windows
-2. Mở file `.exe`, làm theo hướng dẫn, mở app và chờ cài xong.
-3. Chọn model + mức quantization trong **Select model** hoặc **Model hub**, tải về rồi chat.
+2. Mở file `.exe` và làm theo hướng dẫn. Sau đó mở app và chờ cài xong.
+3. Vào **Select model** hoặc **Model hub**, chọn model và mức quantization. Tải về rồi chat.
 
 ### Studio (cài thủ công)
+
+Chạy lệnh sau trong PowerShell để cài:
 
 ```bash
 irm https://unsloth.ai/install.ps1 | iex
 ```
 
-Cùng lệnh này dùng để cập nhật. Mỗi lần chạy:
+Khi muốn cập nhật, bạn chạy lại đúng lệnh này. Mỗi lần muốn mở Studio, chạy:
 
 ```bash
 unsloth studio -H 0.0.0.0 -p 8888
 ```
 
-Sau khi cài, mở `http://127.0.0.1:8888`, lần đầu sẽ được yêu cầu tạo mật khẩu.
+Sau khi cài, mở `http://127.0.0.1:8888` trong trình duyệt. Lần đầu vào, Studio yêu cầu bạn tạo mật khẩu.
 
 ::: warning Docs chưa thống nhất — lệnh chạy Studio, địa chỉ bind và cổng
+Lệnh chạy ở trên mở Studio cho mọi máy trong mạng. Trang Studio chính lại mặc định chỉ cho máy của bạn truy cập, và khuyên cách an toàn hơn khi mở ra ngoài. Cổng cũng khác nhau giữa cài native và Docker:
+
 | Thông số | [install/windows-installation](https://unsloth.ai/docs/get-started/install/windows-installation), [install/mac](https://unsloth.ai/docs/get-started/install/mac), [install/linux](https://unsloth.ai/docs/get-started/install/linux), [get-started/install](https://unsloth.ai/docs/get-started/install), [install/pip-install](https://unsloth.ai/docs/get-started/install/pip-install) | [new/studio/install](https://unsloth.ai/docs/new/studio/install) | [install/docker](https://unsloth.ai/docs/get-started/install/docker) |
 |---|---|---|---|
 | Lệnh chạy | `unsloth studio -H 0.0.0.0 -p 8888` | Hint: `unsloth studio -p 8888`, thêm `-H 0.0.0.0` nếu cần truy cập từ máy khác; bản developer: `unsloth studio -p 8888`; truy cập từ xa "recommended": `unsloth studio --secure -p 8888` | Studio có sẵn trong container |
@@ -182,32 +205,36 @@ Start-Process -FilePath ".\miniconda.exe" -ArgumentList "/S" -Wait
 del .\miniconda.exe
 ```
 
-Mở **Anaconda Powershell Prompt**, tạo môi trường:
+Mở **Anaconda Powershell Prompt** và tạo môi trường:
 
 ```bash
 conda create --name unsloth_env python==3.12 -y
 conda activate unsloth_env
 ```
 
-Chạy `nvidia-smi` để xác nhận có GPU và xem "CUDA Version" ở góc phải trên. Sau đó cài PyTorch, đổi `130` theo phiên bản CUDA của bạn (phiên bản phải tồn tại trên pytorch.org):
+Chạy `nvidia-smi` để xác nhận máy có GPU. Ở góc phải trên của kết quả, ghi lại "CUDA Version".
+
+Sau đó cài PyTorch. Trong lệnh dưới, đổi `130` theo phiên bản CUDA của bạn. Phiên bản đó phải có trên pytorch.org:
 
 ```bash
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
 ```
 
-Kiểm tra PyTorch (xem mục "Kiểm tra sau khi cài" cuối trang), **chỉ khi PyTorch chạy được** mới cài Unsloth:
+Kiểm tra PyTorch theo mục "Kiểm tra sau khi cài" ở cuối trang. **Chỉ khi PyTorch chạy được**, bạn mới cài Unsloth:
 
 ```bash
 pip install unsloth
 ```
 
-Nếu đã có PyTorch, docs nói `pip install unsloth` có thể là đủ.
+Nếu máy đã có PyTorch, docs nói chỉ cần `pip install unsloth` có thể là đủ.
 
 ### Core — cách 2: Docker
 
-Xem mục [Docker](#docker). Docs gọi Docker là cách dễ nhất cho người dùng Windows vì không phải xử lý dependency.
+Docs gọi Docker là cách dễ nhất cho người dùng Windows, vì bạn không phải tự xử lý dependency. Lệnh cụ thể nằm ở mục [Docker](#docker).
 
 ::: warning Docs chưa thống nhất — NVIDIA Container Toolkit trên Windows
+Hai trang nói ngược nhau về việc có phải cài NVIDIA Container Toolkit trên Windows hay không:
+
 | Nguồn | Nội dung |
 |---|---|
 | [install/windows-installation](https://unsloth.ai/docs/get-started/install/windows-installation) (Method #2) | Cài `nvidia-container-toolkit` bằng `sudo apt-get install` với phiên bản `1.17.8-1`; container publish `-p 8888:8888 -p 2222:22` |
@@ -218,18 +245,20 @@ Bảng so sánh đầy đủ ở mục Docker.
 
 ### Core — cách 3: WSL
 
+Cách này chạy Core bên trong một bản Ubuntu nằm trong Windows. Trước tiên, cài và mở Ubuntu:
+
 ```bash
 wsl.exe --install Ubuntu-24.04
 wsl.exe -d Ubuntu-24.04
 ```
 
-Nếu đã có WSL, chỉ cần gõ:
+Nếu máy đã có WSL, bạn chỉ cần gõ:
 
 ```bash
 wsl
 ```
 
-Cài Python, PyTorch, Unsloth và Jupyter:
+Trong WSL, cài lần lượt Python, PyTorch, rồi Unsloth và Jupyter:
 
 ```bash
 sudo apt update
@@ -245,38 +274,40 @@ pip install unsloth jupyter
 ```
 
 ::: warning Lệnh trong docs có lỗi đánh máy
-Trang [install/windows-installation](https://unsloth.ai/docs/get-started/install/windows-installation) (mục WSL) gợi ý thêm cờ khi gặp lỗi quyền, nhưng in cờ bằng dấu gạch dài (en dash) thay vì dấu gạch ngang ASCII:
+Khi gặp lỗi quyền, trang [install/windows-installation](https://unsloth.ai/docs/get-started/install/windows-installation) (mục WSL) gợi ý thêm một cờ vào lệnh. Nhưng cờ này bị in bằng dấu gạch dài (en dash) thay vì dấu gạch ngang ASCII:
 - Với PyTorch: `pip install torch torchvision --force-reinstall --index-url https://download.pytorch.org/whl/cu130 –break-system-packages`
 - Với Unsloth: `pip install unsloth jupyter –-break-system-packages`
 
-**[Nhận định]** Tùy chọn của pip viết bằng hai dấu gạch ngang ASCII (`--`); copy nguyên văn hai lệnh trên có thể khiến pip không nhận ra cờ, nên gõ lại phần cờ.
+**[Nhận định]** Tùy chọn của pip viết bằng hai dấu gạch ngang ASCII (`--`). Nếu copy nguyên văn hai lệnh trên, pip có thể không nhận ra cờ. Bạn nên gõ lại phần cờ.
 :::
+
+Cài xong, mở Jupyter:
 
 ```bash
 jupyter notebook
 ```
 
 ::: warning Cạm bẫy trên Windows
-- Nếu `nvidia-smi` không chạy, phải cài lại NVIDIA driver.
-- Nếu PyTorch không chạy được với CUDA, docs nói có thể phải cài lại CUDA driver — đừng cài Unsloth trước khi PyTorch chạy.
-- **vLLM không hỗ trợ Windows trực tiếp**, chỉ qua WSL hoặc Linux. Cần vLLM khi dùng GRPO (một kiểu reinforcement learning).
-- Trên WSL, NVIDIA driver cài **trên Windows** (không phải trong WSL). Về CUDA toolkit, docs chưa thống nhất: xem hộp ở mục "Linux & WSL".
-- Docker trên Windows không tự nhận GPU: phiên bản `nvcc --version` trong container nên khớp CUDA mà `nvidia-smi` hiển thị trên máy host; xem hướng dẫn GPU của Docker Desktop.
+- Nếu `nvidia-smi` không chạy, bạn phải cài lại NVIDIA driver.
+- Nếu PyTorch không chạy được với CUDA, docs nói có thể phải cài lại CUDA driver. Đừng cài Unsloth trước khi PyTorch chạy được.
+- **vLLM không hỗ trợ Windows trực tiếp**, chỉ chạy qua WSL hoặc Linux. Bạn cần vLLM khi dùng GRPO (một kiểu reinforcement learning).
+- Trên WSL, NVIDIA driver được cài **trên Windows**, không phải trong WSL. Về CUDA toolkit thì docs chưa thống nhất; xem hộp ở mục "Linux & WSL".
+- Docker trên Windows không tự nhận GPU. Phiên bản `nvcc --version` trong container nên khớp với bản CUDA mà `nvidia-smi` hiển thị trên máy host. Xem thêm hướng dẫn GPU của Docker Desktop.
 :::
 
 ::: details Khắc phục sự cố nâng cao (Core trên Windows)
-Theo docs:
+Các bước docs đề xuất khi Core vẫn lỗi:
 1. Cài `torch` và `triton`, ví dụ `pip install torch torchvision torchaudio triton`.
-2. Chạy `nvcc` để xác nhận CUDA; nếu lỗi, cài `cudatoolkit` hoặc CUDA driver.
-3. GPU Intel: làm theo phần Windows của hướng dẫn Intel (mục [Intel](#intel)).
-4. Cài `xformers` thủ công, kiểm tra bằng `python -m xformers.info`; GPU Ampere có thể dùng `flash-attn`.
-5. Đảm bảo các phiên bản Python, CUDA, CUDNN, `torch`, `triton`, `xformers` tương thích nhau (PyTorch Compatibility Matrix).
+2. Chạy `nvcc` để xác nhận có CUDA. Nếu lỗi, cài `cudatoolkit` hoặc CUDA driver.
+3. Với GPU Intel: làm theo phần Windows của hướng dẫn Intel (mục [Intel](#intel)).
+4. Cài `xformers` thủ công và kiểm tra bằng `python -m xformers.info`. GPU Ampere có thể dùng `flash-attn`.
+5. Đảm bảo các phiên bản Python, CUDA, CUDNN, `torch`, `triton`, `xformers` tương thích nhau. Tra bảng PyTorch Compatibility Matrix.
 6. Cài `bitsandbytes` và kiểm tra bằng `python -m bitsandbytes`.
 :::
 
 ### Gỡ cài đặt
 
-- Desktop: Settings → Apps → Installed apps → Unsloth → Uninstall. Model đã tải và file của bạn không bị xóa.
+- Desktop: vào Settings → Apps → Installed apps → Unsloth → Uninstall. Model đã tải và file của bạn không bị xóa.
 - Studio:
 
 ```ps1
@@ -284,36 +315,38 @@ irm https://raw.githubusercontent.com/unslothai/unsloth/main/scripts/uninstall.p
 ```
 
 ::: danger Xóa sạch dữ liệu
-`Remove-Item -Recurse -Force "$HOME\.unsloth"` xóa toàn bộ lịch sử, chat, checkpoint model và file export, không thể khôi phục. Model Hugging Face cache (`%USERPROFILE%\.cache\huggingface\hub\`) không bị ảnh hưởng.
+Lệnh `Remove-Item -Recurse -Force "$HOME\.unsloth"` xóa toàn bộ lịch sử, chat, checkpoint model và file export. Dữ liệu này không thể khôi phục. Các model trong cache Hugging Face (`%USERPROFILE%\.cache\huggingface\hub\`) không bị ảnh hưởng.
 :::
 
 **Nguồn:** https://unsloth.ai/docs/get-started/install/windows-installation, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements, https://unsloth.ai/docs/new/studio/install
 
 ## macOS
 
+Trên Mac, bạn dùng Desktop hoặc Studio. Việc train trên Mac và chạy Core trên Mac thì các trang docs nói chưa khớp nhau; hộp cảnh báo trong mục này liệt kê chi tiết.
+
 ### Yêu cầu
 
-- macOS 12 Monterey trở lên, chip Intel hoặc Apple Silicon.
-- Homebrew, rồi `brew install git`, `brew install cmake`, `brew install openssl`.
-- Python 3.11 đến dưới 3.14, trong môi trường uv, venv hoặc conda/mamba.
+- Hệ điều hành: macOS 12 Monterey trở lên, chip Intel hoặc Apple Silicon.
+- Công cụ: Homebrew, rồi chạy `brew install git`, `brew install cmake`, `brew install openssl`.
+- Python: 3.11 đến dưới 3.14, trong môi trường uv, venv, conda hoặc mamba.
 
 ### Desktop
 
 1. Tải: https://unsloth.ai/download/mac
-2. Mở file `.dmg`, kéo Unsloth vào **Applications**, mở app và chờ cài xong.
-3. Chọn model + quantization phù hợp máy trong **Select model** hoặc **Model hub**, tải về rồi chat.
+2. Mở file `.dmg` và kéo Unsloth vào **Applications**. Sau đó mở app và chờ cài xong.
+3. Vào **Select model** hoặc **Model hub**, chọn model và mức quantization phù hợp với máy. Tải về rồi chat.
 
-Trang cài đặt Mac ghi Desktop dùng để "run and train MLX or GGUF models" (xem hộp "Docs chưa thống nhất" bên dưới).
+Trang cài đặt Mac ghi Desktop dùng để "run and train MLX or GGUF models". Các trang khác nói khác; xem hộp "Docs chưa thống nhất" bên dưới.
 
 ### Studio (cài thủ công)
 
-Lệnh dưới chỉ cài Studio, không cài Desktop hay Core:
+Lệnh dưới chỉ cài Studio. Nó không cài Desktop hay Core:
 
 ```bash
 curl -fsSL https://unsloth.ai/install.sh | sh
 ```
 
-Cùng lệnh dùng để cập nhật. Mỗi lần chạy:
+Khi muốn cập nhật, bạn chạy lại đúng lệnh này. Mỗi lần muốn mở Studio, chạy:
 
 ```bash
 unsloth studio -H 0.0.0.0 -p 8888
@@ -329,12 +362,16 @@ unsloth studio -H 0.0.0.0 -p 8888
 :::
 
 ::: warning Docs chưa thống nhất — lệnh chạy Studio
-[install/mac](https://unsloth.ai/docs/get-started/install/mac) dùng `unsloth studio -H 0.0.0.0 -p 8888` (mở cho cả mạng); [new/studio/install](https://unsloth.ai/docs/new/studio/install) dùng `unsloth studio -p 8888` (mặc định chỉ `127.0.0.1`) và gọi `--secure` là cách "recommended" để truy cập từ xa. Bảng đầy đủ ở mục Windows.
+Hai trang dùng hai lệnh khác nhau:
+- [install/mac](https://unsloth.ai/docs/get-started/install/mac) dùng `unsloth studio -H 0.0.0.0 -p 8888`. Lệnh này mở Studio cho cả mạng.
+- [new/studio/install](https://unsloth.ai/docs/new/studio/install) dùng `unsloth studio -p 8888`, mặc định chỉ nghe ở `127.0.0.1`. Trang này gọi `--secure` là cách "recommended" để truy cập từ xa.
+
+Bảng đầy đủ ở mục Windows.
 :::
 
 ### Gỡ cài đặt
 
-- Desktop: Finder → Applications → chuột phải Unsloth → Move to Trash.
+- Desktop: mở Finder → Applications, chuột phải vào Unsloth → Move to Trash.
 - Studio:
 
 ```shellscript
@@ -345,15 +382,24 @@ curl -fsSL https://raw.githubusercontent.com/unslothai/unsloth/main/scripts/unin
 
 ## Linux & WSL
 
+Trên Linux, bạn dùng được cả ba sản phẩm: Desktop, Studio và Core. Mục này cũng áp dụng cho WSL, tức Linux chạy bên trong Windows.
+
 ### Yêu cầu
 
-- Ubuntu 20.04+ hoặc distro tương tự (64-bit).
-- GPU NVIDIA đã cài driver. CUDA toolkit: xem hộp bên dưới (Blackwell là dòng GPU mới của NVIDIA, ví dụ RTX 50).
-- Git: `sudo apt install git`; CMake có sẵn hoặc `sudo apt install cmake`; C++ compiler: `build-essential`.
-- Python 3.11 đến dưới 3.14, trong uv, venv hoặc conda/mamba.
-- Với Core: GPU NVIDIA từ 2018 trở đi, CUDA Capability (chỉ số thế hệ kiến trúc GPU của NVIDIA) tối thiểu 7.0 — ví dụ V100, T4, Titan V, RTX 20 & 50, A100, H100, L40. GTX 1070, 1080 chạy được nhưng chậm. Thiết bị cần hỗ trợ `xformers`, `torch`, `BitsandBytes` và `triton`.
+- Hệ điều hành: Ubuntu 20.04+ hoặc distro tương tự (64-bit).
+- GPU: GPU NVIDIA đã cài driver. Về CUDA toolkit, xem hộp bên dưới. Blackwell trong hộp đó là dòng GPU mới của NVIDIA, ví dụ RTX 50.
+- Công cụ: Git (`sudo apt install git`). CMake thường có sẵn, nếu chưa thì `sudo apt install cmake`. C++ compiler: `build-essential`.
+- Python: 3.11 đến dưới 3.14, trong uv, venv, conda hoặc mamba.
+
+Riêng Core có yêu cầu GPU cụ thể hơn:
+- GPU NVIDIA từ 2018 trở đi, CUDA Capability tối thiểu 7.0. CUDA Capability là chỉ số thế hệ kiến trúc GPU của NVIDIA.
+- Ví dụ GPU đạt yêu cầu: V100, T4, Titan V, RTX 20 & 50, A100, H100, L40.
+- GTX 1070, 1080 chạy được nhưng chậm.
+- Thiết bị cần hỗ trợ `xformers`, `torch`, `BitsandBytes` và `triton`.
 
 ::: warning Docs chưa thống nhất — Git và CUDA toolkit trên Linux/WSL
+Các chỗ trong docs nói khác nhau về việc CUDA toolkit là bắt buộc, tùy chọn, hay phải cài trong WSL:
+
 | Thông số | [unsloth-requirements](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements) — danh sách "Linux & WSL" (cũng có ở [new/studio/install](https://unsloth.ai/docs/new/studio/install)) | [unsloth-requirements](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements) — bảng mục Training | [new/studio/install](https://unsloth.ai/docs/new/studio/install) — hint WSL |
 |---|---|---|---|
 | CUDA toolkit | "CUDA toolkit (12.4+ recommended, 12.8+ for blackwell)" | "Optional; `nvcc` auto-detected" | "make sure ... the **CUDA toolkit** is installed inside your WSL distro" |
@@ -363,23 +409,31 @@ curl -fsSL https://raw.githubusercontent.com/unslothai/unsloth/main/scripts/unin
 ### Desktop
 
 1. Tải: https://unsloth.ai/download/linux
-2. Mở file `.deb`, chọn Install, mở app và chờ cài xong.
+2. Mở file `.deb` và chọn Install. Sau đó mở app và chờ cài xong.
 
 ### Studio (cài thủ công)
+
+Cài Studio:
 
 ```bash
 curl -fsSL https://unsloth.ai/install.sh | sh
 ```
+
+Mở Studio:
 
 ```bash
 unsloth studio -H 0.0.0.0 -p 8888
 ```
 
 ::: warning Docs chưa thống nhất — lệnh chạy Studio
-[install/linux](https://unsloth.ai/docs/get-started/install/linux) dùng `unsloth studio -H 0.0.0.0 -p 8888` (mở cho cả mạng); [new/studio/install](https://unsloth.ai/docs/new/studio/install) dùng `unsloth studio -p 8888` (mặc định chỉ `127.0.0.1`) và gọi `--secure` là cách "recommended" để truy cập từ xa. Bảng đầy đủ ở mục Windows.
+Hai trang dùng hai lệnh khác nhau:
+- [install/linux](https://unsloth.ai/docs/get-started/install/linux) dùng `unsloth studio -H 0.0.0.0 -p 8888`. Lệnh này mở Studio cho cả mạng.
+- [new/studio/install](https://unsloth.ai/docs/new/studio/install) dùng `unsloth studio -p 8888`, mặc định chỉ nghe ở `127.0.0.1`. Trang này gọi `--secure` là cách "recommended" để truy cập từ xa.
+
+Bảng đầy đủ ở mục Windows.
 :::
 
-Studio từ repo chính (bản developer) hoặc bản nightly:
+Nếu muốn cài Studio từ repo chính (bản developer), dùng khối lệnh đầu. Muốn bản nightly, dùng khối lệnh thứ hai:
 
 ```bash
 git clone https://github.com/unslothai/unsloth
@@ -398,6 +452,8 @@ unsloth studio -H 0.0.0.0 -p 8888
 
 ### Core với uv
 
+Bốn lệnh dưới lần lượt: cài uv, tạo môi trường ảo, bật môi trường, rồi cài Unsloth:
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 uv venv unsloth_env --python 3.13
@@ -408,27 +464,31 @@ uv pip install unsloth --torch-backend=auto
 Chi tiết thêm ở mục "pip & uv" bên dưới.
 
 ::: warning Cạm bẫy Linux/WSL
-- WSL: NVIDIA driver cài **trên Windows**. CUDA toolkit: xem hộp "Docs chưa thống nhất" ở trên.
-- `nvidia-smi not found` → cài NVIDIA driver. `nvcc not found` → `sudo apt install nvidia-cuda-toolkit` hoặc thêm `/usr/local/cuda/bin` vào PATH.
-- Lỗi phiên bản Python → `sudo apt install python3.12 python3.12-venv` (cần 3.11 đến dưới 3.14).
-- `llama-server build failed`: không gây dừng, Unsloth vẫn chạy nhưng **mất inference GGUF**. Cài `cmake` và chạy lại setup.
+- Trên WSL, NVIDIA driver được cài **trên Windows**. Về CUDA toolkit, xem hộp "Docs chưa thống nhất" ở trên.
+- Báo `nvidia-smi not found`: cài NVIDIA driver.
+- Báo `nvcc not found`: chạy `sudo apt install nvidia-cuda-toolkit`, hoặc thêm `/usr/local/cuda/bin` vào PATH.
+- Lỗi phiên bản Python: chạy `sudo apt install python3.12 python3.12-venv`. Studio cần Python 3.11 đến dưới 3.14.
+- Báo `llama-server build failed`: lỗi này không làm dừng cài đặt. Unsloth vẫn chạy nhưng **mất inference GGUF**. Cài `cmake` rồi chạy lại setup.
 - Build failed: xóa `~/.unsloth/llama.cpp` rồi chạy lại setup.
 :::
 
 ### Gỡ cài đặt
 
-- Desktop `.deb`: `sudo apt remove unsloth`; AppImage: xóa file `.AppImage`.
-- Studio: script `uninstall.sh` như ở mục macOS.
+- Desktop bản `.deb`: chạy `sudo apt remove unsloth`.
+- Desktop bản AppImage: xóa file `.AppImage`.
+- Studio: chạy script `uninstall.sh` như ở mục macOS.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/install/linux, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements, https://unsloth.ai/docs/new/studio/install
 
 ## AMD
 
+Mục này dành cho máy dùng GPU AMD. Docs Unsloth quảng cáo fine-tune nhanh tới 2x và ít hơn khoảng 70% bộ nhớ trên phần cứng AMD. Cách dễ nhất là Desktop. Nếu cài Core thủ công, bạn cần thêm vài bước riêng cho AMD: PyTorch bản ROCm, bitsandbytes bản pre-release và biến môi trường.
+
 ### Yêu cầu
 
-- GPU theo trang AMD: Radeon RDNA 3/3.5/4 (RX 6000–9000 series) trên Windows và Linux, và GPU data center như MI300X (192GB).
-- ROCm (nền tảng tính toán GPU của AMD, tương đương CUDA) 6.0 trở lên khi tự cài PyTorch. Xem phiên bản bằng `amd-smi version`.
-- Python theo trang AMD: 3.11–3.13 dùng được mọi nơi, 3.10 được với cài thủ công. Các trang khác ghi khác — xem hộp phiên bản Python ở mục "Bảng tóm tắt theo nền tảng".
+- GPU theo trang AMD: Radeon RDNA 3/3.5/4 (RX 6000–9000 series) trên Windows và Linux. Ngoài ra có GPU data center như MI300X (192GB).
+- ROCm 6.0 trở lên khi bạn tự cài PyTorch. ROCm là nền tảng tính toán GPU của AMD, tương đương CUDA. Xem phiên bản bằng `amd-smi version`.
+- Python theo trang AMD: 3.11–3.13 dùng được mọi nơi, 3.10 dùng được khi cài thủ công. Các trang khác ghi khác; xem hộp phiên bản Python ở mục "Bảng tóm tắt theo nền tảng".
 
 ::: warning Docs chưa thống nhất — dòng GPU AMD được hỗ trợ
 | Thông số | [install/amd](https://unsloth.ai/docs/get-started/install/amd) | [install/docker](https://unsloth.ai/docs/get-started/install/docker) (image `unsloth/unsloth-rocm`) |
@@ -437,17 +497,16 @@ Chi tiết thêm ở mục "pip & uv" bên dưới.
 | GPU data center | MI300X (192GB) | CDNA |
 | ROCm | "ROCm 6.0 or newer is required" (cài PyTorch thủ công) | Image "Built against ROCm 7.2" |
 :::
-- Docs quảng cáo fine-tune nhanh tới 2x, ít hơn khoảng 70% bộ nhớ trên phần cứng AMD.
 
 ### Cài nhanh
 
 Cách dễ nhất là tải Desktop app.
 
 ::: warning Link tải trong docs
-Trên [install/amd](https://unsloth.ai/docs/get-started/install/amd), nút "Download for Linux" trỏ tới `https://unsloth.ai/download/windows`. Các trang [install/linux](https://unsloth.ai/docs/get-started/install/linux) và [get-started/install](https://unsloth.ai/docs/get-started/install) dùng `https://unsloth.ai/download/linux` cho Linux; bản Windows là `https://unsloth.ai/download/windows`.
+Trên [install/amd](https://unsloth.ai/docs/get-started/install/amd), nút "Download for Linux" lại trỏ tới `https://unsloth.ai/download/windows`. Trong khi đó, các trang [install/linux](https://unsloth.ai/docs/get-started/install/linux) và [get-started/install](https://unsloth.ai/docs/get-started/install) dùng `https://unsloth.ai/download/linux` cho Linux. Bản Windows là `https://unsloth.ai/download/windows`.
 :::
 
-Cài thủ công Studio (xem hộp "Docs chưa thống nhất — Studio có train trên AMD/Intel không" ở mục "Bảng tóm tắt theo nền tảng"):
+Nếu muốn cài Studio thủ công, dùng các lệnh dưới. Việc Studio có train được trên AMD không thì docs chưa thống nhất; xem hộp "Docs chưa thống nhất — Studio có train trên AMD/Intel không" ở mục "Bảng tóm tắt theo nền tảng".
 
 Linux:
 
@@ -463,7 +522,9 @@ irm https://unsloth.ai/install.ps1 | iex
 
 ### Core thủ công
 
-1) Môi trường ảo (tùy chọn):
+Cài Core trên AMD gồm năm bước. Bước 4 là bắt buộc với AMD; đừng bỏ qua.
+
+1) Tạo môi trường ảo (tùy chọn). Khối đầu cho Linux, khối sau cho Windows:
 
 ```bash
 # Linux — swap 3.13 for whichever 3.10-3.13 you have
@@ -479,21 +540,21 @@ unsloth_env\Scripts\Activate.ps1
 pip install uv
 ```
 
-2) PyTorch cho ROCm (bỏ qua nếu cài Unsloth kèm extra AMD như `unsloth[rocm72-torch291]`, vì extra đã kèm PyTorch khớp). Linux, đổi `rocm7.1` theo phiên bản ROCm của bạn:
+2) Cài PyTorch cho ROCm. Bạn bỏ qua bước này nếu cài Unsloth kèm extra AMD như `unsloth[rocm72-torch291]`, vì extra đó đã kèm PyTorch khớp phiên bản. Trên Linux, đổi `rocm7.1` theo phiên bản ROCm của bạn:
 
 ```bash
 uv pip install "torch>=2.4,<2.11.0" "torchvision<0.26.0" "torchaudio<2.11.0" \
     --index-url https://download.pytorch.org/whl/rocm7.1 --upgrade --force-reinstall
 ```
 
-ROCm 7.2 (wheel torch 2.11):
+Nếu dùng ROCm 7.2 (wheel torch 2.11), dùng lệnh này thay thế:
 
 ```bash
 uv pip install "torch>=2.11.0,<2.12.0" torchvision torchaudio \
     --index-url https://download.pytorch.org/whl/rocm7.2 --upgrade --force-reinstall
 ```
 
-Tag index có sẵn: `rocm6.0`, `rocm6.1`, `rocm6.2`, `rocm6.3`, `rocm6.4`, `rocm7.0`, `rocm7.1`, `rocm7.2`. ROCm 6.5–6.9 dùng `rocm6.4`; ROCm 7.3+ dùng `rocm7.2`.
+Tag index là đoạn cuối URL trong lệnh, ví dụ `rocm7.1`. Các tag có sẵn: `rocm6.0`, `rocm6.1`, `rocm6.2`, `rocm6.3`, `rocm6.4`, `rocm7.0`, `rocm7.1`, `rocm7.2`. Nếu máy bạn có ROCm 6.5–6.9, dùng `rocm6.4`. Nếu có ROCm 7.3+, dùng `rocm7.2`.
 
 ::: details Lệnh tự dò phiên bản ROCm và cài PyTorch
 ```bash
@@ -507,7 +568,7 @@ ROCM_TAG="$({ command -v amd-smi >/dev/null 2>&1 && amd-smi version 2>/dev/null 
 uv pip install unsloth[amd]
 ```
 
-4) **Bắt buộc với AMD**: cài bitsandbytes (thư viện nén 4-bit/8-bit) bản pre-release. Phải dùng `pip`, không dùng `uv` (uv từ chối wheel này do lệch phiên bản trong tên file):
+4) **Bắt buộc với AMD**: cài bitsandbytes bản pre-release. bitsandbytes là thư viện nén model xuống 4-bit hoặc 8-bit. Ở bước này phải dùng `pip`, không dùng `uv`, vì uv từ chối wheel này do phiên bản trong tên file bị lệch:
 
 ```bash
 # x86_64 systems:
@@ -520,7 +581,7 @@ pip install --force-reinstall --no-cache-dir --no-deps \
 # pip install --force-reinstall --no-cache-dir --no-deps "bitsandbytes>=0.49.1"
 ```
 
-5) Biến môi trường trước khi train:
+5) Đặt biến môi trường trước khi train:
 
 ```bash
 export HSA_OVERRIDE_GFX_VERSION=9.4.2  # Required for AMD MI300X
@@ -528,14 +589,14 @@ export HF_HUB_DISABLE_XET=1            # Fixes HuggingFace download issues on AM
 ```
 
 ::: warning Cạm bẫy AMD
-- bitsandbytes bản ≤ 0.49.2 có **lỗi NaN khi decode 4-bit trên mọi GPU AMD** — phải dùng bản pre-release ở trên.
-- `HSA_OVERRIDE_GFX_VERSION=9.4.2` bảo ROCm coi GPU là gfx942 (MI300X); thiếu nó một số kernel có thể không biên dịch/chạy được.
-- Flash Attention 2 không có trên AMD; Unsloth tự chuyển sang Xformers, cảnh báo có thể bỏ qua.
+- bitsandbytes bản ≤ 0.49.2 có **lỗi NaN khi decode 4-bit trên mọi GPU AMD**. Vì vậy phải dùng bản pre-release ở trên.
+- `HSA_OVERRIDE_GFX_VERSION=9.4.2` bảo ROCm coi GPU là gfx942 (MI300X). Thiếu biến này, một số kernel có thể không biên dịch hoặc không chạy được.
+- Flash Attention 2 không có trên AMD. Unsloth tự chuyển sang Xformers, nên bạn có thể bỏ qua cảnh báo về việc này.
 - Trên Windows, dùng Python 3.12 nếu cài extra `unsloth[rocm72-torch291]`.
 :::
 
 ::: warning Docs chưa thống nhất — ROCm 7.2+, bitsandbytes và extra AMD
-Tất cả trên cùng trang [install/amd](https://unsloth.ai/docs/get-started/install/amd):
+Ngay trong cùng trang [install/amd](https://unsloth.ai/docs/get-started/install/amd) có những câu mâu thuẫn nhau. Cột "Câu A" và "Câu B" là hai câu khác nhau trên trang đó:
 
 | Thông số | Câu A | Câu B |
 |---|---|---|
@@ -545,25 +606,32 @@ Tất cả trên cùng trang [install/amd](https://unsloth.ai/docs/get-started/i
 | Extra khi cài Unsloth | Mục Install PyTorch nhắc extra `unsloth[rocm72-torch291]` (Windows: "use 3.12" khi cài extra này) | Mục Install Unsloth dùng `uv pip install unsloth[amd]` |
 :::
 
-AMD còn có notebook one-click với GPU MI300X 192GB VRAM miễn phí qua AMD Dev Cloud (không cần đăng ký hay thẻ).
+AMD còn có notebook one-click trên AMD Dev Cloud. Notebook này cho dùng miễn phí GPU MI300X 192GB VRAM, không cần đăng ký hay thẻ.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/install/amd, https://unsloth.ai/docs/get-started/install/docker
 
 ## Intel
 
+Với GPU Intel, trang hướng dẫn Intel chỉ nói tới Core, và bạn cài Core bằng cách build từ source. Trên Windows cần thêm vài bước cấu hình runtime.
+
 ### Yêu cầu
 
 - GPU Intel: Data Center GPU Max Series, Arc Series, hoặc Intel Ultra AIPC.
-- OS: Linux (khuyến nghị Ubuntu 22.04+) hoặc Windows 11 (khuyến nghị).
-- Chỉ Windows: Intel oneAPI Base Toolkit 2025.2.1 (chọn đúng bản 2025.2.1).
-- Driver Intel Graphics mới nhất được khuyến nghị; Python 3.10+.
+- Hệ điều hành: Linux (khuyến nghị Ubuntu 22.04+) hoặc Windows 11 (khuyến nghị).
+- Chỉ trên Windows: Intel oneAPI Base Toolkit 2025.2.1. Chọn đúng bản 2025.2.1.
+- Driver: nên dùng driver Intel Graphics mới nhất.
+- Python: 3.10+.
 
 ### Cài Unsloth với hỗ trợ Intel (Core)
+
+Tạo và bật môi trường conda:
 
 ```bash
 conda create -n unsloth-xpu python==3.10
 conda activate unsloth-xpu
 ```
+
+Tải mã nguồn Unsloth và cài kèm extra cho GPU Intel:
 
 ```bash
 git clone https://github.com/unslothai/unsloth.git
@@ -571,17 +639,17 @@ cd unsloth
 pip install .[intel-gpu-torch290]
 ```
 
-Chỉ Linux: có thể cài thêm vLLM cho inference và RL theo hướng dẫn Intel XPU của vLLM.
+Chỉ trên Linux: bạn có thể cài thêm vLLM để dùng cho inference và RL. Làm theo hướng dẫn Intel XPU của vLLM.
 
 ### Cấu hình runtime chỉ cho Windows
 
-Trong Command Prompt quyền Administrator, bật long path (chỉ cần một lần mỗi máy):
+Mở Command Prompt với quyền Administrator và bật long path. Mỗi máy chỉ cần làm một lần:
 
 ```bash
 powershell -Command "Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem" -Name "LongPathsEnabled" -Value 1
 ```
 
-Tải và giải nén `level-zero-win-sdk-1.20.2.zip` từ GitHub (oneapi-src/level-zero, release v1.20.2), rồi trong Command Prompt, ở môi trường conda `unsloth-xpu`:
+Tiếp theo, tải và giải nén `level-zero-win-sdk-1.20.2.zip` từ GitHub (repo oneapi-src/level-zero, release v1.20.2). Sau đó mở Command Prompt, bật môi trường conda `unsloth-xpu` và chạy:
 
 ```bash
 call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat" -
@@ -590,29 +658,36 @@ set ZE_PATH=path\to\the\unzipped\level-zero-win-sdk-1.20.2
 
 ::: warning Lệnh trong docs có thể sai cú pháp
 Trên [install/intel](https://unsloth.ai/docs/get-started/install/intel):
-- Lệnh `powershell -Command "Set-ItemProperty -Path "HKLM:..." -Name "LongPathsEnabled" -Value 1` có ngoặc kép lồng trong ngoặc kép và không có ngoặc kép đóng ở cuối. **[Nhận định]** Copy nguyên văn có thể lỗi; cần kiểm tra lại cú pháp.
-- Dòng `call "...\oneAPI\setvars.bat" -` kết thúc bằng ` -`; nguồn không giải thích ý nghĩa.
+- Lệnh `powershell -Command "Set-ItemProperty -Path "HKLM:..." -Name "LongPathsEnabled" -Value 1` có ngoặc kép lồng trong ngoặc kép, và thiếu ngoặc kép đóng ở cuối. **[Nhận định]** Copy nguyên văn có thể lỗi; cần kiểm tra lại cú pháp.
+- Dòng `call "...\oneAPI\setvars.bat" -` kết thúc bằng ` -`. Nguồn không giải thích ý nghĩa của nó.
 :::
 
 ::: warning Cạm bẫy Intel
-- Intel Ultra AIPC trên Windows: bộ nhớ GPU dùng chung cho iGPU mặc định khoảng **57%** RAM hệ thống. Model lớn (ví dụ Qwen3-32B), context dài, batch lớn hoặc LoRA rank lớn có thể cần tăng tỷ lệ này qua registry: khóa `SystemPartitionCommitLimitPercentage` tại `Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\MemoryManager`.
-- OOM: giảm `per_device_train_batch_size`, dùng model nhỏ hơn, giảm `max_seq_length`, giảm LoRA rank (`r=8` thay vì 16/32), với GRPO giảm `num_generations`.
-- Phiên bản Python: trang Intel dùng 3.10 (conda), các trang khác ghi khác — xem hộp phiên bản Python ở mục "Bảng tóm tắt theo nền tảng".
+- Intel Ultra AIPC trên Windows: iGPU dùng chung bộ nhớ với hệ thống, mặc định khoảng **57%** RAM. Một số trường hợp có thể cần tăng tỷ lệ này: model lớn (ví dụ Qwen3-32B), context dài, batch lớn hoặc LoRA rank lớn. Bạn tăng qua registry, ở khóa `SystemPartitionCommitLimitPercentage` tại `Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\MemoryManager`.
+- Khi gặp OOM, bạn có thể: giảm `per_device_train_batch_size`, dùng model nhỏ hơn, giảm `max_seq_length`, giảm LoRA rank (`r=8` thay vì 16 hoặc 32). Với GRPO, giảm thêm `num_generations`.
+- Phiên bản Python: trang Intel dùng 3.10 (conda), các trang khác ghi khác. Xem hộp phiên bản Python ở mục "Bảng tóm tắt theo nền tảng".
 :::
 
 **Nguồn:** https://unsloth.ai/docs/get-started/install/intel, https://unsloth.ai/docs/get-started/install/windows-installation
 
 ## CPU-only
 
-- Studio hỗ trợ máy không có GPU cho **Chat với model GGUF** và **Data Recipes** (tạo dataset từ tài liệu); **Export** "coming very soon".
-- Yêu cầu giống Linux (trừ NVIDIA driver) và macOS.
-- Cài như Studio trên Linux/macOS (`install.sh`).
+Máy không có GPU vẫn dùng được Studio, nhưng chỉ cho một số việc:
+- **Chat với model GGUF**.
+- **Data Recipes** (tạo dataset từ tài liệu).
+- **Export**: docs ghi "coming very soon".
+
+Yêu cầu giống Linux (trừ NVIDIA driver) và macOS. Bạn cài như Studio trên Linux hoặc macOS, bằng `install.sh`.
 
 ::: info Không train trên CPU
-Nguồn chỉ nêu Chat + Data Recipes cho CPU, không nhắc tới training. Danh sách training chỉ gồm NVIDIA, AMD, Intel và Mac.
+Nguồn chỉ nêu Chat + Data Recipes cho CPU, không nhắc tới training. Danh sách thiết bị train được chỉ gồm NVIDIA, AMD, Intel và Mac.
 :::
 
-Tùy chọn cài liên quan: bỏ qua PyTorch (chế độ chỉ GGUF) bằng biến `UNSLOTH_NO_TORCH`; giới hạn số luồng CPU trên máy nhiều nhân bằng `UNSLOTH_CPU_THREADS` (ví dụ `UNSLOTH_CPU_THREADS=8 unsloth studio -p 8888`). **[Nhận định]** Nguồn không nói chế độ GGUF-only dành riêng cho CPU.
+Có hai biến môi trường liên quan khi cài và chạy:
+- `UNSLOTH_NO_TORCH`: bỏ qua PyTorch, tức chế độ chỉ dùng GGUF. **[Nhận định]** Nguồn không nói chế độ GGUF-only dành riêng cho CPU.
+- `UNSLOTH_CPU_THREADS`: giới hạn số luồng CPU trên máy nhiều nhân, ví dụ `UNSLOTH_CPU_THREADS=8 unsloth studio -p 8888`.
+
+Lệnh cài với `UNSLOTH_NO_TORCH` trên Linux hoặc macOS, rồi trên Windows:
 
 ```bash
 curl -fsSL https://unsloth.ai/install.sh | UNSLOTH_NO_TORCH=1 sh
@@ -626,11 +701,17 @@ $env:UNSLOTH_NO_TORCH=1; irm https://unsloth.ai/install.ps1 | iex
 
 ## Docker
 
-Image chính thức: `unsloth/unsloth` (NVIDIA) và `unsloth/unsloth-rocm` (AMD). Container (môi trường đóng gói sẵn mọi dependency) đã có Unsloth Studio (cổng 8000) và JupyterLab (cổng 8888). Từ tháng 9/2026 image đã cập nhật Studio và AMD. Với Blackwell/RTX 50 dùng cùng image `unsloth/unsloth`.
+Docker cho bạn chạy Unsloth trong một container, tức môi trường đóng gói sẵn mọi dependency. Nhờ vậy bạn không phải tự xử lý dependency trên máy.
+
+Có hai image chính thức:
+- `unsloth/unsloth` cho GPU NVIDIA. Blackwell và RTX 50 cũng dùng image này.
+- `unsloth/unsloth-rocm` cho GPU AMD.
+
+Container đã có sẵn Unsloth Studio (cổng 8000) và JupyterLab (cổng 8888). Từ tháng 9/2026, image đã cập nhật Studio và AMD.
 
 ### NVIDIA — terminal (bash)
 
-Yêu cầu: NVIDIA driver **570.26 trở lên**. Chạy từ thư mục dự án (thư mục đó thành `/workspace/host`):
+Yêu cầu: NVIDIA driver **570.26 trở lên**. Chạy lệnh từ thư mục dự án; bên trong container, thư mục đó sẽ là `/workspace/host`:
 
 ```bash
 docker run -d --name unsloth --gpus all --ipc=host \
@@ -645,6 +726,8 @@ docker run -d --name unsloth --gpus all --ipc=host \
 
 ### NVIDIA — PowerShell
 
+Cùng lệnh trên, viết cho PowerShell:
+
 ```powershell
 docker run -d --name unsloth --gpus all --ipc=host `
   --ulimit memlock=-1 --ulimit stack=67108864 `
@@ -658,6 +741,8 @@ docker run -d --name unsloth --gpus all --ipc=host `
 
 ### Chuẩn bị
 
+Trước khi chạy các lệnh trên, máy cần có Docker và cách để container dùng GPU NVIDIA.
+
 Cài Docker (Linux):
 
 ```bash
@@ -670,11 +755,18 @@ NVIDIA Container Toolkit (Linux):
 curl -fsSL https://raw.githubusercontent.com/unslothai/unsloth/main/docker/install_nvidia_toolkit.sh -o install_nvidia_toolkit.sh && sudo -E bash install_nvidia_toolkit.sh
 ```
 
-Windows: cài Docker Desktop + NVIDIA driver mới nhất, chạy `wsl --update`, bật **Use the WSL 2 based engine** trong Docker Desktop. **Không cần** cài NVIDIA Container Toolkit riêng.
+Trên Windows:
+1. Cài Docker Desktop và NVIDIA driver mới nhất.
+2. Chạy `wsl --update`.
+3. Trong Docker Desktop, bật **Use the WSL 2 based engine**.
+
+Trên Windows, trang Docker ghi **không cần** cài NVIDIA Container Toolkit riêng.
 
 ### AMD — Linux
 
-Yêu cầu: driver `amdgpu` hoạt động; image build với ROCm 7.2, hỗ trợ RDNA1 trở lên và CDNA. Không cần container toolkit.
+Yêu cầu: driver `amdgpu` phải hoạt động. Image được build với ROCm 7.2, hỗ trợ RDNA1 trở lên và CDNA. Bạn không cần container toolkit.
+
+Đoạn đầu của lệnh dưới tự gom các thiết bị GPU và nhóm quyền cần thiết vào biến `GPU_FLAGS`, rồi mới chạy container:
 
 ```bash
 GPU_FLAGS="--device /dev/kfd"
@@ -696,7 +788,7 @@ docker run -d --name unsloth \
 ```
 
 ::: details AMD — trong WSL2 và PowerShell
-WSL2 không có `/dev/kfd` nên GPU được truyền qua `/dev/dxg`. Chạy bên trong distro WSL2 (ví dụ `wsl -d Ubuntu`); yêu cầu driver AMD cho Windows có hỗ trợ WSL2.
+WSL2 không có `/dev/kfd`, nên GPU được truyền vào container qua `/dev/dxg`. Chạy lệnh bên trong distro WSL2, ví dụ `wsl -d Ubuntu`. Máy cần driver AMD cho Windows có hỗ trợ WSL2.
 
 ```bash
 docker run -d --name unsloth --device /dev/dxg --ipc=host \
@@ -731,22 +823,25 @@ docker run -d --name unsloth --device /dev/dxg --ipc=host `
 
 ### Sau khi chạy container
 
-- Xem mật khẩu: `docker logs -f unsloth`, tìm dòng **Unsloth container ready**.
-- Studio: `http://localhost:8000`, đăng nhập user `unsloth`. JupyterLab: `http://localhost:8888` với `JUPYTER_PASSWORD`.
-- Quên mật khẩu Studio: `docker exec unsloth unsloth studio reset-password --username unsloth`.
-- Cập nhật: `docker pull unsloth/unsloth` (hoặc `unsloth/unsloth-rocm`), `docker rm -f unsloth`, rồi chạy lại lệnh Quickstart với cùng cờ `-v`. Model, file và dữ liệu Studio được giữ.
+- Xem mật khẩu: chạy `docker logs -f unsloth` và tìm dòng **Unsloth container ready**.
+- Mở Studio: vào `http://localhost:8000`, đăng nhập bằng user `unsloth`.
+- Mở JupyterLab: vào `http://localhost:8888`, dùng mật khẩu đã đặt trong `JUPYTER_PASSWORD`.
+- Quên mật khẩu Studio: chạy `docker exec unsloth unsloth studio reset-password --username unsloth`.
+- Cập nhật: chạy `docker pull unsloth/unsloth` (hoặc `unsloth/unsloth-rocm`), rồi `docker rm -f unsloth`. Sau đó chạy lại lệnh Quickstart với cùng các cờ `-v`. Model, file và dữ liệu Studio vẫn được giữ.
 
 ::: warning Cạm bẫy Docker
-- Studio và JupyterLab **dùng chung GPU**; model đã load trong Studio giữ VRAM cho tới khi unload. Unload trước khi train trong notebook.
-- Lưu kết quả dưới `/workspace/host`; thứ gì ghi ngoài volume sẽ mất khi xóa container.
-- Dùng **named volume** cho `/opt/unsloth-studio`, không dùng thư mục host: Studio cần symlink, host Windows/macOS có thể không cho, làm container dừng khi khởi động.
-- Studio tự tắt sau 3600 giây (`UNSLOTH_STUDIO_BOOTSTRAP_TIMEOUT`) nếu chưa đổi mật khẩu tự sinh; chạy `docker restart unsloth` rồi đổi mật khẩu.
-- Cổng bị chiếm: đổi phía host, ví dụ `-p 8001:8000`.
-- Container chạy bằng root; cần file thuộc user host thì dùng `unsloth/unsloth:core` với `--user`.
-- Cổng publish lắng nghe mọi interface, Studio/JupyterLab dùng HTTP thường. Trên cloud, bind `127.0.0.1` hoặc `-e UNSLOTH_STUDIO_SECURE=1`; truy cập từ xa qua `ssh -L 8000:localhost:8000 -L 8888:localhost:8888 user@your-server`.
+- Studio và JupyterLab **dùng chung GPU**. Model đã load trong Studio giữ VRAM cho tới khi bạn unload. Hãy unload trước khi train trong notebook.
+- Lưu kết quả dưới `/workspace/host`. Thứ gì ghi ra ngoài volume sẽ mất khi xóa container.
+- Dùng **named volume** cho `/opt/unsloth-studio`, không dùng thư mục host. Lý do: Studio cần tạo symlink, mà host Windows hoặc macOS có thể không cho phép, làm container dừng ngay khi khởi động.
+- Nếu chưa đổi mật khẩu tự sinh, Studio tự tắt sau 3600 giây (`UNSLOTH_STUDIO_BOOTSTRAP_TIMEOUT`). Khi đó chạy `docker restart unsloth` rồi đổi mật khẩu.
+- Cổng bị chiếm: đổi cổng phía host, ví dụ `-p 8001:8000`.
+- Container chạy bằng root. Nếu cần file thuộc về user trên máy host, dùng `unsloth/unsloth:core` với `--user`.
+- Cổng publish lắng nghe trên mọi interface, và Studio cùng JupyterLab dùng HTTP thường. Trên cloud, hãy bind `127.0.0.1` hoặc đặt `-e UNSLOTH_STUDIO_SECURE=1`. Để truy cập từ xa, dùng `ssh -L 8000:localhost:8000 -L 8888:localhost:8888 user@your-server`.
 :::
 
 ::: warning Docs chưa thống nhất — lệnh và yêu cầu Docker
+Ba trang đưa ra ba lệnh Docker khác nhau về cổng, thư mục mount và cờ. Hướng dẫn ở trên theo trang [install/docker](https://unsloth.ai/docs/get-started/install/docker):
+
 | Thông số | [install/windows-installation](https://unsloth.ai/docs/get-started/install/windows-installation) (Method #2) | [new/studio/install](https://unsloth.ai/docs/new/studio/install) (mục Docker) | [install/docker](https://unsloth.ai/docs/get-started/install/docker) |
 |---|---|---|---|
 | NVIDIA Container Toolkit trên Windows | Cài bằng `apt-get` với `NVIDIA_CONTAINER_TOOLKIT_VERSION=1.17.8-1` | — | "No separate NVIDIA Container Toolkit installation is needed" (Windows); Linux dùng script `install_nvidia_toolkit.sh` |
@@ -770,7 +865,9 @@ docker run -d --name unsloth --device /dev/dxg --ipc=host `
 
 ## pip & uv: cài Unsloth Core bằng code
 
-uv là trình quản lý gói Python nhanh, thay pip. Cài uv:
+Mục này dành cho người muốn dùng Unsloth Core trong code Python của mình. Bạn cài Core như một thư viện Python bình thường, bằng pip hoặc uv. uv là trình quản lý gói Python nhanh, dùng thay pip.
+
+Cài uv (khối đầu cho Linux và macOS, khối sau cho Windows PowerShell):
 
 ```shellscript
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -788,26 +885,26 @@ source unsloth_env/bin/activate
 uv pip install unsloth --torch-backend=auto
 ```
 
-Hoặc chỉ pip:
+Hoặc chỉ dùng pip:
 
 ```bash
 pip install unsloth
 ```
 
-Kèm vLLM (engine inference hiệu năng cao):
+Cài kèm vLLM (engine inference hiệu năng cao):
 
 ```bash
 uv pip install unsloth vllm --torch-backend=auto
 ```
 
-Bản mới nhất từ nhánh main:
+Cài bản mới nhất từ nhánh main:
 
 ```bash
 uv pip install unsloth --torch-backend=auto
 pip uninstall unsloth unsloth_zoo -y && pip install --no-deps git+https://github.com/unslothai/unsloth_zoo.git && pip install --no-deps git+https://github.com/unslothai/unsloth.git
 ```
 
-Cô lập bằng venv để không làm hỏng gói hệ thống:
+Để không làm hỏng các gói Python của hệ thống, bạn nên cô lập Unsloth trong một venv:
 
 ```bash
 apt install python3.10-venv python3.11-venv python3.12-venv python3.13-venv -y
@@ -817,9 +914,9 @@ pip install --upgrade pip && pip install uv
 uv pip install unsloth --torch-backend=auto
 ```
 
-Trong Jupyter/Colab, thêm tiền tố `!` trước lệnh. Nếu đã có torch/transformers khác phiên bản, `pip install unsloth` tự cài bản mới nhất của các thư viện đó.
+Trong Jupyter hoặc Colab, thêm tiền tố `!` trước lệnh. Nếu máy đã có torch hoặc transformers ở phiên bản khác, `pip install unsloth` sẽ tự cài bản mới nhất của các thư viện đó.
 
-Còn lỗi dependency: ép cài lại:
+Nếu vẫn còn lỗi dependency, ép cài lại:
 
 ```bash
 pip install --upgrade --force-reinstall --no-cache-dir --no-deps unsloth
@@ -827,21 +924,21 @@ pip install --upgrade --force-reinstall --no-cache-dir --no-deps unsloth_zoo
 ```
 
 ::: details Cài pip nâng cao theo torch/CUDA (không dùng nếu có Conda)
-Lệnh thay đổi theo phiên bản torch và CUDA. Ví dụ torch 2.4 + CUDA 12.1:
+Lệnh thay đổi theo phiên bản torch và CUDA trên máy bạn. Ví dụ với torch 2.4 và CUDA 12.1:
 
 ```bash
 pip install --upgrade pip
 pip install "unsloth[cu121-torch240] @ git+https://github.com/unslothai/unsloth.git"
 ```
 
-torch 2.5 + CUDA 12.4:
+Với torch 2.5 và CUDA 12.4:
 
 ```bash
 pip install --upgrade pip
 pip install "unsloth[cu124-torch250] @ git+https://github.com/unslothai/unsloth.git"
 ```
 
-GPU Ampere (A100, H100, RTX3090) trở lên dùng biến thể `-ampere`. Lệnh in ra câu pip tối ưu cho máy:
+GPU Ampere (A100, H100, RTX3090) trở lên dùng biến thể `-ampere`. Nếu không chắc chọn lệnh nào, chạy lệnh dưới; nó in ra câu lệnh pip tối ưu cho máy bạn:
 
 ```bash
 wget -qO- https://raw.githubusercontent.com/unslothai/unsloth/main/unsloth/_auto_install.py | python -
@@ -849,7 +946,7 @@ wget -qO- https://raw.githubusercontent.com/unslothai/unsloth/main/unsloth/_auto
 :::
 
 ::: warning Docs chưa thống nhất — CUDA/torch cho cài pip nâng cao
-Cả hai trên cùng trang [install/pip-install](https://unsloth.ai/docs/get-started/install/pip-install):
+Trên cùng trang [install/pip-install](https://unsloth.ai/docs/get-started/install/pip-install), phần văn bản và script dò tự động hỗ trợ các bản CUDA, torch khác nhau:
 
 | Thông số | Văn bản "Advanced Pip Installation" | Script dò tự động (`_auto_install.py` / đoạn Python REPL) |
 |---|---|---|
@@ -877,12 +974,20 @@ Cả hai trên cùng trang [install/pip-install](https://unsloth.ai/docs/get-sta
 
 ## Google Colab
 
-- Colab cho GPU T4 miễn phí. Trong notebook, bấm nút Play từng cell theo thứ tự, không bỏ cell; hoặc **Runtime → Run all** để chạy hết. Cell đầu tiên cài Unsloth từ GitHub và các gói phụ thuộc.
-- Có notebook Colab miễn phí cho **Unsloth Studio**: https://colab.research.google.com/github/unslothai/unsloth/blob/main/studio/Unsloth_Studio_Colab.ipynb — train và chạy hầu hết model tới **22B tham số** trên T4; model lớn hơn thì đổi GPU lớn hơn. Bấm "Run all", cuộn tới **Start Unsloth Studio** → **Open Unsloth Studio**.
+Colab cho dùng GPU T4 miễn phí. **[Nhận định]** Vì vậy đây là cách thử Unsloth khi máy bạn không có GPU phù hợp, mà không cần cài gì trên máy.
+
+**Chạy notebook Unsloth:**
+- Bấm nút Play ở từng cell theo thứ tự, không bỏ cell nào. Hoặc chọn **Runtime → Run all** để chạy hết.
+- Cell đầu tiên cài Unsloth từ GitHub cùng các gói phụ thuộc.
+
+**Chạy Unsloth Studio trên Colab:**
+- Có notebook Colab miễn phí cho **Unsloth Studio**: https://colab.research.google.com/github/unslothai/unsloth/blob/main/studio/Unsloth_Studio_Colab.ipynb
+- Trên T4, notebook này train và chạy được hầu hết model tới **22B tham số**. Model lớn hơn thì cần đổi sang GPU lớn hơn.
+- Cách mở: bấm "Run all", cuộn tới **Start Unsloth Studio** rồi bấm **Open Unsloth Studio**.
 
 ::: warning Lưu ý Colab
-- Link mở Studio có thể báo lỗi nếu tắt cookie, dùng adblocker hoặc dùng Mozilla; vẫn có thể cuộn xuống dưới nút để thấy UI.
-- Colab có thể tắt phiên GPU nếu phát hiện bạn không hoạt động trên trang.
+- Link mở Studio có thể báo lỗi nếu bạn tắt cookie, dùng adblocker hoặc dùng Mozilla. Khi đó bạn vẫn có thể cuộn xuống dưới nút để thấy giao diện.
+- Colab có thể tắt phiên GPU nếu thấy bạn không hoạt động trên trang.
 :::
 
 ::: details Ví dụ code Colab (fine-tune gpt-oss-20b)
@@ -955,24 +1060,24 @@ trainer.train()
 ```
 :::
 
-Giải thích từng tham số trong code trên: xem [Fine-tuning](/fine-tuning).
+Ý nghĩa từng tham số trong code trên được giải thích ở trang [Fine-tuning](/fine-tuning).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/install/google-colab, https://unsloth.ai/docs/new/studio/install
 
 ## Cập nhật
 
+Mỗi sản phẩm có cách cập nhật riêng. Desktop cập nhật độc lập với Studio và Core cài thủ công, nên bạn cần cập nhật từng cái mình đang dùng.
+
 ### Desktop
 
-Tự kiểm tra cập nhật khi khởi động; kiểm tra tay ở **Settings → General → Check for updates**.
-- macOS, Windows: chọn **Update now**, app tự cài và mở lại.
-- Linux AppImage: cập nhật trong app được.
-- Linux `.deb`: tải gói mới từ trang download Linux và cài đè; không tự cập nhật.
-
-Desktop cập nhật độc lập với Studio và Core cài thủ công.
+Desktop tự kiểm tra cập nhật mỗi khi khởi động. Bạn cũng có thể kiểm tra tay ở **Settings → General → Check for updates**.
+- macOS, Windows: chọn **Update now**. App tự cài bản mới và mở lại.
+- Linux AppImage: cập nhật được ngay trong app.
+- Linux `.deb`: không tự cập nhật. Bạn tải gói mới từ trang download Linux và cài đè lên.
 
 ### Studio
 
-Chạy lại chính lệnh cài:
+Chạy lại chính lệnh cài. Khối đầu cho Linux và macOS, khối sau cho Windows:
 
 ```bash
 curl -fsSL https://unsloth.ai/install.sh | sh
@@ -982,9 +1087,11 @@ curl -fsSL https://unsloth.ai/install.sh | sh
 irm https://unsloth.ai/install.ps1 | iex
 ```
 
-Bản developer (cài từ repo) thì `git pull` rồi chạy lại `./install.sh --local`.
+Với bản developer (cài từ repo), chạy `git pull` rồi chạy lại `./install.sh --local`.
 
 ### Core
+
+Cập nhật Unsloth và thư viện đi kèm `unsloth_zoo`:
 
 ```bash
 pip install --upgrade unsloth unsloth_zoo
@@ -997,7 +1104,7 @@ pip install --upgrade --force-reinstall --no-cache-dir --no-deps unsloth
 pip install --upgrade --force-reinstall --no-cache-dir --no-deps unsloth_zoo
 ```
 
-Quay về phiên bản cũ (thay `2025.1.5` bằng release trên GitHub):
+Để quay về phiên bản cũ, dùng lệnh dưới và thay `2025.1.5` bằng số phiên bản của release trên GitHub:
 
 ```bash
 pip install --force-reinstall --no-cache-dir --no-deps unsloth==2025.1.5
@@ -1011,11 +1118,15 @@ Xem phần "Sau khi chạy container" ở mục [Docker](#docker).
 
 ## Kiểm tra sau khi cài
 
-**Studio:** mở `http://127.0.0.1:8888` (Docker: `http://localhost:8000`). Lần đầu sẽ chuyển tới trang tạo mật khẩu (`/change-password`), sau đó vào trang Chat.
+Mục này gom các lệnh để bạn xác nhận từng phần đã cài đúng: Studio, GPU, PyTorch và các thư viện phụ.
 
-**GPU NVIDIA:** chạy `nvidia-smi`; nếu không có lệnh hoặc không hiện bảng, cài lại NVIDIA driver. Trong Docker: `docker exec unsloth nvidia-smi`. AMD trong Docker: `docker exec unsloth rocm-smi` (lỗi quyền trên `/dev/kfd` nghĩa là thiếu các id `--group-add`).
+**Studio:** mở `http://127.0.0.1:8888`. Nếu dùng Docker thì mở `http://localhost:8000`. Lần đầu, trình duyệt chuyển tới trang tạo mật khẩu (`/change-password`), sau đó vào trang Chat.
 
-**PyTorch + CUDA (Core):** chạy trong `python`, kết quả phải là `True` và một ma trận toàn số 10:
+**GPU NVIDIA:** chạy `nvidia-smi`. Nếu không có lệnh này hoặc không hiện bảng, cài lại NVIDIA driver.
+- Trong Docker: `docker exec unsloth nvidia-smi`.
+- AMD trong Docker: `docker exec unsloth rocm-smi`. Nếu báo lỗi quyền trên `/dev/kfd`, nghĩa là lệnh chạy container thiếu các id `--group-add`.
+
+**PyTorch + CUDA (Core):** chạy đoạn code sau trong `python`. Kết quả đúng là `True` và một ma trận toàn số 10:
 
 ```python
 import torch
@@ -1035,7 +1146,7 @@ print(f"XPU device count: {torch.xpu.device_count()}")
 print(f"XPU device name: {torch.xpu.get_device_name(0)}")
 ```
 
-**Thư viện phụ:** `python -m xformers.info`, `python -m bitsandbytes`, `nvcc --version`.
+**Thư viện phụ:** kiểm tra bằng `python -m xformers.info`, `python -m bitsandbytes` và `nvcc --version`.
 
 ::: details Script train thử Unsloth (từ trang Windows)
 ```python
@@ -1095,10 +1206,12 @@ trainer = SFTTrainer(
 trainer.train()
 ```
 
-Khi chạy đúng, log in banner `🦥 Unsloth: Will patch your computer to enable 2x faster free finetuning.` kèm thông tin GPU, phiên bản Torch/CUDA/Triton, rồi bắt đầu train. Ví dụ trong docs: RTX 3060 12 GB, Torch 2.10.0+cu130, Platform: Windows.
+Khi chạy đúng, log in ra banner `🦥 Unsloth: Will patch your computer to enable 2x faster free finetuning.`. Kèm theo là thông tin GPU và phiên bản Torch, CUDA, Triton. Sau đó quá trình train bắt đầu. Ví dụ trong docs: RTX 3060 12 GB, Torch 2.10.0+cu130, Platform: Windows.
 :::
 
 ::: warning Docs chưa thống nhất — bảo mật khi mở Studio ra ngoài
+Các trang hướng dẫn cài đều dùng lệnh mở Studio cho cả mạng. Trang Studio chính và trang Docker lại khuyên hạn chế truy cập từ ngoài:
+
 | Nguồn | Nội dung |
 |---|---|
 | [install/windows-installation](https://unsloth.ai/docs/get-started/install/windows-installation), [install/mac](https://unsloth.ai/docs/get-started/install/mac), [install/linux](https://unsloth.ai/docs/get-started/install/linux), [install/pip-install](https://unsloth.ai/docs/get-started/install/pip-install) | Lệnh chạy trong hướng dẫn: `unsloth studio -H 0.0.0.0 -p 8888` |
