@@ -140,17 +140,19 @@ const pct = (x: number) => (result.value.total > 0 ? (x / result.value.total) * 
           </tr>
         </tbody>
       </table>
-      <p class="note">[Ước tính] Không phải số đo. Bộ nhớ thực tế phụ thuộc model, engine và cấu hình.</p>
+      <p class="note"><span class="mark mark-uoc-tinh">Ước tính</span> Không phải số đo. Bộ nhớ thực tế phụ thuộc model, engine và cấu hình.</p>
     </div>
   </div>
 </template>
 
 <style scoped>
 .vram {
+  font-family: var(--font-ui);
   border: 1px solid var(--vp-c-divider);
-  border-radius: 12px;
-  padding: 16px;
-  margin: 16px 0;
+  border-top: 2px solid var(--ink);
+  border-radius: 0 0 4px 4px;
+  padding: 18px 18px 16px;
+  margin: 20px 0;
   background: var(--vp-c-bg-soft);
 }
 .grid {
@@ -168,8 +170,9 @@ label {
 input,
 select {
   border: 1px solid var(--vp-c-divider);
-  border-radius: 6px;
+  border-radius: 3px;
   padding: 6px 8px;
+  font-family: var(--font-ui);
   font-size: 14px;
   color: var(--vp-c-text-1);
   background: var(--vp-c-bg);
@@ -184,7 +187,8 @@ select:disabled {
 }
 .arch summary {
   cursor: pointer;
-  color: var(--vp-c-brand-1);
+  color: var(--ink-2);
+  font-weight: 600;
   margin-bottom: 8px;
 }
 .src {
@@ -200,8 +204,11 @@ select:disabled {
   gap: 12px;
 }
 .total strong {
-  font-size: 28px;
-  color: var(--vp-c-brand-1);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 .bar {
   display: flex;
@@ -232,11 +239,15 @@ select:disabled {
   border-radius: 2px;
   margin-right: 8px;
 }
-.seg-weights { background: #e30613; }
-.seg-kv { background: #f59e0b; }
-.seg-train { background: #8b5cf6; }
-.seg-act { background: #0ea5e9; }
-.seg-over { background: #9ca3af; }
+/* Dải slate đơn sắc: không trùng màu của hệ nhãn nguồn gốc */
+.seg-weights { background: var(--ink); }
+.seg-kv { background: #5d6f93; }
+.seg-train { background: #5d6f93; }
+.seg-act { background: #9aa8c2; }
+.seg-over { background: #cfd5e0; }
+.dark .seg-kv, .dark .seg-train { background: #8fa0c2; }
+.dark .seg-act { background: #5d6f93; }
+.dark .seg-over { background: #3a4150; }
 .note {
   font-size: 12px;
   color: var(--vp-c-text-2);

@@ -1,45 +1,7 @@
 ---
 layout: home
 title: "Unsloth Research"
-description: "Nghiên cứu Unsloth bằng tiếng Việt: chạy, fine-tune và triển khai LLM trên phần cứng của bạn."
-
-hero:
-  name: "Unsloth Research"
-  text: "Chạy và huấn luyện LLM ngay trên máy của bạn"
-  tagline: "Unsloth là framework mã nguồn mở để chạy (inference) và huấn luyện (training) LLM trên phần cứng local, có giao diện Desktop, Studio và thư viện Python Core."
-  actions:
-    - theme: brand
-      text: "Bắt đầu với Unsloth"
-      link: /tong-quan
-    - theme: alt
-      text: "Kiến thức nền LLM"
-      link: /kien-thuc-nen/
-
-features:
-  - title: "Tổng quan kiến trúc"
-    details: "Ba dạng sản phẩm Desktop, Studio, Core; CLI unsloth và API tương thích OpenAI/Anthropic."
-    link: /tong-quan
-    linkText: "Xem kiến trúc"
-  - title: "Lộ trình học 5 bước"
-    details: "Từ đọc kiến thức nền, cài đặt, chạy model đến fine-tune và export."
-    link: /lo-trinh-hoc
-    linkText: "Xem lộ trình"
-  - title: "Cài đặt & phần cứng"
-    details: "App Desktop cho macOS, Windows, Linux; Studio cài bằng script; Core cài bằng uv/pip."
-    link: /cai-dat
-    linkText: "Cài đặt"
-  - title: "Inference & API"
-    details: "Chạy GGUF, safetensors; phục vụ model qua endpoint /v1/chat/completions và /v1/messages."
-    link: /inference
-    linkText: "Chạy model"
-  - title: "Fine-tuning"
-    details: "QLoRA, LoRA, full fine-tuning; docs ghi nhận nhanh hơn 2 lần và ít hơn 70% VRAM."
-    link: /fine-tuning
-    linkText: "Huấn luyện"
-  - title: "Export & deploy"
-    details: "Xuất model sang GGUF, safetensors hoặc LoRA để dùng với llama.cpp, Ollama, vLLM."
-    link: /export-deploy
-    linkText: "Triển khai"
+description: "Nghiên cứu Unsloth bằng tiếng Việt: chạy, fine-tune và triển khai LLM trên phần cứng của bạn, kèm nguồn cho từng thông số."
 ---
 
 ## Unsloth là gì
@@ -104,22 +66,3 @@ Nền tảng theo docs: macOS, Windows, Linux, WSL; GPU NVIDIA, AMD, Intel, Mac 
 **[Nhận định]** Website này viết cho người đã biết Python/FastAPI nhưng mới với AI: phần "Unsloth" tập trung vào thao tác, còn khái niệm (token, LoRA, quantization...) được tách sang route Kiến thức nền.
 
 **Nguồn:** https://unsloth.ai/docs/desktop, https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners, https://github.com/unslothai/unsloth
-
-## Cách dùng website này
-
-Website có hai route, chuyển qua thanh điều hướng trên cùng:
-
-| Route | Nội dung | Khi nào đọc |
-| --- | --- | --- |
-| **Unsloth** (`/`) | Kiến trúc, cài đặt, inference & API, model catalog, fine-tuning, RL, dữ liệu, export, ứng dụng RAG, thuật ngữ, nguồn | Khi thao tác với Unsloth |
-| **Kiến thức nền LLM** (`/kien-thuc-nen/`) | Token, kiến trúc Transformer, dense/MoE, bộ nhớ, lượng tử hóa, quá trình huấn luyện, LoRA, RL, sampling | Trước khi cài đặt, trước khi chạy inference, trước khi fine-tune |
-
-Thứ tự đọc gợi ý:
-
-1. [Tổng quan kiến trúc](/tong-quan): nắm ba dạng Desktop, Studio, Core và cách chúng nối với CLI, API.
-2. [Lộ trình học](/lo-trinh-hoc): năm bước, mỗi bước chỉ rõ trang Kiến thức nền cần đọc trước.
-3. Các trang chi tiết theo thanh bên trái.
-
-Mọi thông số trên website lấy từ docs chính thức của Unsloth; mỗi mục có dòng **Nguồn**. Câu gắn **[Nhận định]** là ý kiến người viết. Danh sách đầy đủ: [Nguồn tham khảo](/nguon).
-
-**Nguồn:** https://unsloth.ai/docs, https://github.com/unslothai/unsloth

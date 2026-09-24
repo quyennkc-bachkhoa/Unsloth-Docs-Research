@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { withMermaid } from 'vitepress-plugin-mermaid'
+import { researchMarks } from './researchMarks'
 
 const unslothSidebar = [
   {
@@ -87,8 +88,22 @@ export default withMermaid(
     lastUpdated: true,
     appearance: true,
     vite: { build: { chunkSizeWarningLimit: 4000 } },
-    head: [['meta', { name: 'theme-color', content: '#E30613' }]],
+    head: [
+      ['meta', { name: 'theme-color', content: '#E30613' }],
+      ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+      ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
+      [
+        'link',
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap'
+        }
+      ]
+    ],
     markdown: {
+      config: (md) => {
+        md.use(researchMarks)
+      },
       container: {
         tipLabel: 'Mẹo',
         warningLabel: 'Cảnh báo',

@@ -1,20 +1,322 @@
+/* ------------------------------------------------------------------
+   Unsloth Research: hồ sơ thẩm định docs.
+   Điểm nhấn duy nhất là hệ thống nhãn nguồn gốc thông tin; mọi thứ khác giữ yên.
+   ------------------------------------------------------------------ */
+
 :root {
+  /* Mực và giấy */
+  --ink: #1c2230;
+  --ink-2: #4a5263;
+  --ink-3: #7a8294;
+  --rule: #dfe2e8;
+  --paper: #ffffff;
+  --paper-2: #f5f6f8;
+
+  /* Hệ thống nhãn */
+  --mark-docs: #1c2230;
+  --mark-ext: #2b5c8a;
+  --mark-opinion: #9a5b00;
+  --mark-estimate: #1f7a5a;
+  --mark-conflict: #c4050f;
+
+  --font-ui: 'Be Vietnam Pro', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Source Serif 4', 'Noto Serif', Georgia, serif;
+
+  --vp-font-family-base: var(--font-ui);
+  --vp-c-text-1: var(--ink);
+  --vp-c-text-2: var(--ink-2);
+  --vp-c-text-3: var(--ink-3);
+  --vp-c-divider: var(--rule);
+  --vp-c-bg: var(--paper);
+  --vp-c-bg-alt: var(--paper-2);
+  --vp-c-bg-soft: var(--paper-2);
+
+  /* Đỏ Unsloth: chỉ cho link, trạng thái đang chọn và mâu thuẫn */
   --vp-c-brand-1: #e30613;
   --vp-c-brand-2: #c10510;
   --vp-c-brand-3: #a0040d;
-  --vp-c-brand-soft: rgba(227, 6, 19, 0.12);
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient(120deg, #e30613 30%, #ff7a45);
+  --vp-c-brand-soft: rgba(227, 6, 19, 0.1);
+
+  /* Code inline: màu mực, không dùng đỏ để giữ đỏ cho link và mâu thuẫn */
+  --vp-code-color: #2d3446;
+  --vp-code-bg: #eef0f4;
 }
 
 .dark {
-  --vp-c-brand-1: #ff4d57;
+  --ink: #e6e8ee;
+  --ink-2: #b3b9c6;
+  --ink-3: #8a91a0;
+  --rule: #2c313c;
+  --paper: #16191f;
+  --paper-2: #1d2129;
+
+  --mark-docs: #e6e8ee;
+  --mark-ext: #7fb0de;
+  --mark-opinion: #e3a64a;
+  --mark-estimate: #5cc49c;
+  --mark-conflict: #ff5b63;
+
+  --vp-c-brand-1: #ff5b63;
   --vp-c-brand-2: #e30613;
   --vp-c-brand-3: #c10510;
-  --vp-c-brand-soft: rgba(255, 77, 87, 0.16);
+  --vp-c-brand-soft: rgba(255, 91, 99, 0.14);
+
+  --vp-code-color: #d5d9e2;
+  --vp-code-bg: #242935;
 }
+
+/* ---------- Chữ ---------- */
+
+.vp-doc {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.75;
+  font-optical-sizing: auto;
+}
+
+.vp-doc p,
+.vp-doc li {
+  line-height: 1.75;
+}
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4,
+.vp-doc table,
+.vp-doc .custom-block,
+.vp-doc .src-line,
+.vp-doc figcaption {
+  font-family: var(--font-ui);
+}
+
+.vp-doc h1 {
+  font-size: 34px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.vp-doc h2 {
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+
+.vp-doc h3 {
+  font-size: 19px;
+  line-height: 1.4;
+  font-weight: 600;
+  margin-top: 36px;
+}
+
+.vp-doc strong {
+  font-weight: 600;
+}
+
+.vp-doc :not(pre) > code {
+  font-size: 0.84em;
+}
+
+/* ---------- Bảng: đọc như bảng số liệu ---------- */
 
 .vp-doc table {
   display: block;
   overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+  border-collapse: collapse;
+}
+
+.vp-doc tr {
+  background: transparent;
+  border-top: none;
+}
+
+.vp-doc tr:nth-child(2n) {
+  background: transparent;
+}
+
+.vp-doc th,
+.vp-doc td {
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  padding: 9px 14px 9px 0;
+  vertical-align: top;
+}
+
+.vp-doc th {
+  background: transparent;
+  color: var(--ink);
+  font-weight: 600;
+  border-bottom: 2px solid var(--ink);
+}
+
+.vp-doc td:first-child,
+.vp-doc th:first-child {
+  padding-left: 0;
+}
+
+/* ---------- Hệ thống nhãn nguồn gốc ---------- */
+
+.vp-doc .mark {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 0.72em;
+  font-weight: 600;
+  line-height: 1;
+  padding: 3px 7px 4px;
+  margin-right: 2px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  vertical-align: 0.12em;
+  white-space: nowrap;
+}
+
+.vp-doc .mark-nhan-dinh {
+  color: var(--mark-opinion);
+}
+
+.vp-doc .mark-nguon-ngoai {
+  color: var(--mark-ext);
+}
+
+.vp-doc .mark-uoc-tinh {
+  color: var(--mark-estimate);
+}
+
+/* Dòng Nguồn: khối trích dẫn nhỏ, lùi về sau nội dung */
+.vp-doc .src-line {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-3);
+  padding: 2px 0 2px 12px;
+  border-left: 2px solid var(--rule);
+  margin: 20px 0;
+  overflow-wrap: anywhere;
+}
+
+.vp-doc .src-line strong {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+.vp-doc .src-line a {
+  color: var(--ink-2);
+  text-decoration-color: var(--rule);
+  font-weight: 400;
+}
+
+.vp-doc .src-line a:hover {
+  color: var(--vp-c-brand-1);
+  text-decoration-color: currentColor;
+}
+
+/* ---------- Hộp ---------- */
+
+.vp-doc .custom-block {
+  font-size: 14.5px;
+  line-height: 1.65;
+  border-radius: 4px;
+}
+
+.vp-doc .custom-block p {
+  line-height: 1.65;
+}
+
+.vp-doc .custom-block .custom-block-title {
+  font-weight: 700;
+}
+
+/* Kiến thức nền: một lối rẽ, không phải cảnh báo */
+.vp-doc .custom-block[data-kind='kb'] {
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--mark-ext);
+  color: var(--ink-2);
+  padding: 10px 16px;
+}
+
+.vp-doc .custom-block[data-kind='kb'] .custom-block-title {
+  color: var(--mark-ext);
+  margin-bottom: 2px;
+}
+
+.vp-doc .custom-block[data-kind='kb'] a {
+  color: var(--mark-ext);
+}
+
+/* Docs chưa thống nhất: dấu mâu thuẫn, màu đỏ Unsloth */
+.vp-doc .custom-block[data-kind='conflict'] {
+  background: color-mix(in srgb, var(--mark-conflict) 5%, var(--paper));
+  border: 1px solid color-mix(in srgb, var(--mark-conflict) 35%, var(--rule));
+  border-left: 3px solid var(--mark-conflict);
+  color: var(--ink);
+}
+
+.vp-doc .custom-block[data-kind='conflict'] .custom-block-title {
+  color: var(--mark-conflict);
+}
+
+.vp-doc .custom-block[data-kind='conflict'] .custom-block-title::before {
+  content: '≠';
+  display: inline-block;
+  width: 1.1em;
+  font-weight: 700;
+}
+
+.vp-doc .custom-block[data-kind='conflict'] table {
+  font-size: 13.5px;
+}
+
+.vp-doc .custom-block[data-kind='conflict'] th {
+  border-bottom-color: color-mix(in srgb, var(--mark-conflict) 50%, var(--ink));
+}
+
+/* ---------- Khung ---------- */
+
+.VPNavBarTitle .title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.VPSidebarItem.level-0 > .item > .text {
+  font-weight: 700;
+}
+
+:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Trang chủ: phần markdown thẳng lề với ResearchHome ---------- */
+
+.VPHome > .vp-doc.container {
+  max-width: 1080px;
+  padding: 0 32px;
+}
+
+.VPHome > .vp-doc.container > div > * {
+  max-width: 760px;
+}
+
+@media (max-width: 860px) {
+  .VPHome > .vp-doc.container {
+    padding: 0 20px;
+  }
 }
