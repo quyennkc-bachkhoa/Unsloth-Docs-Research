@@ -30,7 +30,7 @@ Docs Unsloth cũng nêu điều kiện để RL chạy được: xác suất mod
 
 **Ảnh hưởng khi dùng Unsloth.** Docs Unsloth so sánh: SFT thường chỉ tối đa hóa xác suất dự đoán từ tiếp theo, còn GRPO tối ưu theo reward function. RL dùng khi bạn cần model giỏi một hành vi cụ thể (ví dụ tool calling), dựa trên môi trường và reward function thay vì dữ liệu có nhãn. Docs cũng nói "với đa số trường hợp, SFT là đủ".
 
-**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning), [Fine-tuning](/fine-tuning).
+**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning), [Fine-tuning](/fine-tuning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide. **[Nguồn ngoài]** Loss của SFT là cross-entropy trên từng token của chuỗi đích: https://huggingface.co/docs/trl/sft_trainer
 
@@ -294,7 +294,7 @@ Mục này giúp bạn chọn phương pháp dựa trên loại dữ liệu đan
 
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 | --- | --- | --- |
-| SFT vs RL | [Reinforcement Learning](/reinforcement-learning), [Fine-tuning](/fine-tuning) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), [Fine-tuning Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide) |
+| SFT vs RL | [Reinforcement Learning](/reinforcement-learning), [Fine-tuning](/fine-tuning/) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), [Fine-tuning Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide) |
 | Policy, reward, environment | [Reinforcement Learning](/reinforcement-learning) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
 | Reward function, verifier | [Reinforcement Learning](/reinforcement-learning) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
 | Reference model, KL, `beta` | [Reinforcement Learning](/reinforcement-learning) | [Advanced RL Documentation](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation) |

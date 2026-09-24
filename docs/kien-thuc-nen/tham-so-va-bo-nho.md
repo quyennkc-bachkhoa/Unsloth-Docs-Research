@@ -11,7 +11,7 @@ Trang này giúp bạn làm ba việc:
 - Đọc hiểu bảng yêu cầu RAM và VRAM trong docs Unsloth.
 - Giải mã tên file model.
 
-Nên đọc trước khi chọn model và mức quant ở [Model catalog](/model-catalog), [Inference](/inference), hoặc trước khi fine-tune ở [Fine-tuning](/fine-tuning).
+Nên đọc trước khi chọn model và mức quant ở [Model catalog](/model-catalog), [Inference](/inference), hoặc trước khi fine-tune ở [Fine-tuning](/fine-tuning/).
 
 ## Tham số là gì
 
@@ -23,7 +23,7 @@ Số tham số cho biết model "to" cỡ nào, và là yếu tố đầu tiên 
 
 **Ảnh hưởng khi dùng Unsloth.** Bảng yêu cầu VRAM của Unsloth được sắp theo cột "Model parameters" (3B, 7B, 8B, … 405B). Biết số tham số là bạn tra được ngay hàng cần xem.
 
-**Gặp ở đâu trong Unsloth.** [Cài đặt – Yêu cầu VRAM](/cai-dat), [Fine-tuning](/fine-tuning).
+**Gặp ở đâu trong Unsloth.** [Cài đặt – Yêu cầu VRAM](/cai-dat), [Fine-tuning](/fine-tuning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements ; **[Nguồn ngoài]** https://huggingface.co/Qwen/Qwen3-8B
 
@@ -52,7 +52,7 @@ bộ nhớ trọng số ≈ số tham số × số byte mỗi tham số
 
 **Ảnh hưởng khi dùng Unsloth.** Khi nạp model bằng `FastLanguageModel.from_pretrained`, bạn chọn số byte mỗi tham số của model gốc trong VRAM qua các cờ `load_in_4bit`, `load_in_8bit`, `load_in_16bit`, `load_in_fp8`. Docs Unsloth ghi `load_in_4bit = True` "reducing memory use 4×".
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning), [Reinforcement Learning](/reinforcement-learning) (FP8).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Reinforcement Learning](/reinforcement-learning) (FP8).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide ; **[Nguồn ngoài]** các URL PyTorch, Hugging Face, llama.cpp ghi trong mục.
 
@@ -162,7 +162,7 @@ Mức tốn của từng khoản, theo tài liệu "GPU memory usage" của Hugg
 - **Gradient checkpointing** chỉ giữ một phần activation, phần còn lại được tính lại ở lượt backward. Cách này tiết kiệm bộ nhớ, đổi lại chậm hơn **[Nguồn ngoài]** https://huggingface.co/docs/transformers/grad_checkpointing . Unsloth khuyên `use_gradient_checkpointing = "unsloth"`, "reduces memory usage by an extra 30%". Docs RL mô tả phiên bản này offload activation sang RAM hệ thống một cách bất đồng bộ, "only 1% slower".
 - **Full fine-tune:** `full_finetuning = True` là trường hợp tốn bộ nhớ nhất, vì mọi tham số đều có gradient và optimizer state.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning), [Reinforcement Learning](/reinforcement-learning).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Reinforcement Learning](/reinforcement-learning).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements, https://unsloth.ai/docs/get-started/install/google-colab, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide ; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/model_memory_anatomy , https://huggingface.co/docs/transformers/grad_checkpointing , https://arxiv.org/abs/2305.14314
 
@@ -189,7 +189,7 @@ Mức tốn của từng khoản, theo tài liệu "GPU memory usage" của Hugg
 - Với GRPO dùng QLoRA 4-bit, quy tắc của Unsloth là số tham số (tỷ) ≈ số GB VRAM cần. Ngữ cảnh càng dài càng tốn thêm.
 - Với FP8 RL, Unsloth ghi mức tiết kiệm xấp xỉ bằng bộ nhớ trọng số (khoảng 8 GB cho Qwen3-8B).
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning), [Reinforcement Learning](/reinforcement-learning).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Reinforcement Learning](/reinforcement-learning).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning ; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/model_memory_anatomy
 
@@ -259,7 +259,7 @@ Tên file model thường nói sẵn kích thước, biến thể, định dạn
 - **Chọn quant khi tải:** khi tải bằng `hf download … --include "*UD-Q4_K_XL*"`, sai một ký tự là tải nhầm quant hoặc không tải được gì.
 - **Model MoE:** với model `A3B`, bộ nhớ cần tính theo **tổng** tham số, không theo số tham số kích hoạt. Bảng Qwen3.5 ghi 35B-A3B ở 4-bit cần 22 GB, lớn hơn 27B dense (17 GB). Dù vậy docs nói 35B-A3B cho inference nhanh hơn nhiều.
 
-**Gặp ở đâu trong Unsloth.** [Model catalog](/model-catalog), [Inference](/inference), [Fine-tuning](/fine-tuning).
+**Gặp ở đâu trong Unsloth.** [Model catalog](/model-catalog), [Inference](/inference), [Fine-tuning](/fine-tuning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/basics/dynamic-3.0-ggufs, https://unsloth.ai/docs/basics/nvfp4, https://unsloth.ai/docs/get-started/unsloth-model-catalog ; **[Nguồn ngoài]** https://github.com/ggml-org/ggml/blob/master/docs/gguf.md
 
@@ -355,10 +355,10 @@ Cần kiểm tra lại bằng số đo thực tế trên máy của bạn.
 
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 |---|---|---|
-| Số tham số, bảng VRAM fine-tune | [/cai-dat](/cai-dat), [/fine-tuning](/fine-tuning) | https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements |
-| Byte mỗi tham số, `load_in_4bit`/`load_in_8bit`/`load_in_16bit` | [/fine-tuning](/fine-tuning) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
+| Số tham số, bảng VRAM fine-tune | [/cai-dat](/cai-dat), [/fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements |
+| Byte mỗi tham số, `load_in_4bit`/`load_in_8bit`/`load_in_16bit` | [/fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
 | KV cache, context length, FP8 KV cache | [/inference](/inference) | https://unsloth.ai/docs/basics/nvfp4 |
-| Gradient, optimizer state, activation, gradient checkpointing | [/fine-tuning](/fine-tuning) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide |
-| LoRA/QLoRA và VRAM | [/fine-tuning](/fine-tuning), [/reinforcement-learning](/reinforcement-learning) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
+| Gradient, optimizer state, activation, gradient checkpointing | [/fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide |
+| LoRA/QLoRA và VRAM | [/fine-tuning](/fine-tuning/), [/reinforcement-learning](/reinforcement-learning) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
 | Tên model: `UD-`, `bnb-4bit`, `A3B`, shard | [/model-catalog](/model-catalog), [/inference](/inference) | https://unsloth.ai/docs/models/qwen3.8 |
 | RAM + VRAM, unified memory, offload | [/inference](/inference), [/cai-dat](/cai-dat) | https://unsloth.ai/docs/models/qwen3.5 |

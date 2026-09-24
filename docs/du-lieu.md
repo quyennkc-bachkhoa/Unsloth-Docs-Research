@@ -143,7 +143,7 @@ Dữ liệu vision giống cặp hỏi–đáp, chỉ khác là phần input có
 ]
 ```
 
-Ví dụ trong docs dùng bản rút gọn của ROCO radiography dataset: 1978 dòng, gồm các cột `image`, `image_id`, `caption`, `cui`. Mỗi mẫu được chuyển sang dạng `messages` bằng hàm `convert_to_conversation`. Xem thêm mục Vision ở trang [Fine-tuning](/fine-tuning).
+Ví dụ trong docs dùng bản rút gọn của ROCO radiography dataset: 1978 dòng, gồm các cột `image`, `image_id`, `caption`, `cui`. Mỗi mẫu được chuyển sang dạng `messages` bằng hàm `convert_to_conversation`. Xem thêm mục Vision ở trang [Fine-tuning](/fine-tuning/).
 
 ::: warning Docs chưa thống nhất: thứ tự text/ảnh trong lượt user
 Thứ tự phần chữ và phần ảnh khác nhau giữa dữ liệu train và ví dụ inference:
@@ -199,7 +199,7 @@ Về chọn model:
 - 300–1.000 dòng chất lượng cao: base hay instruct đều được.
 - Dưới 300 dòng: instruct model thường tốt hơn.
 
-Chi tiết ở trang [Fine-tuning](/fine-tuning).
+Chi tiết ở trang [Fine-tuning](/fine-tuning/).
 
 ::: warning Docs chưa thống nhất: lượng dữ liệu và loại model
 Các trang đưa ra những mốc và khuyến nghị khác nhau:
@@ -343,7 +343,7 @@ model = FastLanguageModel.get_peft_model(...)
 
 ### Chỉ train trên câu trả lời
 
-Sau khi đã áp template, bạn có thể che phần user và chỉ tính loss trên phần assistant bằng `train_on_responses_only`. Hàm này cần chuỗi đánh dấu đầu lượt user và đầu lượt assistant **đúng theo template** của model. Ví dụ Llama 3 dùng `<|start_header_id|>user<|end_header_id|>`, còn Gemma dùng `<start_of_turn>user`. Code đầy đủ ở trang [Fine-tuning](/fine-tuning).
+Sau khi đã áp template, bạn có thể che phần user và chỉ tính loss trên phần assistant bằng `train_on_responses_only`. Hàm này cần chuỗi đánh dấu đầu lượt user và đầu lượt assistant **đúng theo template** của model. Ví dụ Llama 3 dùng `<|start_header_id|>user<|end_header_id|>`, còn Gemma dùng `<start_of_turn>user`. Code đầy đủ ở trang [Fine-tuning](/fine-tuning/).
 
 **Nguồn:** https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama
 

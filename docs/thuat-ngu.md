@@ -25,7 +25,7 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | BPE, WordPiece, SentencePiece | Các thuật toán và thư viện cắt văn bản thành mảnh từ (subword) | [Token & context](/kien-thuc-nen/token-va-context) |
 | Special token, BOS, EOS | Special token: token mang tín hiệu điều khiển. BOS: token đánh dấu đầu chuỗi. EOS: token kết thúc, model sinh ra nó thì dừng | [Token & context](/kien-thuc-nen/token-va-context) |
 | Context window | Số token tối đa model xử lý trong một lần, tính cả prompt lẫn phần model sinh ra | [Token & context](/kien-thuc-nen/token-va-context) |
-| `max_seq_length` | Độ dài chuỗi tối đa (tính bằng token) bạn đặt khi nạp hoặc train model trong Unsloth | [Token & context](/kien-thuc-nen/token-va-context), [Fine-tuning](/fine-tuning) |
+| `max_seq_length` | Độ dài chuỗi tối đa (tính bằng token) bạn đặt khi nạp hoặc train model trong Unsloth | [Token & context](/kien-thuc-nen/token-va-context), [Fine-tuning](/fine-tuning/) |
 | Next-token prediction | Cách LLM làm việc: nhìn các token đã có rồi đoán token kế tiếp | [Token & context](/kien-thuc-nen/token-va-context) |
 | YaRN, RoPE scaling | Kỹ thuật kéo giãn cách model ghi nhận vị trí token, để dùng được context dài hơn | [Token & context](/kien-thuc-nen/token-va-context) |
 | Transformer | Kiến trúc mạng nơ-ron dựa trên cơ chế attention | [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer) |
@@ -72,7 +72,7 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | MXFP4, microscaling (MX) | Định dạng 4-bit; cứ mỗi khối 32 phần tử dùng chung một hệ số scale | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | INT8 / INT4 | Lưu bằng số nguyên 8 hoặc 4 bit, kèm hệ số scale | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | Quantization (lượng tử hóa) | Lưu trọng số bằng ít bit hơn (độ chính xác thấp hơn) để model chiếm ít bộ nhớ hơn | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
-| PTQ / QAT | PTQ: lượng tử hóa sau khi train xong. QAT: trong lúc train đã mô phỏng lượng tử hóa | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa), [Fine-tuning](/fine-tuning) |
+| PTQ / QAT | PTQ: lượng tử hóa sau khi train xong. QAT: trong lúc train đã mô phỏng lượng tử hóa | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa), [Fine-tuning](/fine-tuning/) |
 | Calibration, imatrix | Calibration: dữ liệu mẫu dùng để hiệu chỉnh khi lượng tử hóa. Imatrix: ma trận độ quan trọng của llama.cpp | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | W4A16, W4A4, W8A8 | Cách ghi số bit: W là trọng số, A là activation | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | GGUF | Định dạng gói model vào một file duy nhất, dùng bởi llama.cpp và ggml | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa), [Export & deploy](/export-deploy) |
@@ -90,9 +90,9 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Thuật ngữ | Giải thích | Xem |
 | --- | --- | --- |
 | Pretraining | Huấn luyện model từ đầu trên lượng dữ liệu rất lớn | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) |
-| Fine-tuning (tinh chỉnh) | Train thêm một model đã pretrain bằng dữ liệu của bạn | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen), [Fine-tuning](/fine-tuning) |
+| Fine-tuning (tinh chỉnh) | Train thêm một model đã pretrain bằng dữ liệu của bạn | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen), [Fine-tuning](/fine-tuning/) |
 | SFT | Tinh chỉnh có giám sát: model học từ các cặp đầu vào → đầu ra mẫu | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) |
-| Continued pretraining (CPT) | Pretrain tiếp trên văn bản thô, để model học một lĩnh vực hoặc ngôn ngữ mới | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen), [Fine-tuning](/fine-tuning) |
+| Continued pretraining (CPT) | Pretrain tiếp trên văn bản thô, để model học một lĩnh vực hoặc ngôn ngữ mới | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen), [Fine-tuning](/fine-tuning/) |
 | Loss, cross-entropy | Con số đo model sai bao nhiêu. Loss theo token = −ln(xác suất token đúng) | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) |
 | Gradient, backpropagation | Gradient: đạo hàm của loss theo từng tham số. Backpropagation: thuật toán tính gradient đi ngược từ loss | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) |
 | Optimizer (SGD, Adam, AdamW) | Thuật toán dùng gradient để cập nhật trọng số | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) |
@@ -107,8 +107,8 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Overfitting / underfitting | Overfitting: model học thuộc dữ liệu train. Underfitting: model học chưa đủ | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) |
 | Train loss / eval loss | Train loss: loss trên dữ liệu train. Eval loss: loss trên phần dữ liệu tách riêng | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) |
 | Early stopping | Dừng train sớm khi eval loss không giảm nữa | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) |
-| Checkpoint | Bản lưu model giữa chừng, dùng để train tiếp | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen), [Fine-tuning](/fine-tuning) |
-| Hyperparameter | Siêu tham số: các thiết lập bạn đặt trước khi train (learning rate, rank…) | [Fine-tuning](/fine-tuning) |
+| Checkpoint | Bản lưu model giữa chừng, dùng để train tiếp | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen), [Fine-tuning](/fine-tuning/) |
+| Hyperparameter | Siêu tham số: các thiết lập bạn đặt trước khi train (learning rate, rank…) | [Fine-tuning](/fine-tuning/) |
 | Full fine-tuning (FFT) | Train và cập nhật mọi trọng số của model | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) |
 | PEFT | Tinh chỉnh tiết kiệm tham số: giữ nguyên (đóng băng) model gốc, chỉ train một phần nhỏ gắn thêm vào | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) |
 | LoRA, adapter | Học phần cập nhật dưới dạng tích của hai ma trận hạng thấp. Phần gắn thêm này gọi là adapter | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) |
@@ -119,7 +119,7 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Gradient checkpointing | Không giữ hết activation trong bộ nhớ, khi backward thì tính lại. Cách này tiết kiệm VRAM | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) |
 | Merge, `save_method` | Merge: cộng LoRA vào trọng số gốc. `save_method`: chọn cách lưu (`merged_16bit`, `merged_4bit`, `lora`) | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora), [Export & deploy](/export-deploy) |
 | LoRA hot swapping | Nạp hoặc gỡ adapter trên vLLM ngay khi đang chạy | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) |
-| Multi-GPU, DDP | Multi-GPU: train trên nhiều GPU. DDP: song song hóa dữ liệu giữa các GPU | [Fine-tuning](/fine-tuning) |
+| Multi-GPU, DDP | Multi-GPU: train trên nhiều GPU. DDP: song song hóa dữ liệu giữa các GPU | [Fine-tuning](/fine-tuning/) |
 | Dataset format (Alpaca, ShareGPT, ChatML) | Các định dạng dữ liệu dạng instruction hoặc dạng hội thoại | [Dữ liệu](/du-lieu) |
 | Synthetic data | Dữ liệu train do LLM sinh ra | [Dữ liệu](/du-lieu) |
 | Data Recipes | Công cụ trong Unsloth Studio để tạo dataset từ tài liệu | [Dữ liệu](/du-lieu) |

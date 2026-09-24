@@ -252,7 +252,7 @@ Docs Unsloth còn ghi hai trường hợp khác:
 - **Khi chạy `llama-server`:** `--jinja` bật engine Jinja cho chat template (mặc định bật theo README hiện tại). Tham số riêng của template truyền qua `--chat-template-kwargs '{"enable_thinking":false}'`.
 - **[Nguồn ngoài]** TRL nhắc: với base model đã có template sẵn (ví dụ Qwen), phải căn chỉnh EOS token với chat template để câu trả lời kết thúc đúng: https://huggingface.co/docs/trl/sft_trainer
 
-**Gặp ở đâu trong Unsloth.** [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning), [Export & deploy](/export-deploy), [Inference & API](/inference).
+**Gặp ở đâu trong Unsloth.** [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy), [Inference & API](/inference).
 
 **Nguồn:** https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference, https://unsloth.ai/docs/new/studio/chat, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/chat_templating, https://huggingface.co/docs/transformers/llm_tutorial, https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
 

@@ -22,7 +22,22 @@ const unslothSidebar = [
   {
     text: 'Huấn luyện',
     items: [
-      { text: 'Fine-tuning', link: '/fine-tuning' },
+      {
+        text: 'Fine-tuning',
+        link: '/fine-tuning/',
+        collapsed: false,
+        items: [
+          { text: 'LoRA, QLoRA hay full', link: '/fine-tuning/lora-qlora-full' },
+          { text: 'Chọn model', link: '/fine-tuning/chon-model' },
+          { text: 'Quy trình', link: '/fine-tuning/quy-trinh' },
+          { text: 'Hyperparameter', link: '/fine-tuning/hyperparameter' },
+          { text: 'Đánh giá & overfitting', link: '/fine-tuning/danh-gia' },
+          { text: 'Notebooks', link: '/fine-tuning/notebooks' },
+          { text: 'Hiệu năng & benchmark', link: '/fine-tuning/benchmark' },
+          { text: 'Mở rộng', link: '/fine-tuning/mo-rong' },
+          { text: 'Cạm bẫy', link: '/fine-tuning/cam-bay' }
+        ]
+      },
       { text: 'Reinforcement Learning', link: '/reinforcement-learning' },
       { text: 'Dữ liệu', link: '/du-lieu' }
     ]

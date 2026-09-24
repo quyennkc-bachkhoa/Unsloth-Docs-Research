@@ -1060,7 +1060,7 @@ trainer.train()
 ```
 :::
 
-Ý nghĩa từng tham số trong code trên được giải thích ở trang [Fine-tuning](/fine-tuning).
+Ý nghĩa từng tham số trong code trên được giải thích ở trang [Fine-tuning](/fine-tuning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/install/google-colab, https://unsloth.ai/docs/new/studio/install
 

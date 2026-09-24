@@ -303,7 +303,7 @@ Mỗi chỗ trong docs liệt kê một bộ định dạng file dữ liệu kh�
 - PDF, CSV, DOCX "and more" (Data Recipes): [docs](https://unsloth.ai/docs)
 :::
 
-Chi tiết: [Fine-tuning](/fine-tuning), [Reinforcement Learning](/reinforcement-learning), [Dữ liệu](/du-lieu), [Export & deploy](/export-deploy).
+Chi tiết: [Fine-tuning](/fine-tuning/), [Reinforcement Learning](/reinforcement-learning), [Dữ liệu](/du-lieu), [Export & deploy](/export-deploy).
 
 **Nguồn:** https://unsloth.ai/docs/new/studio, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/basics/inference-and-deployment/unsloth-inference, https://unsloth.ai/docs/desktop, https://unsloth.ai/docs
 

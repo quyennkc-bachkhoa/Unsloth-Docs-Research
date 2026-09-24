@@ -21,7 +21,7 @@ Bạn nên đọc trang này sau [Kiến trúc Transformer](/kien-thuc-nen/kien-
 
 **Ảnh hưởng khi dùng Unsloth.** Model dense fine-tune theo cách chuẩn, với `target_modules` gồm `gate_proj`, `up_proj`, `down_proj`. Riêng QLoRA 4-bit cho Qwen3.5 dense, docs chưa nhất quán. Code mẫu trong docs Qwen3.5 ghi QLoRA 4-bit "is fine" cho 27B. Nhưng một đoạn khác lại không khuyến nghị QLoRA cho mọi model Qwen3.5 (xem hộp cảnh báo cuối trang).
 
-**Gặp ở đâu trong Unsloth.** [/model-catalog](/model-catalog), [/fine-tuning](/fine-tuning).
+**Gặp ở đâu trong Unsloth.** [/model-catalog](/model-catalog), [/fine-tuning](/fine-tuning/).
 
 **Nguồn:** Unsloth Qwen3.5; Unsloth Qwen3.5 Fine-tuning Guide; HF Mixtral model doc.
 
@@ -51,7 +51,7 @@ self.gate_up_proj = nn.Parameter(torch.empty(num_experts, 2 * intermediate_dim, 
 
 **Ảnh hưởng khi dùng Unsloth.** Expert là FFN, nên tên module LoRA cho expert là `gate_up_proj` và `down_proj`. Chi tiết ở mục "Unsloth làm gì cho MoE" bên dưới.
 
-**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning), [Faster MoE](https://unsloth.ai/docs/basics/faster-moe).
+**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning/), [Faster MoE](https://unsloth.ai/docs/basics/faster-moe).
 
 **Nguồn:** arXiv 1701.06538; HF blog MoE (chỉ diễn giải khái niệm); Unsloth Faster MoE.
 
@@ -82,7 +82,7 @@ Trong config HF, `num_experts` là tổng số expert, còn `num_experts_per_tok
 
 **Ảnh hưởng khi dùng Unsloth.** Docs Unsloth nói fine-tune router layer "không phải ý hay". Vì vậy Unsloth **tắt mặc định** việc train router. Điều này được nhắc ở Faster MoE, ở Qwen3.5 Fine-tuning ("vì ổn định") và ở Nemotron 3. Không có lý do để tự bật. **[Nhận định]**
 
-**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning), [/model-catalog](/model-catalog).
+**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning/), [/model-catalog](/model-catalog).
 
 **Nguồn:** HF blog MoE; arXiv 2101.03961; HF Qwen3MoE, Mixtral model doc; Unsloth Faster MoE, gpt-oss, Qwen3.5 Fine-tuning, [Nemotron 3](https://unsloth.ai/docs/models/nemotron-3).
 
@@ -262,7 +262,7 @@ model = FastLanguageModel.get_peft_model(
   - DeepSeek (V3, R1, V3.1, V3.2);
   - Qwen3.5-35B-A3B, 122B-A10B, 397B-A17B dùng cùng bản cập nhật này ([Qwen3.5 Fine-tuning](https://unsloth.ai/docs/models/qwen3.5/fine-tune)).
 
-**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning); cơ chế LoRA: [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora).
+**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning/); cơ chế LoRA: [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora).
 
 **Nguồn:** Unsloth Faster MoE; Unsloth Qwen3.5 Fine-tuning Guide; Unsloth gpt-oss.
 
@@ -282,7 +282,7 @@ Trang [Faster MoE](https://unsloth.ai/docs/basics/faster-moe) và các trang li�
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 |---|---|---|
 | Dense vs MoE, chọn model | [/model-catalog](/model-catalog) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5), [Gemma 4](https://unsloth.ai/docs/models/gemma-4) |
-| Expert, router, top-k | [/fine-tuning](/fine-tuning) | [Faster MoE](https://unsloth.ai/docs/basics/faster-moe), [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
+| Expert, router, top-k | [/fine-tuning](/fine-tuning/) | [Faster MoE](https://unsloth.ai/docs/basics/faster-moe), [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
 | Tổng tham số vs kích hoạt, ký hiệu "A3B" | [/model-catalog](/model-catalog) | [Model Catalog](https://unsloth.ai/docs/get-started/unsloth-model-catalog), [Qwen3.8](https://unsloth.ai/docs/models/qwen3.8), [GLM-5.3](https://unsloth.ai/docs/models/glm-5.3) |
 | Bộ nhớ MoE, offload expert (`-ot`) | [/inference](/inference) | [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune), [Qwen3-2507](https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-2507), [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5) |
-| Faster MoE, `UNSLOTH_MOE_BACKEND`, `gate_up_proj` | [/fine-tuning](/fine-tuning) | [Faster MoE](https://unsloth.ai/docs/basics/faster-moe), [Qwen3.5 Fine-tuning](https://unsloth.ai/docs/models/qwen3.5/fine-tune) |
+| Faster MoE, `UNSLOTH_MOE_BACKEND`, `gate_up_proj` | [/fine-tuning](/fine-tuning/) | [Faster MoE](https://unsloth.ai/docs/basics/faster-moe), [Qwen3.5 Fine-tuning](https://unsloth.ai/docs/models/qwen3.5/fine-tune) |

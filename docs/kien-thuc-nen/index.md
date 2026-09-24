@@ -17,7 +17,7 @@ Bạn không cần đọc hết route. Tìm việc bạn sắp làm ở cột đ
 | --- | --- | --- |
 | Cài Unsloth, chọn model vừa với máy | Nhóm A và B | [Cài đặt & phần cứng](/cai-dat), [Model catalog](/model-catalog) |
 | Chạy model, gọi API, chỉnh sampling | Nhóm D | [Inference & API](/inference) |
-| Fine-tune bằng LoRA/QLoRA | Nhóm C (hai trang đầu) | [Fine-tuning](/fine-tuning), [Dữ liệu](/du-lieu) |
+| Fine-tune bằng LoRA/QLoRA | Nhóm C (hai trang đầu) | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu) |
 | Dùng GRPO, DPO | Nhóm C (trang RL) | [Reinforcement Learning](/reinforcement-learning) |
 | Export GGUF, NVFP4 | Nhóm B | [Export & deploy](/export-deploy) |
 
@@ -39,22 +39,22 @@ Gặp một khái niệm lạ trong docs Unsloth? Tra ở bảng này để bi�
 | Khái niệm | Trang giải thích | Trang Unsloth dùng khái niệm |
 | --- | --- | --- |
 | Token, tokenizer, vocabulary | [Token & context](/kien-thuc-nen/token-va-context) | [Dữ liệu](/du-lieu), [Inference & API](/inference) |
-| Context window, `max_seq_length` | [Token & context](/kien-thuc-nen/token-va-context) | [Fine-tuning](/fine-tuning), [Model catalog](/model-catalog) |
-| Base vs Instruct | [Phân loại mô hình](/kien-thuc-nen/phan-loai-mo-hinh) | [Fine-tuning](/fine-tuning) |
-| Vision / multimodal | [Phân loại mô hình](/kien-thuc-nen/phan-loai-mo-hinh) | [Model catalog](/model-catalog), [Fine-tuning](/fine-tuning) |
+| Context window, `max_seq_length` | [Token & context](/kien-thuc-nen/token-va-context) | [Fine-tuning](/fine-tuning/), [Model catalog](/model-catalog) |
+| Base vs Instruct | [Phân loại mô hình](/kien-thuc-nen/phan-loai-mo-hinh) | [Fine-tuning](/fine-tuning/) |
+| Vision / multimodal | [Phân loại mô hình](/kien-thuc-nen/phan-loai-mo-hinh) | [Model catalog](/model-catalog), [Fine-tuning](/fine-tuning/) |
 | Embedding model | [Phân loại mô hình](/kien-thuc-nen/phan-loai-mo-hinh) | [Ứng dụng RAG](/ung-dung-rag) |
-| Attention, GQA, FFN, RoPE, RMSNorm | [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer) | [Fine-tuning](/fine-tuning) (target modules) |
-| `q_proj` … `down_proj` | [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer) | [Fine-tuning](/fine-tuning) |
+| Attention, GQA, FFN, RoPE, RMSNorm | [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer) | [Fine-tuning](/fine-tuning/hyperparameter) (target modules) |
+| `q_proj` … `down_proj` | [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer) | [Fine-tuning](/fine-tuning/) |
 | Dense, MoE, "A3B", tham số kích hoạt | [Dense & MoE](/kien-thuc-nen/dense-va-moe) | [Model catalog](/model-catalog) |
 | Số tham số, VRAM, RAM, offload | [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho) | [Cài đặt & phần cứng](/cai-dat), [Model catalog](/model-catalog) |
 | Tên file `UD-Q4_K_XL`, `-bnb-4bit` | [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho) | [Model catalog](/model-catalog), [Export & deploy](/export-deploy) |
 | BF16, FP8, NVFP4, MXFP4, INT4 | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) | [Export & deploy](/export-deploy), [Reinforcement Learning](/reinforcement-learning) |
 | GGUF quant, Dynamic quants | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) | [Export & deploy](/export-deploy), [Model catalog](/model-catalog) |
-| Loss, learning rate, epoch, batch | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) | [Fine-tuning](/fine-tuning) |
-| Optimizer AdamW 8-bit, scheduler, warmup | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) | [Fine-tuning](/fine-tuning) |
-| Overfitting, eval loss | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) | [Fine-tuning](/fine-tuning) |
-| LoRA `r`, `lora_alpha`, QLoRA, merge | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) | [Fine-tuning](/fine-tuning), [Export & deploy](/export-deploy) |
-| Gradient checkpointing | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) | [Fine-tuning](/fine-tuning), [Reinforcement Learning](/reinforcement-learning) |
+| Loss, learning rate, epoch, batch | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) | [Fine-tuning](/fine-tuning/) |
+| Optimizer AdamW 8-bit, scheduler, warmup | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) | [Fine-tuning](/fine-tuning/) |
+| Overfitting, eval loss | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) | [Fine-tuning](/fine-tuning/) |
+| LoRA `r`, `lora_alpha`, QLoRA, merge | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) | [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy) |
+| Gradient checkpointing | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) | [Fine-tuning](/fine-tuning/), [Reinforcement Learning](/reinforcement-learning) |
 | SFT, reward, DPO, GRPO, reward hacking | [RL & preference](/kien-thuc-nen/rl-va-preference) | [Reinforcement Learning](/reinforcement-learning) |
 | KV cache | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) | [Inference & API](/inference), [Model catalog](/model-catalog) |
 | Temperature, top-p, top-k, min-p | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) | [Inference & API](/inference), [Model catalog](/model-catalog) |

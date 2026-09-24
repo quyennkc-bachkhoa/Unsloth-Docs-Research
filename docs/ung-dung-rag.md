@@ -318,7 +318,7 @@ FAQ nói fine-tune giúp kiểm soát giọng văn, bám thương hiệu và **t
 
 [Nhận định] Trong kịch bản này, bạn chỉ nên fine-tune LLM để cố định **cách trả lời**: luôn trích nguồn, giữ cấu trúc câu trả lời, từ chối câu hỏi ngoài phạm vi, xưng hô chuẩn. Còn **kiến thức nghiệp vụ** thay đổi liên tục nên để RAG lo.
 
-Sau khi train, bạn xuất model sang GGUF để chạy trên Unsloth API. Các bước xuất xem [Export & deploy](/export-deploy). Việc `unsloth run` load file GGUF cục bộ (thay vì repo Hugging Face) cần kiểm tra lại, vì trang API chỉ đưa ví dụ tên repo. Quy trình train xem [Fine-tuning](/fine-tuning).
+Sau khi train, bạn xuất model sang GGUF để chạy trên Unsloth API. Các bước xuất xem [Export & deploy](/export-deploy). Việc `unsloth run` load file GGUF cục bộ (thay vì repo Hugging Face) cần kiểm tra lại, vì trang API chỉ đưa ví dụ tên repo. Quy trình train xem [Fine-tuning](/fine-tuning/).
 
 ::: tip Kiến thức nền
 LoRA/QLoRA: xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora).

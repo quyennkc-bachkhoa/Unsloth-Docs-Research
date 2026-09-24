@@ -36,7 +36,7 @@ BF16 thì "has the same exponent range as fp32 so it almost never overflows". Hu
 
 **Ảnh hưởng khi dùng Unsloth.** Tham số `dtype = None` là mặc định, nghĩa là Unsloth tự chọn. Docs ghi có thể dùng `torch.float16` hoặc `torch.bfloat16` "for newer GPUs". **[Nhận định]** Trên GPU T4 (Colab miễn phí) nên để `None` hoặc FP16, vì theo Hugging Face T4 thuộc nhóm nên dùng FP16. Model "không hậu tố" trên Hugging Face của Unsloth là bản 16-bit gốc.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning), [Cài đặt & phần cứng](/cai-dat).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Cài đặt & phần cứng](/cai-dat).
 
 **Nguồn:** https://unsloth.ai/docs/basics/nvfp4, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide ; **[Nguồn ngoài]** các URL PyTorch, NVIDIA, Hugging Face ghi trong mục.
 
@@ -124,7 +124,7 @@ INT4 theo cùng ý tưởng, nhưng chỉ có 16 mức giá trị.
 
 **Ảnh hưởng khi dùng Unsloth.** `load_in_8bit = True` bật fine-tune 8-bit. Với QAT, Unsloth hỗ trợ `qat_scheme` gồm `fp8-int4`, `fp8-fp8`, `int8-int4`, `int4`.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning), [Export & deploy](/export-deploy).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy).
 
 **Nguồn:** https://unsloth.ai/docs/blog/quantization-aware-training-qat, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide ; **[Nguồn ngoài]** https://arxiv.org/abs/2208.07339 , https://huggingface.co/docs/transformers/quantization/bitsandbytes
 
@@ -192,7 +192,7 @@ model = FastLanguageModel.get_peft_model(
 
 Sau khi train, xuất model bằng `model.save_pretrained_torchao`. Docs Unsloth cũng khuyên "training and serving in the same precision": nếu định chạy 4-bit thì train 4-bit.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning), [Export & deploy](/export-deploy).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy).
 
 **Nguồn:** https://unsloth.ai/docs/blog/quantization-aware-training-qat, https://unsloth.ai/docs/basics/dynamic-3.0-ggufs, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide
 
@@ -345,7 +345,7 @@ QLoRA 4-bit mất bao nhiêu độ chính xác so với LoRA 16-bit? Mỗi trang
 - "Slightly slower and marginally less accurate" — https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide
 :::
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide ; **[Nguồn ngoài]** https://arxiv.org/abs/2305.14314 , https://huggingface.co/docs/transformers/quantization/bitsandbytes
 
@@ -370,7 +370,7 @@ QLoRA 4-bit mất bao nhiêu độ chính xác so với LoRA 16-bit? Mỗi trang
 - Chạy local cho một người trên GPU thường, CPU hoặc Mac: dùng GGUF `UD-Q4_K_XL`, rồi hạ dần mức quant nếu không vừa bộ nhớ.
 - Fine-tune: bắt đầu bằng QLoRA theo khuyến nghị Unsloth; nếu đủ VRAM thì dùng LoRA 16-bit.
 
-**Gặp ở đâu trong Unsloth.** [Inference](/inference), [Fine-tuning](/fine-tuning), [Export & deploy](/export-deploy), [Reinforcement Learning](/reinforcement-learning).
+**Gặp ở đâu trong Unsloth.** [Inference](/inference), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy), [Reinforcement Learning](/reinforcement-learning).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning, https://unsloth.ai/docs/basics/nvfp4, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/basics/dynamic-3.0-ggufs, https://unsloth.ai/docs/models/qwen3.5/gguf-benchmarks, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide ; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/perf_train_gpu_one , https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md
 
@@ -378,11 +378,11 @@ QLoRA 4-bit mất bao nhiêu độ chính xác so với LoRA 16-bit? Mỗi trang
 
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 |---|---|---|
-| BF16/FP16, `dtype` | [/fine-tuning](/fine-tuning) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
+| BF16/FP16, `dtype` | [/fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
 | FP8, `load_in_fp8` | [/reinforcement-learning](/reinforcement-learning) | https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning |
 | NVFP4, MXFP4, W4A4/W4A16 | [/inference](/inference), [/export-deploy](/export-deploy) | https://unsloth.ai/docs/basics/nvfp4 |
-| PTQ, QAT, `qat_scheme` | [/fine-tuning](/fine-tuning), [/export-deploy](/export-deploy) | https://unsloth.ai/docs/blog/quantization-aware-training-qat |
+| PTQ, QAT, `qat_scheme` | [/fine-tuning](/fine-tuning/), [/export-deploy](/export-deploy) | https://unsloth.ai/docs/blog/quantization-aware-training-qat |
 | Mức quant GGUF, `quantization_method`, imatrix | [/export-deploy](/export-deploy), [/inference](/inference) | https://unsloth.ai/docs/basics/inference-and-deployment/saving-to-gguf |
 | Unsloth Dynamic 2.0/3.0, KLD | [/inference](/inference), [/model-catalog](/model-catalog) | https://unsloth.ai/docs/basics/dynamic-3.0-ggufs |
 | GPU hỗ trợ FP8/FP4 | [/cai-dat](/cai-dat) | https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements |
-| QLoRA, NF4, `unsloth-bnb-4bit` | [/fine-tuning](/fine-tuning) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
+| QLoRA, NF4, `unsloth-bnb-4bit` | [/fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |

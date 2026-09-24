@@ -32,7 +32,7 @@ Bộ quy ước đó chính là một **reward function** (hàm chấm điểm).
 **Khác SFT ở đâu:** SFT (Supervised Fine-Tuning, fine-tune có giám sát, tức "fine-tune thường") chỉ tối đa hóa xác suất dự đoán từ tiếp theo theo dữ liệu mẫu. GRPO thì tối ưu theo reward function. Nhờ vậy model học *cách* đi tới đáp án, thay vì chỉ ghi nhớ và lặp lại câu trả lời trong dữ liệu.
 
 ::: tip Kiến thức nền
-Chưa rõ SFT vs RL, reward, policy là gì? Xem [RL & Preference](/kien-thuc-nen/rl-va-preference). Về SFT nói chung, xem [Fine-tuning](/fine-tuning).
+Chưa rõ SFT vs RL, reward, policy là gì? Xem [RL & Preference](/kien-thuc-nen/rl-va-preference). Về SFT nói chung, xem [Fine-tuning](/fine-tuning/).
 :::
 
 **Vì sao RL "chạy được":** docs gọi ý này là "Patience is All You Need". Model chưa huấn luyện có thể trả lời "0, cat, -10, 1928, 3, A, B..." rồi bỗng ra "4". Reward tương ứng là 0, 0, 0... rồi 1.
@@ -316,7 +316,7 @@ Cách chọn phụ thuộc vào dữ liệu bạn có: đáp án mẫu, cặp so
 | --- | --- | --- | --- |
 | Tối ưu cái gì (theo docs) | Xác suất dự đoán từ tiếp theo | Căn chỉnh theo preference (sở thích) | Tối đa hóa reward từ reward function |
 | Dữ liệu cần | Cặp đầu vào → đầu ra mẫu | Dữ liệu preference (định dạng: cần kiểm tra lại) | Câu hỏi + đáp án (không kèm lập luận) + reward function/verifier |
-| Lượng dữ liệu theo docs | (xem trang [Fine-tuning](/fine-tuning)) | Docs không nêu | Tối ưu từ 500 dòng; thử được với 10 dòng |
+| Lượng dữ liệu theo docs | (xem trang [Fine-tuning](/fine-tuning/)) | Docs không nêu | Tối ưu từ 500 dòng; thử được với 10 dòng |
 | Hợp với | [Nhận định] Dạy model format, phong cách, kiến thức miền khi có sẵn đáp án mẫu | [Nhận định] Khi có sẵn các cặp so sánh "câu này tốt hơn câu kia" | Tác vụ kiểm chứng được (toán, code); suy luận; email, truy vấn DB, luật, y khoa nếu có rubric tốt |
 | Chi phí | [Nhận định] Rẻ nhất | [Nhận định] Trung bình (ví dụ trong docs xuất phát từ model đã SFT) | Cao: sinh nhiều câu trả lời mỗi prompt, cần tối thiểu ~300 bước |
 

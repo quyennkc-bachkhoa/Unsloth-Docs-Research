@@ -26,7 +26,7 @@ Có hai hướng fine-tune: sửa toàn bộ model, hoặc chỉ train thêm m�
 - Chỉ được bật một phương pháp tại một thời điểm (`load_in_4bit`, `load_in_16bit`, `load_in_8bit`, `full_finetuning`).
 - Vì sao PEFT tiết kiệm: xem ví dụ optimizer state ở [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) và cách ước tính VRAM ở [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho).
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (mục LoRA vs QLoRA vs full fine-tuning); docs gốc [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [Unsloth Studio](https://unsloth.ai/docs/new/studio/start).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/lora-qlora-full) (mục LoRA vs QLoRA vs full fine-tuning); docs gốc [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [Unsloth Studio](https://unsloth.ai/docs/new/studio/start).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/new/studio/start, https://huggingface.co/docs/peft/conceptual_guides/lora
 
@@ -61,7 +61,7 @@ Docs Unsloth cũng đưa ví dụ lớp MLP với `m ≈ 4096`, `n ≈ 12k`, `r 
 - Kết quả train chỉ là một **adapter** nhỏ (docs: "a small 100MB file called a LoRA adapter"). Khi chạy, bạn vẫn cần model gốc, trừ khi đã merge (mục cuối trang).
 - Muốn kiểm tra adapter có thay đổi sau train không, docs Unsloth lưu ý đừng dùng `np.allclose()`. Hàm này có thể bỏ sót thay đổi nhỏ, nhất là ở ma trận A (khởi tạo bằng giá trị Gaussian nhỏ). Hãy dùng một trong các cách: so sánh hash hoặc checksum, tổng chênh lệch tuyệt đối, hoặc `np.array_equal()`.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Faster MoE](https://unsloth.ai/docs/basics/faster-moe).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Faster MoE](https://unsloth.ai/docs/basics/faster-moe).
 
 **Nguồn:** https://arxiv.org/abs/2106.09685, https://huggingface.co/docs/peft/conceptual_guides/lora, https://huggingface.co/docs/peft/developer_guides/lora, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/basics/faster-moe, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama
 
@@ -180,7 +180,7 @@ Các trang docs Unsloth, và đôi khi hai mục trong cùng một trang, ghi gi
 | `bias` | Code `bias = "none"`, nhưng lời giải thích ghi "Leave this as 0" — [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama) | "Leave this as `"none"`" — [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) | — |
 :::
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (Code Core tiêu biểu, Hyperparameter khuyến nghị, So sánh mặc định), [Cài đặt](/cai-dat) (code mẫu); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/quy-trinh) (Code Core tiêu biểu, Hyperparameter khuyến nghị, So sánh mặc định), [Cài đặt](/cai-dat) (code mẫu); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/get-started/install/google-colab, https://unsloth.ai/docs/basics/faster-moe, https://unsloth.ai/docs/basics/continued-pretraining, https://huggingface.co/docs/peft/main/en/package_reference/lora, https://huggingface.co/docs/peft/developer_guides/lora, https://arxiv.org/abs/2312.03732
 
@@ -220,7 +220,7 @@ Các trang docs đánh giá khác nhau về mức giảm độ chính xác khi d
 | Mức giảm độ chính xác của QLoRA so với LoRA | 4-bit gây "1-2% accuracy degradation" — [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama) | Nhờ dynamic 4-bit, mức giảm "largely recovered" — [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide); "now negligible" — [FAQ](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me) |
 :::
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (LoRA vs QLoRA vs full fine-tuning; đọc hậu tố tên model), [Model catalog](/model-catalog); docs gốc [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/lora-qlora-full) (LoRA vs QLoRA vs full fine-tuning; đọc hậu tố tên model), [Model catalog](/model-catalog); docs gốc [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
 
 **Nguồn:** https://arxiv.org/abs/2305.14314, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune
 
@@ -240,7 +240,7 @@ Gradient checkpointing giúp bạn train với ít VRAM hơn, đổi lại phả
 - Chỉ nên đặt `False` để train nhanh hơn khi VRAM còn dư nhiều. Nếu không, bạn dễ gặp OOM, nhất là với `max_seq_length` lớn **[Nhận định]**.
 - `"unsloth"` dùng RAM hệ thống để chứa activation. Vì vậy máy ít RAM có thể thành điểm nghẽn **[Nhận định]**, cần kiểm tra lại.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (bảng Hyperparameter khuyến nghị); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [500K Context Length Fine-tuning](https://unsloth.ai/docs/blog/500k-context-length-fine-tuning), [Unsloth Studio](https://unsloth.ai/docs/new/studio/start).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/hyperparameter) (bảng Hyperparameter khuyến nghị); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [500K Context Length Fine-tuning](https://unsloth.ai/docs/blog/500k-context-length-fine-tuning), [Unsloth Studio](https://unsloth.ai/docs/new/studio/start).
 
 **Nguồn:** https://docs.pytorch.org/docs/stable/checkpoint.html, https://arxiv.org/abs/1604.06174, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/blog/500k-context-length-fine-tuning, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/get-started/install/google-colab
 
@@ -284,11 +284,11 @@ Sau khi train, bạn chọn giữ adapter riêng hay gộp nó vào model gốc.
 
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 | --- | --- | --- |
-| Full fine-tuning vs PEFT | [Fine-tuning](/fine-tuning) | [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide) |
-| LoRA (A × B) | [Fine-tuning](/fine-tuning) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Faster MoE](https://unsloth.ai/docs/basics/faster-moe) |
-| `r`, `lora_alpha`, `lora_dropout`, `bias`, `use_rslora`, `loftq_config` | [Fine-tuning](/fine-tuning), [Cài đặt](/cai-dat) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama) |
-| `target_modules` | [Fine-tuning](/fine-tuning) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining) |
-| QLoRA, `load_in_4bit` | [Fine-tuning](/fine-tuning), [Model catalog](/model-catalog) | [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [FAQ](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me) |
-| Gradient checkpointing | [Fine-tuning](/fine-tuning) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [500K Context Length Fine-tuning](https://unsloth.ai/docs/blog/500k-context-length-fine-tuning) |
+| Full fine-tuning vs PEFT | [Fine-tuning](/fine-tuning/) | [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide) |
+| LoRA (A × B) | [Fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Faster MoE](https://unsloth.ai/docs/basics/faster-moe) |
+| `r`, `lora_alpha`, `lora_dropout`, `bias`, `use_rslora`, `loftq_config` | [Fine-tuning](/fine-tuning/), [Cài đặt](/cai-dat) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama) |
+| `target_modules` | [Fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining) |
+| QLoRA, `load_in_4bit` | [Fine-tuning](/fine-tuning/), [Model catalog](/model-catalog) | [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [FAQ](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me) |
+| Gradient checkpointing | [Fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [500K Context Length Fine-tuning](https://unsloth.ai/docs/blog/500k-context-length-fine-tuning) |
 | Merge adapter, `save_method` | [Export & deploy](/export-deploy) | [vLLM Deployment & Inference Guide](https://unsloth.ai/docs/basics/inference-and-deployment/vllm-guide), [Saving to GGUF](https://unsloth.ai/docs/basics/inference-and-deployment/saving-to-gguf) |
 | LoRA hot swapping | [Export & deploy](/export-deploy) | [LoRA Hot Swapping Guide](https://unsloth.ai/docs/basics/inference-and-deployment/vllm-guide/lora-hot-swapping-guide) |

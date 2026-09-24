@@ -5,7 +5,7 @@ description: Loss, gradient, optimizer, learning rate, scheduler, warmup, epoch/
 
 # Quá trình huấn luyện
 
-Trang này giải thích chuyện gì xảy ra khi bạn bấm **Start Training** trong Unsloth Studio hoặc gọi `trainer.train()`. Bạn sẽ biết model học bằng cách nào, và mỗi tham số như `learning_rate`, `gradient_accumulation_steps`, `warmup_steps` điều khiển phần nào. Trang cũng hướng dẫn cách đọc biểu đồ loss. Nên đọc trang này trước khi chỉnh hyperparameter trong [Fine-tuning](/fine-tuning).
+Trang này giải thích chuyện gì xảy ra khi bạn bấm **Start Training** trong Unsloth Studio hoặc gọi `trainer.train()`. Bạn sẽ biết model học bằng cách nào, và mỗi tham số như `learning_rate`, `gradient_accumulation_steps`, `warmup_steps` điều khiển phần nào. Trang cũng hướng dẫn cách đọc biểu đồ loss. Nên đọc trang này trước khi chỉnh hyperparameter trong [Fine-tuning](/fine-tuning/).
 
 ## Vòng lặp huấn luyện một bước
 
@@ -36,12 +36,13 @@ Nhánh "đã gom đủ" trong sơ đồ chính là cách gradient accumulation h
 
 ## Pretraining, fine-tuning và continued pretraining
 
-Ba cách train này khác nhau ở điểm xuất phát và lượng dữ liệu cần. Mục này giúp bạn biết mình đang cần cách nào.
+Các cách train này khác nhau ở điểm xuất phát và lượng dữ liệu cần. Mục này giúp bạn biết mình đang cần cách nào.
 
 **Khái niệm.**
 - **Pretraining** (huấn luyện trước): train model từ đầu. Trọng số được khởi tạo ngẫu nhiên. Cần lượng dữ liệu khổng lồ và có thể kéo dài nhiều tuần. **[Nguồn ngoài]** https://huggingface.co/learn/llm-course/chapter1/4
 - **Fine-tuning** (tinh chỉnh): train thêm một model *đã* pretrain bằng dataset riêng cho tác vụ của bạn. Cách này cần ít dữ liệu, thời gian và chi phí hơn nhiều, vì kiến thức sẵn có được "chuyển giao" (transfer learning). **[Nguồn ngoài]** https://huggingface.co/learn/llm-course/chapter1/4. Dạng phổ biến nhất là **SFT** (Supervised Fine-Tuning — tinh chỉnh có giám sát): train trên các cặp đầu vào và đầu ra. **[Nguồn ngoài]** https://huggingface.co/docs/trl/sft_trainer
 - **Continued pretraining** (CPT — pretrain tiếp): theo docs Unsloth, đây là cách "lái" model sang một miền kiến thức mới, hoặc một ngôn ngữ mà model gốc học chưa tốt. Ví dụ: luật, y khoa, một ngôn ngữ khác. CPT thường dùng văn bản thô thay vì cặp hỏi–đáp.
+- **Distillation** (chưng cất): **[Nguồn ngoài]** nén kiến thức của một model lớn, hoặc của cả một nhóm model, vào một model nhỏ hơn và dễ triển khai hơn. Paper gốc: https://arxiv.org/abs/1503.02531. Trong docs Unsloth, bạn gặp khái niệm này qua tên model, ví dụ các bản "distilled" của DeepSeek-R1 như `DeepSeek-R1-Distill-Llama-8B`.
 
 **Ví dụ.** Theo docs Unsloth, Llama-3 được pretrain trên khoảng 15 nghìn tỷ token. Nếu bạn chỉ muốn model trả lời theo giọng thương hiệu, một dataset hỏi–đáp nhỏ là đủ để fine-tune. Nếu muốn dạy model một ngôn ngữ mới, hãy dùng notebook continued pretraining.
 
@@ -50,9 +51,9 @@ Ba cách train này khác nhau ở điểm xuất phát và lượng dữ liệu
 - Với CPT, docs thêm `lm_head` và `embed_tokens` vào `target_modules`. Hai lớp này dùng learning rate riêng, nhỏ hơn 2–10 lần: `embedding_learning_rate = 5e-6` bên cạnh `learning_rate = 5e-5`.
 - Colab có thể hết bộ nhớ với Llama-3 8B. Khi đó docs khuyên chỉ thêm `lm_head`.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (mục Continued pretraining); docs gốc [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining), [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/mo-rong) (mục Continued pretraining); docs gốc [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining), [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide).
 
-**Nguồn:** https://unsloth.ai/docs/basics/continued-pretraining, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me, https://huggingface.co/learn/llm-course/chapter1/4, https://huggingface.co/docs/trl/sft_trainer
+**Nguồn:** https://unsloth.ai/docs/basics/continued-pretraining, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me, https://huggingface.co/learn/llm-course/chapter1/4, https://huggingface.co/docs/trl/sft_trainer, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://arxiv.org/abs/1503.02531
 
 ## Loss và cross-entropy
 
@@ -76,7 +77,7 @@ Model càng tự tin vào token đúng thì loss càng gần 0. Model đoán sai
 - `train_on_responses_only` (trong Studio là "Train on Completions") che phần câu hỏi của người dùng. Khi đó loss chỉ tính trên câu trả lời của assistant. Docs Unsloth dẫn QLoRA paper: cách này tăng độ chính xác, nhất là với hội thoại nhiều lượt. Vì mẫu số khác nhau, loss khi bật và khi tắt tùy chọn này không so trực tiếp được với nhau **[Nhận định]**.
 - Docs ghi ngưỡng loss "tốt" không thống nhất. Xem mục "Overfitting và underfitting" bên dưới.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (mục Đánh giá và tránh overfitting), [Dữ liệu](/du-lieu); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide). Khái niệm token: [Token & context](/kien-thuc-nen/token-va-context).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/danh-gia) (mục Đánh giá và tránh overfitting), [Dữ liệu](/du-lieu); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide). Khái niệm token: [Token & context](/kien-thuc-nen/token-va-context).
 
 **Nguồn:** https://huggingface.co/docs/trl/sft_trainer, https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html, https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/new/studio/start
 
@@ -96,7 +97,7 @@ Gradient cho model biết nên chỉnh từng tham số theo hướng nào để
 - Lượt backward cần giữ lại các activation (giá trị trung gian) từ lượt forward, nên tốn nhiều bộ nhớ. Unsloth giảm phần này bằng `use_gradient_checkpointing = "unsloth"`. Xem [LoRA và QLoRA](/kien-thuc-nen/lora-va-qlora).
 - Với LoRA, gradient và optimizer state chỉ cần lưu cho ma trận adapter, không cần cho toàn bộ trọng số gốc (theo trang [Faster MoE](https://unsloth.ai/docs/basics/faster-moe) của docs Unsloth).
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (bảng các bước trong Studio: Loss, LR, Grad Norm); docs gốc [Get started with Unsloth Studio](https://unsloth.ai/docs/new/studio/start).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/quy-trinh) (bảng các bước trong Studio: Loss, LR, Grad Norm); docs gốc [Get started with Unsloth Studio](https://unsloth.ai/docs/new/studio/start).
 
 **Nguồn:** https://docs.pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html, https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html, https://huggingface.co/docs/trl/sft_trainer, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/basics/faster-moe
 
@@ -120,7 +121,7 @@ Nếu full fine-tuning model 8B, riêng state 32-bit đã là `8 tỷ × 2 × 4 
 - Nếu không có Unsloth, `SFTConfig` (TRL) mặc định `optim = "adamw_torch_fused"`, `learning_rate = 2e-5`, `weight_decay = 0.0`. Nếu bạn tự viết `SFTConfig` mà không đặt các giá trị này, kết quả sẽ khác notebook Unsloth. **[Nguồn ngoài]** https://huggingface.co/docs/trl/sft_trainer
 - Docs Unsloth ghi: khi load lại một LoRA adapter để train tiếp, optimizer state bị reset. Muốn giữ optimizer state thì resume từ checkpoint (mục "Checkpoint" cuối trang).
 
-**Gặp ở đâu trong Unsloth.** [Cài đặt](/cai-dat) (code mẫu `optim = "adamw_8bit"`), [Fine-tuning](/fine-tuning); docs gốc [Google Colab install](https://unsloth.ai/docs/get-started/install/google-colab), [Get started with Unsloth Studio](https://unsloth.ai/docs/new/studio/start).
+**Gặp ở đâu trong Unsloth.** [Cài đặt](/cai-dat) (code mẫu `optim = "adamw_8bit"`), [Fine-tuning](/fine-tuning/); docs gốc [Google Colab install](https://unsloth.ai/docs/get-started/install/google-colab), [Get started with Unsloth Studio](https://unsloth.ai/docs/new/studio/start).
 
 **Nguồn:** https://arxiv.org/abs/1412.6980, https://arxiv.org/abs/1711.05101, https://arxiv.org/abs/2110.02861, https://docs.pytorch.org/docs/stable/generated/torch.optim.SGD.html, https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html, https://huggingface.co/docs/trl/sft_trainer, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/get-started/install/google-colab, https://unsloth.ai/docs/basics/continued-pretraining
 
@@ -142,7 +143,7 @@ Learning rate quyết định model học nhanh hay chậm. Đây là một tron
 - LR thấp: ổn định hơn nhưng cần nhiều epoch hơn. Docs lưu ý LR thấp cũng có thể dẫn tới overfitting, hoặc khiến model không học được.
 - TRL ghi chú: train adapter thường dùng LR cao hơn (khoảng `1e-4`), vì chỉ học các tham số mới. **[Nguồn ngoài]** https://huggingface.co/docs/trl/sft_trainer
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (bảng Hyperparameter khuyến nghị), [Reinforcement learning](/reinforcement-learning); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/hyperparameter) (bảng Hyperparameter khuyến nghị), [Reinforcement learning](/reinforcement-learning); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/new/studio/start, https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html, https://huggingface.co/docs/trl/sft_trainer
 
@@ -172,7 +173,7 @@ Các trang docs ghi warmup theo hai đơn vị khác nhau: số step cố địn
 | Warmup | 5–10% tổng số step — [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) | Warmup Steps = `5` — [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) | `warmup_steps = 10` — code mẫu [Google Colab install](https://unsloth.ai/docs/get-started/install/google-colab), [Windows install](https://unsloth.ai/docs/get-started/install/windows-installation) |
 :::
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (bảng So sánh mặc định: Studio vs Core); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Get started with Unsloth Studio](https://unsloth.ai/docs/new/studio/start).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/hyperparameter) (bảng So sánh mặc định: Studio vs Core); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Get started with Unsloth Studio](https://unsloth.ai/docs/new/studio/start).
 
 **Nguồn:** https://huggingface.co/docs/transformers/main_classes/optimizer_schedules, https://docs.pytorch.org/docs/stable/optim.html, https://huggingface.co/docs/trl/sft_trainer, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/get-started/install/google-colab, https://unsloth.ai/docs/get-started/install/windows-installation
 
@@ -212,7 +213,7 @@ Các trang docs đưa ra giá trị mặc định khác nhau cho batch size, gra
 Effective batch của Studio (32) nằm ngoài khoảng 4–16 mà LoRA Hyperparameters Guide khuyến nghị.
 :::
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (Hyperparameter khuyến nghị, So sánh mặc định), [Cài đặt](/cai-dat) (code mẫu); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/hyperparameter) (Hyperparameter khuyến nghị, So sánh mặc định), [Cài đặt](/cai-dat) (code mẫu); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/new/studio/start, https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html, https://huggingface.co/docs/trl/sft_trainer
 
@@ -226,7 +227,7 @@ Weight decay là một cách chống học thuộc. Bạn thường giữ giá t
 
 **Ảnh hưởng khi dùng Unsloth.** Docs khuyên dùng `0.01` (khoảng `0.01`–`0.1`) và cảnh báo đừng dùng số quá lớn. Studio mặc định `0.01`. Khi nghi overfitting, docs gợi ý tăng `weight_decay`, bắt đầu từ `0.01` hoặc `0.1`.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/new/studio/start, https://arxiv.org/abs/1711.05101, https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html
 
@@ -257,7 +258,7 @@ Hai trang docs đưa ra ngưỡng training loss "tốt" khác nhau:
 Cả hai trang đều nói ngưỡng phụ thuộc vào dataset và tác vụ, và khuyên kiểm tra thêm bằng validation (eval) loss.
 :::
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (mục Đánh giá và tránh overfitting); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide). Các núm `r`, `lora_alpha`, `lora_dropout`: [LoRA và QLoRA](/kien-thuc-nen/lora-va-qlora).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/danh-gia) (mục Đánh giá và tránh overfitting); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide). Các núm `r`, `lora_alpha`, `lora_dropout`: [LoRA và QLoRA](/kien-thuc-nen/lora-va-qlora).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama
 
@@ -274,7 +275,7 @@ Train loss chỉ cho biết model học dữ liệu train tốt đến đâu. Đ
 
 **Ảnh hưởng khi dùng Unsloth.**
 - Studio: bạn phải chọn **Eval split** thì mới có biểu đồ **Eval Loss**. Nếu đặt eval steps mà không chọn eval split, Studio sẽ báo lỗi. Eval Steps mặc định `0`.
-- Core: early stopping cần `eval_strategy = "steps"`, `load_best_model_at_end = True`, `metric_for_best_model = "eval_loss"`, `greater_is_better = False` và `EarlyStoppingCallback(early_stopping_patience = 3, ...)`. Code đầy đủ ở [Fine-tuning](/fine-tuning).
+- Core: early stopping cần `eval_strategy = "steps"`, `load_best_model_at_end = True`, `metric_for_best_model = "eval_loss"`, `greater_is_better = False` và `EarlyStoppingCallback(early_stopping_patience = 3, ...)`. Code đầy đủ ở [Fine-tuning](/fine-tuning/).
 - Eval có thể chậm với dataset lớn. Docs gợi ý giảm kích thước tập eval, hoặc giãn số step giữa các lần eval.
 
 ::: warning Docs chưa thống nhất
@@ -287,7 +288,7 @@ Ba trang docs dùng tên và giá trị khác nhau cho số step giữa các l�
 `SFTConfig` của TRL hiện có tham số `eval_steps` (https://huggingface.co/docs/trl/sft_trainer). Danh sách tham số đó không có `evaluation_steps` — cần kiểm tra lại với phiên bản bạn dùng.
 :::
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (Đánh giá và tránh overfitting); docs gốc [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint) (mục Early Stopping), [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/danh-gia) (Đánh giá và tránh overfitting); docs gốc [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint) (mục Early Stopping), [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint, https://unsloth.ai/docs/new/studio/start, https://huggingface.co/learn/llm-course/chapter3/5, https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html, https://huggingface.co/docs/trl/sft_trainer
 
@@ -335,7 +336,7 @@ flowchart TD
 - Nếu đường loss nhiều nhiễu, trước hết hãy thử tăng `gradient_accumulation_steps` (theo tutorial Unsloth), rồi mới tính đến đổi LR.
 - Loss thấp chưa chắc model tốt. Docs Unsloth khuyên kiểm tra thêm bằng eval loss và chat thử với model.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (bước Train trong Studio); docs gốc [Get started with Unsloth Studio](https://unsloth.ai/docs/new/studio/start) (mục Charts).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/quy-trinh) (bước Train trong Studio); docs gốc [Get started with Unsloth Studio](https://unsloth.ai/docs/new/studio/start) (mục Charts).
 
 **Nguồn:** https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://huggingface.co/learn/llm-course/chapter3/5
 
@@ -358,7 +359,7 @@ Checkpoint giúp bạn không mất công train khi quá trình bị ngắt gi�
 - Studio: nút **Stop Training → Stop & Save** lưu checkpoint trước khi dừng. Nút **Cancel** dừng luôn, không lưu. Save Steps mặc định `0`. Trang Export của Studio cho chọn checkpoint để xuất. CLI có lệnh `list-checkpoints`.
 - Bạn có thể đẩy checkpoint lên Weights & Biases (`WANDB_LOG_MODEL = "checkpoint"`) và resume từ artifact.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning) (mục Resume từ checkpoint), [Export & deploy](/export-deploy) (chọn checkpoint để xuất); docs gốc [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint), [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/mo-rong) (mục Resume từ checkpoint), [Export & deploy](/export-deploy) (chọn checkpoint để xuất); docs gốc [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint), [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining).
 
 **Nguồn:** https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint, https://unsloth.ai/docs/basics/continued-pretraining, https://unsloth.ai/docs/new/studio/start, https://huggingface.co/docs/trl/sft_trainer
 
@@ -366,15 +367,15 @@ Checkpoint giúp bạn không mất công train khi quá trình bị ngắt gi�
 
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 | --- | --- | --- |
-| Pretraining / fine-tuning / CPT | [Fine-tuning](/fine-tuning), [Tổng quan](/tong-quan) | [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining) |
-| Loss, cross-entropy, train on completions | [Fine-tuning](/fine-tuning), [Dữ liệu](/du-lieu) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
-| Gradient, Grad Norm | [Fine-tuning](/fine-tuning) | [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
-| Optimizer (`adamw_8bit`) | [Cài đặt](/cai-dat), [Fine-tuning](/fine-tuning) | [Google Colab install](https://unsloth.ai/docs/get-started/install/google-colab), [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
-| Learning rate | [Fine-tuning](/fine-tuning), [Reinforcement learning](/reinforcement-learning) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
-| LR scheduler, warmup | [Fine-tuning](/fine-tuning) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
-| Epoch, step, batch, gradient accumulation | [Fine-tuning](/fine-tuning) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama) |
-| Weight decay | [Fine-tuning](/fine-tuning) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
-| Overfitting / underfitting | [Fine-tuning](/fine-tuning) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
-| Train loss vs eval loss, early stopping | [Fine-tuning](/fine-tuning) | [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint), [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide) |
-| Biểu đồ loss | [Fine-tuning](/fine-tuning) | [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
-| Checkpoint | [Fine-tuning](/fine-tuning), [Export & deploy](/export-deploy) | [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint) |
+| Pretraining / fine-tuning / CPT | [Fine-tuning](/fine-tuning/), [Tổng quan](/tong-quan) | [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining) |
+| Loss, cross-entropy, train on completions | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
+| Gradient, Grad Norm | [Fine-tuning](/fine-tuning/) | [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
+| Optimizer (`adamw_8bit`) | [Cài đặt](/cai-dat), [Fine-tuning](/fine-tuning/) | [Google Colab install](https://unsloth.ai/docs/get-started/install/google-colab), [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
+| Learning rate | [Fine-tuning](/fine-tuning/), [Reinforcement learning](/reinforcement-learning) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
+| LR scheduler, warmup | [Fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
+| Epoch, step, batch, gradient accumulation | [Fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama) |
+| Weight decay | [Fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
+| Overfitting / underfitting | [Fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
+| Train loss vs eval loss, early stopping | [Fine-tuning](/fine-tuning/) | [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint), [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide) |
+| Biểu đồ loss | [Fine-tuning](/fine-tuning/) | [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
+| Checkpoint | [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy) | [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint) |

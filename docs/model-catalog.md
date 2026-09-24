@@ -422,6 +422,6 @@ Mục này gom các gợi ý chọn model rải rác trong docs thành một dan
 
 **[Nhận định]** Nếu mục tiêu là fine-tune, bạn nên ưu tiên model mà trang docs có notebook hoặc số VRAM cho training cụ thể (gpt-oss, Nemotron 3, Qwen3-VL, Granite 4.1, DeepSeek-OCR 2), thay vì model chỉ có hướng dẫn chạy.
 
-Xem tiếp: [Inference](/inference), [Fine-tuning](/fine-tuning), [Cài đặt](/cai-dat).
+Xem tiếp: [Inference](/inference), [Fine-tuning](/fine-tuning/), [Cài đặt](/cai-dat).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/unsloth-model-catalog, https://unsloth.ai/docs/models/tutorials, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/ibm-granite-4.1, https://unsloth.ai/docs/models/tutorials/llama-4-how-to-run-and-fine-tune

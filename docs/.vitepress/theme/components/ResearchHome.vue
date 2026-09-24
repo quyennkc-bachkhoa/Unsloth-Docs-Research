@@ -28,14 +28,14 @@ const legend = [
     name: 'Nhận định',
     meaning: 'Ý kiến của người viết, không có trong nguồn nào.',
     example: 'Với dữ liệu thay đổi hằng ngày, RAG thường thực tế hơn fine-tune lại liên tục.',
-    where: '/fine-tuning'
+    where: '/fine-tuning/'
   },
   {
     kind: 'conflict',
     name: 'Docs chưa thống nhất',
     meaning: 'Các trang docs ghi giá trị khác nhau. Website liệt kê đủ, kèm link, không tự chọn.',
     example: 'lora_alpha mặc định: 32 trong Studio, 16 trong notebook Core.',
-    where: '/fine-tuning'
+    where: '/fine-tuning/hyperparameter'
   }
 ]
 
@@ -58,7 +58,7 @@ const unsloth = [
   {
     group: 'Huấn luyện',
     items: [
-      { t: 'Fine-tuning', d: 'LoRA, QLoRA, full; hyperparameter', l: '/fine-tuning' },
+      { t: 'Fine-tuning', d: 'LoRA, QLoRA, full; hyperparameter', l: '/fine-tuning/' },
       { t: 'Reinforcement Learning', d: 'GRPO, DPO, ORPO, KTO', l: '/reinforcement-learning' },
       { t: 'Dữ liệu', d: 'Định dạng dataset, chat template, Data Recipes', l: '/du-lieu' }
     ]

@@ -202,7 +202,7 @@ Các trang docs liệt kê khác nhau về định dạng file và phần cứng
 
 **[Nhận định]** Chạy một lượt nhỏ bằng Dataset slice trước khi train cả dataset giúp bạn phát hiện lỗi định dạng dữ liệu sớm.
 
-**Trang nội bộ:** [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning).
+**Trang nội bộ:** [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/).
 
 **Docs Unsloth gốc:** [Get started with Unsloth Studio](https://unsloth.ai/docs/new/studio/start), [Fine-tuning Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide), [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Data Recipes](https://unsloth.ai/docs/new/studio/data-recipe), [What Model Should I Use?](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use).
 

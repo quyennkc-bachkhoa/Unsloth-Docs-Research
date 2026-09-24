@@ -43,7 +43,7 @@ flowchart TD
 
 **Ảnh hưởng khi dùng Unsloth.** Tên các lớp trong sơ đồ (`q_proj`, `gate_proj`, `embed_tokens`, `lm_head`...) chính là những chuỗi bạn truyền vào `target_modules` khi gọi `get_peft_model`. Mục "Liên hệ LoRA target modules" ở cuối trang nói chi tiết.
 
-**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning), [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning/), [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
 
 **Nguồn:** HF Transformers Llama model doc; HF Modular Transformers; HF LLM Course chương 1.6 (https://huggingface.co/learn/llm-course/chapter1/6).
 
@@ -63,7 +63,7 @@ Transformer gốc dùng embedding học được. Nó cũng dùng chung ma trậ
 
 Xem [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining).
 
-**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning); khái niệm token: [Token & context](/kien-thuc-nen/token-va-context).
+**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning/); khái niệm token: [Token & context](/kien-thuc-nen/token-va-context).
 
 **Nguồn:** arXiv 1706.03762; HF LlamaConfig; Unsloth Continued Pretraining.
 
@@ -96,7 +96,7 @@ Trong mô hình decoder-only, mỗi token chỉ được nhìn các token đứn
 
 **Ảnh hưởng khi dùng Unsloth.** Trong code HF, ba phép chiếu Q, K, V có tên `q_proj`, `k_proj`, `v_proj`. Phép chiếu gộp đầu ra có tên `o_proj`. Cả bốn nằm trong `self_attn` của mỗi layer. **[Nguồn ngoài]** https://huggingface.co/docs/transformers/en/modular_transformers. Docs Unsloth xếp bốn module này vào nhóm "Attention" của `target_modules`. Nếu bạn bỏ chúng khỏi `target_modules`, LoRA không chỉnh được cách mô hình chọn ngữ cảnh.
 
-**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning); [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning/); [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
 
 **Nguồn:** arXiv 1706.03762; HF LLM Course 1.6; HF Modular Transformers; Unsloth LoRA Hyperparameters Guide.
 
@@ -195,7 +195,7 @@ Công thức trong paper gốc là `FFN(x) = max(0, x·W1 + b1)·W2 + b2`, với
 
 **Ảnh hưởng khi dùng Unsloth.** Ba module `gate_proj`, `up_proj`, `down_proj` là nhóm "MLP" của `target_modules`. Trong model MoE, FFN được thay bằng nhiều expert; xem [Dense & MoE](/kien-thuc-nen/dense-va-moe).
 
-**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning).
+**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning/).
 
 **Nguồn:** arXiv 1706.03762; HF LlamaConfig; Unsloth Faster MoE.
 
@@ -217,7 +217,7 @@ SwiGLU có **ba** ma trận trọng số thay vì hai. Để giữ số tham s�
 
 **Ảnh hưởng khi dùng Unsloth.** Ba ma trận của SwiGLU ứng với ba module `gate_proj`, `up_proj`, `down_proj` (xem mục cuối trang). Hàm kích hoạt cố định theo model; Unsloth không có tham số nào để đổi nó.
 
-**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning).
+**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning/).
 
 **Nguồn:** arXiv 1706.03762; arXiv 1606.08415; arXiv 2002.05202; PyTorch `torch.nn.GELU`; HF Llama model doc.
 
@@ -297,7 +297,7 @@ Phần lớn LLM hiện đại là decoder-only; HF lấy ví dụ các dòng Ll
 
 **Ảnh hưởng khi dùng Unsloth.** Khi fine-tune SFT, loss được tính trên việc dự đoán token kế tiếp. Docs Unsloth khuyên chỉ train trên phần trả lời (training on completions only), tức che phần input khỏi loss. Docs dẫn QLoRA paper rằng cách này tăng độ chính xác. Xem [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide). Phân loại model chi tiết: [Phân loại mô hình](/kien-thuc-nen/phan-loai-mo-hinh).
 
-**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning), [/model-catalog](/model-catalog).
+**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning/), [/model-catalog](/model-catalog).
 
 **Nguồn:** HF LLM Course 1.4 và 1.6; Unsloth LoRA Hyperparameters Guide.
 
@@ -351,7 +351,7 @@ Mỗi layer có đủ 7 module, và tổng này nhân với 32 layer.
 - Continued pretraining: thêm `"lm_head", "embed_tokens"` như ở mục Embedding.
 - Cách chọn `r`, `lora_alpha` và lý do LoRA tiết kiệm bộ nhớ: [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora).
 
-**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning) (bảng tham số `target_modules`), [/cai-dat](/cai-dat) (code mẫu), [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Faster MoE](https://unsloth.ai/docs/basics/faster-moe), [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining).
+**Gặp ở đâu trong Unsloth.** [/fine-tuning](/fine-tuning/hyperparameter) (bảng tham số `target_modules`), [/cai-dat](/cai-dat) (code mẫu), [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Faster MoE](https://unsloth.ai/docs/basics/faster-moe), [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining).
 
 **Nguồn:** Unsloth LoRA Hyperparameters Guide; Unsloth Faster MoE; Unsloth Continued Pretraining; HF Modular Transformers; HF Llama model doc; arXiv 2002.05202.
 
@@ -359,11 +359,11 @@ Mỗi layer có đủ 7 module, và tổng này nhân với 32 layer.
 
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 |---|---|---|
-| Embedding (`embed_tokens`), LM head (`lm_head`) | [/fine-tuning](/fine-tuning) | [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining) |
-| Self-attention, `q_proj`/`k_proj`/`v_proj`/`o_proj` | [/fine-tuning](/fine-tuning), [/cai-dat](/cai-dat) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
+| Embedding (`embed_tokens`), LM head (`lm_head`) | [/fine-tuning](/fine-tuning/) | [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining) |
+| Self-attention, `q_proj`/`k_proj`/`v_proj`/`o_proj` | [/fine-tuning](/fine-tuning/), [/cai-dat](/cai-dat) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
 | GQA, KV cache | [/inference](/inference) | [Claude Code](https://unsloth.ai/docs/basics/claude-code) |
 | RoPE | [/inference](/inference) | [Dynamic 3.0 GGUFs](https://unsloth.ai/docs/basics/dynamic-3.0-ggufs) |
 | Softmax, sampling | [/inference](/inference) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5) |
-| FFN/MLP, SwiGLU, `gate_proj`/`up_proj`/`down_proj` | [/fine-tuning](/fine-tuning) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Faster MoE](https://unsloth.ai/docs/basics/faster-moe) |
+| FFN/MLP, SwiGLU, `gate_proj`/`up_proj`/`down_proj` | [/fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Faster MoE](https://unsloth.ai/docs/basics/faster-moe) |
 | Layer, `--n-gpu-layers`, `-ot` | [/inference](/inference) | [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
-| Decoder-only, train trên completions | [/fine-tuning](/fine-tuning), [/model-catalog](/model-catalog) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
+| Decoder-only, train trên completions | [/fine-tuning](/fine-tuning/), [/model-catalog](/model-catalog) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
