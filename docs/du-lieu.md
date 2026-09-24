@@ -44,6 +44,10 @@ Không cần cấu trúc, giữ mạch văn tự nhiên để model học từ v
   "text": "Pasta carbonara is a traditional Roman pasta dish. The sauce is made by mixing raw eggs with grated Pecorino Romano cheese and black pepper. The hot pasta is then tossed with crispy guanciale (cured pork cheek) and the egg mixture, creating a creamy sauce from the residual heat. Despite popular belief, authentic carbonara never contains cream or garlic. The dish likely originated in Rome in the mid-20th century, though its exact origins are debated..."
 ```
 
+::: warning Ví dụ trên không phải JSON hợp lệ
+Ví dụ raw text trong [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide) chỉ là một cặp khóa–giá trị, thiếu dấu `{}` bao ngoài. Nếu copy làm file dữ liệu, mỗi bản ghi cần là một object JSON đầy đủ có trường `"text"`.
+:::
+
 ### Instruction (Alpaca)
 
 Dùng khi muốn model trả lời một lượt theo chỉ dẫn cụ thể:
@@ -57,6 +61,13 @@ Dùng khi muốn model trả lời một lượt theo chỉ dẫn cụ thể:
 ```
 
 Alpaca dataset gốc có 52.000 cặp chỉ dẫn/đầu ra do GPT-4 sinh ra, gồm 3 cột `instruction`, `input`, `output`; mỗi dòng được ghép thành một prompt lớn để train (supervised instruction finetuning). Bản GPT-4: https://huggingface.co/datasets/vicgalle/alpaca-gpt4. Phần lớn notebook của Unsloth dùng Alpaca dataset.
+
+::: warning Docs chưa thống nhất: tên cột Alpaca, và ví dụ không phải JSON hợp lệ
+- Viết hoa: `"Instruction"`, `"Input"`, `"Output"` — [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
+- Viết thường: cột `instruction` / `input` / `output` (format `alpaca`) — [Studio](https://unsloth.ai/docs/new/studio/start); cột "instruction", "input", "output" — [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama)
+
+Ví dụ Alpaca ở trên cũng chỉ là các cặp khóa–giá trị rời, thiếu `{}` và dấu phẩy giữa các trường, nên không parse được nếu copy nguyên văn thành file JSON.
+:::
 
 ### Conversation — ShareGPT
 
@@ -104,6 +115,10 @@ Hội thoại nhiều lượt, khóa `"from"`/`"value"`, luân phiên giữa `hu
 }
 ```
 
+::: warning Ví dụ ChatML trên không phải JSON hợp lệ
+Ví dụ chép nguyên văn từ [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide) có dấu phẩy thừa sau phần tử cuối của mảng `"messages"` (`},` trước `]`). JSON chuẩn không cho phép dấu phẩy này; nếu copy làm file dữ liệu, bỏ dấu phẩy đó đi.
+:::
+
 ### Vision (ảnh + chữ)
 
 Giống cặp hỏi–đáp nhưng thêm ảnh trong phần input. Mọi tác vụ vision phải có dạng:
@@ -121,6 +136,13 @@ Giống cặp hỏi–đáp nhưng thêm ảnh trong phần input. Mọi tác v�
 
 Ví dụ trong docs dùng bản rút gọn của ROCO radiography dataset (1978 dòng, cột `image`, `image_id`, `caption`, `cui`), chuyển mỗi mẫu sang dạng `messages` bằng hàm `convert_to_conversation`. Xem thêm mục Vision ở trang [Fine-tuning](/fine-tuning).
 
+::: warning Docs chưa thống nhất: thứ tự text/ảnh trong lượt user
+- Dữ liệu train: `{"type": "text", ...}` đứng trước `{"type": "image", ...}` — khuôn định dạng và hàm `convert_to_conversation` trong [Vision Fine-tuning](https://unsloth.ai/docs/basics/vision-fine-tuning) và [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
+- Ví dụ inference ngay sau đó trên cùng hai trang: `{"type": "image"}` đứng trước `{"type": "text", ...}` — [Vision Fine-tuning](https://unsloth.ai/docs/basics/vision-fine-tuning), [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
+
+Docs không nói thứ tự có ảnh hưởng hay không: cần kiểm tra lại với chat template của model bạn dùng.
+:::
+
 ### Dữ liệu dạng bảng nhiều cột (CSV/Excel)
 
 Trợ lý kiểu ChatGPT chỉ nhận **một** prompt, nên dataset nhiều cột (ví dụ Titanic: tuổi, hạng vé, giá vé...) phải được gộp thành một prompt. Unsloth có hàm `to_sharegpt` làm việc này:
@@ -129,7 +151,12 @@ Trợ lý kiểu ChatGPT chỉ nhận **một** prompt, nên dataset nhiều c�
 - Đoạn tùy chọn đặt trong `[[]]`: nếu cột trống, cả đoạn bị bỏ qua (hữu ích khi thiếu dữ liệu).
 - Cột đích/đầu ra khai báo ở `output_column_name` (với Alpaca là `output`).
 
-Ví dụ: với dòng thiếu giá vé, thay vì "Their fare is EMPTY", đoạn đó bị lược bỏ hoàn toàn. Tham số `conversation_extension` chọn ngẫu nhiên N dòng một lượt và ghép thành một hội thoại nhiều lượt (ví dụ đặt 3 → gộp 3 dòng); đặt lớn thì train chậm hơn nhưng chatbot có thể tốt hơn. Sau đó luôn gọi `standardize_sharegpt`. Notebook CSV/Excel: https://colab.research.google.com/drive/1VYkncZMfGFkeCEgN2IzbZIKEDkyQuJAS?usp=sharing
+Ví dụ: với dòng thiếu giá vé, thay vì "Their fare is EMPTY", đoạn đó bị lược bỏ hoàn toàn. Tham số `conversation_extension` chọn ngẫu nhiên N dòng một lượt và ghép thành một hội thoại nhiều lượt (ví dụ đặt 3 → gộp 3 dòng); đặt lớn thì train chậm hơn nhưng chatbot có thể tốt hơn. Tutorial dặn sau đó gọi `standardize_sharegpt` (xem hộp cảnh báo bên dưới). Notebook CSV/Excel: https://colab.research.google.com/drive/1VYkncZMfGFkeCEgN2IzbZIKEDkyQuJAS?usp=sharing
+
+::: warning Docs chưa thống nhất: khi nào gọi `standardize_sharegpt`
+- "We then use the `standardize_sharegpt` function ... Always call this!" (sau `to_sharegpt` / `conversation_extension`) — [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama), [Chat Templates](https://unsloth.ai/docs/basics/chat-templates), [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
+- "Only use the standardize_sharegpt method if your target dataset is formatted in the sharegpt format, but your model expect a ChatML format instead." — mục Q&A của [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
+:::
 
 ### Dataset cho model reasoning
 
@@ -149,13 +176,20 @@ Ví dụ: với dòng thiếu giá vé, thay vì "Their fare is EMPTY", đoạn 
 
 Lượng dữ liệu cũng ảnh hưởng tới việc chọn model: trên 1.000 dòng thường nên fine-tune base model; 300–1.000 dòng chất lượng cao thì base hay instruct đều được; dưới 300 dòng thì instruct model thường tốt hơn (chi tiết ở trang [Fine-tuning](/fine-tuning)).
 
+::: warning Docs chưa thống nhất: lượng dữ liệu và loại model
+- Tối thiểu "at least 100 rows"; tốt nhất "over 1,000 rows" — [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
+- Trên 1.000 dòng → base; 300–1.000 dòng → base hoặc instruct; "Less than 300 Rows" → instruct — [What Model Should I Use?](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use)
+- "We recommend starting with Instruct models" (không kèm điều kiện về lượng dữ liệu) — [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [What Model Should I Use?](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use)
+- Khi sinh dữ liệu tổng hợp bằng LLM: cần sẵn "at least 10 examples" — [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
+:::
+
 Docs nhấn mạnh hiệu quả phụ thuộc rất lớn vào **chất lượng** dữ liệu, nên phải làm sạch và chuẩn bị kỹ.
 
 **Nhiều dataset:** chuẩn hóa định dạng rồi gộp thành một dataset, hoặc dùng [notebook Multiple Datasets](https://colab.research.google.com/drive/1njCCbE1YVal9xC83hjdo2hiGItpY_D6t?usp=sharing).
 
 **Fine-tune một model nhiều lần?** Làm được, nhưng docs khuyên gộp mọi dataset và train một lần, vì train chồng lên model đã fine-tune có thể làm thay đổi chất lượng và kiến thức đã học ở lần trước.
 
-**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide
 
 ## Chat template
 
@@ -228,7 +262,7 @@ dataset = standardize_sharegpt(dataset)
 dataset = dataset.map(formatting_prompts_func, batched = True,)
 ```
 
-Chỉ dùng `standardize_sharegpt` khi dataset là ShareGPT còn model cần ChatML.
+Mục Q&A của Datasets Guide nói chỉ dùng `standardize_sharegpt` khi dataset là ShareGPT còn model cần ChatML; tutorial lại dặn "Always call this!" — xem hộp cảnh báo ở mục "Dữ liệu dạng bảng nhiều cột".
 
 ### Ánh xạ khóa ShareGPT trực tiếp (`mapping`)
 
@@ -254,6 +288,13 @@ from datasets import load_dataset
 dataset = load_dataset("philschmid/guanaco-sharegpt-style", split = "train")
 dataset = dataset.map(formatting_prompts_func, batched = True,)
 ```
+
+::: warning Docs chưa thống nhất: template nào dùng được với `mapping`
+- Comment trong code trên: `chat_template = "chatml", # Supports zephyr, chatml, mistral, llama, alpaca, vicuna, vicuna_old, unsloth` — [Chat Templates](https://unsloth.ai/docs/basics/chat-templates)
+- Danh sách `CHAT_TEMPLATES` in ra dài hơn nhiều (thêm `gemma`, `llama-3.1`, `qwen-2.5`, `phi-4`, `gemma-3`...) — [Chat Templates](https://unsloth.ai/docs/basics/chat-templates), [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
+
+Docs không nói `mapping` có dùng được với các template ngoài 8 tên trong comment hay không: cần kiểm tra lại.
+:::
 
 Có thể tự viết template riêng bằng cách truyền tuple `(custom_template, eos_token)`, trong đó `eos_token` phải được dùng bên trong template. Với template tùy biến kiểu notebook Ollama, bắt buộc có trường `{INPUT}` cho chỉ dẫn và `{OUTPUT}` cho đầu ra; `{SYSTEM}` là tùy chọn.
 
@@ -297,6 +338,15 @@ Tùy chọn khác: **Subset** (tự lấy từ dataset card), **Train split / Ev
 ## Data Recipes trong Studio
 
 Data Recipes biến tài liệu (PDF, CSV...) thành dataset dùng được / dataset tổng hợp, thông qua workflow dạng đồ thị node (graph-node) chỉnh sửa trực quan. Chạy trên nền NVIDIA NeMo [Data Designer](https://github.com/NVIDIA-NeMo/DataDesigner). Recipe lưu cục bộ trong trình duyệt, có thể export/import để chia sẻ.
+
+::: warning Docs chưa thống nhất: Data Recipes nhận loại file nào
+- "upload documents like PDFs or CSVs files" — [Data Recipes](https://unsloth.ai/docs/new/studio/data-recipe), [Studio](https://unsloth.ai/docs/new/studio/start), [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
+- Block Seed: dữ liệu từ Hugging Face, "local structured files" hoặc "unstructured documents that get chunked into rows" (không liệt kê định dạng cụ thể) — [Data Recipes](https://unsloth.ai/docs/new/studio/data-recipe)
+- "upload any unstructured or structured data into Unsloth Studio's Data Recipes" — [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
+- Tab Local ở bước Dataset khi train (không phải Data Recipes) nhận `PDF`, `DOCX`, `JSONL`, `JSON`, `CSV`, `Parquet` — [Studio](https://unsloth.ai/docs/new/studio/start)
+
+Data Recipes có nhận DOCX, JSONL, Parquet hay không: cần kiểm tra lại. Trang Data Recipes cũng chưa hoàn chỉnh (còn dòng nháp "need to add more here", mục "Run the full dataset build" để trống).
+:::
 
 ### Các bước
 
@@ -398,11 +448,11 @@ Sau khi sinh: kiểm tra chất lượng, loại bỏ hoặc sửa câu trả l�
 
 1. Đã xác định **mục đích**, **kiểu đầu ra** và **nguồn dữ liệu**.
 2. Chọn đúng định dạng theo kiểu train: raw text (CPT), Alpaca/instruction (SFT một lượt), ShareGPT/ChatML (SFT hội thoại), có ảnh (vision).
-3. Đủ số lượng: tối thiểu 100 dòng, tốt nhất trên 1.000 dòng; ít dữ liệu thì cân nhắc instruct model.
+3. Đủ số lượng: Datasets Guide ghi tối thiểu 100 dòng, tốt nhất trên 1.000 dòng; What Model Should I Use? ghi dưới 300 dòng thì dùng instruct model (các trang không thống nhất — xem hộp cảnh báo ở mục "Bao nhiêu dữ liệu là đủ").
 4. Ưu tiên dữ liệu tuyển chọn dạng hỏi–đáp thay vì đổ tài liệu thô (trừ trường hợp code).
 5. Đã làm sạch: bỏ mẫu lạc đề, kém chất lượng; cân bằng giữa các nhóm.
 6. Dữ liệu bảng nhiều cột đã gộp thành một prompt (`to_sharegpt`, đoạn tùy chọn trong `[[]]`).
-7. Đã áp **đúng chat template** của model (`get_chat_template`); dùng `standardize_sharegpt` nếu dataset ShareGPT mà model cần ChatML.
+7. Đã áp **đúng chat template** của model (`get_chat_template`); đã quyết định có gọi `standardize_sharegpt` hay không (docs chưa thống nhất: "Always call this!" hay chỉ khi dataset ShareGPT mà model cần ChatML — xem hộp cảnh báo ở mục "Dữ liệu dạng bảng nhiều cột").
 8. Token mới (nếu có) được thêm bằng `add_new_tokens` **trước** `get_peft_model`.
 9. Đã tách tập eval (ví dụ khoảng 20% dữ liệu) để theo dõi eval loss.
 10. Nhiều dataset: chuẩn hóa định dạng và gộp, train một lần thay vì fine-tune chồng nhiều lần.

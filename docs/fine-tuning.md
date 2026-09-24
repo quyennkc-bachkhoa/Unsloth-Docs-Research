@@ -47,14 +47,28 @@ Chưa rõ LoRA rank/alpha, QLoRA, gradient checkpointing là gì? Xem [LoRA và 
 | Tiêu chí | QLoRA (4-bit) | LoRA (16-bit) | Full fine-tuning |
 | --- | --- | --- | --- |
 | Model gốc | Lượng tử hóa 4-bit + LoRA adapter | Độ chính xác đầy đủ (16-bit) + LoRA adapter | Train toàn bộ trọng số |
-| VRAM (bộ nhớ card đồ họa) | Thấp nhất — ít hơn LoRA 4× ("save 75% memory", "over 75%") | Trung bình — gấp 4× QLoRA | Cao nhất |
+| VRAM (bộ nhớ card đồ họa) | Thấp nhất — mức giảm so với LoRA docs ghi nhiều cách (xem hộp cảnh báo bên dưới) | Trung bình — docs ghi gấp 4× QLoRA | Cao nhất |
 | Tốc độ | Chậm hơn LoRA một chút | Nhanh hơn QLoRA một chút | Docs chỉ ghi "compute-heavy", cần nhiều tài nguyên hơn hẳn |
-| Chất lượng | Kém LoRA không đáng kể; với Unsloth dynamic 4-bit, phần mất mát "largely recovered" / "negligible" | Chính xác hơn QLoRA một chút | Docs: LoRA làm đúng có thể ngang FFT |
+| Chất lượng | Kém LoRA một chút — mức chênh docs ghi khác nhau (xem hộp cảnh báo bên dưới) | Chính xác hơn QLoRA một chút | Docs: LoRA làm đúng có thể ngang FFT |
 | Ví dụ theo docs | Llama 70B vừa dưới 48GB VRAM với QLoRA trong Unsloth | — | — |
 | Cờ trong code | `load_in_4bit = True` | `load_in_4bit = False` hoặc `load_in_16bit = True` | `full_finetuning = True` |
 | Docs khuyên | **Bắt đầu từ đây** | Khi môi trường 16-bit và cần độ chính xác tối đa | Thường không cần; thử LoRA/QLoRA trước |
 
 Ngoài ra còn 8-bit (`load_in_8bit = True`). Mỗi lần chỉ được bật **một** phương pháp là `True`.
+
+::: warning Docs chưa thống nhất: QLoRA tiết kiệm bao nhiêu VRAM và mất bao nhiêu độ chính xác
+**Mức tiết kiệm VRAM của QLoRA (4-bit) so với LoRA 16-bit:**
+- "4× less" VRAM; LoRA "4× more than QLoRA" — [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide)
+- "reducing VRAM usage by over 75%" — [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide)
+- "quantizes to 4-bit to save 75% memory"; `load_in_4bit = True` "reducing memory use 4×" — [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide)
+- "reduces memory usage by 4x, allowing us to actually do finetuning in a free 16GB memory GPU" — [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama)
+
+**Độ chính xác mất đi khi dùng 4-bit:**
+- "1-2% accuracy degradation" (với `load_in_4bit = True`) — [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama)
+- "Slightly slower and marginally less accurate" — [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide)
+- Với Unsloth dynamic 4-bit, phần mất mát "is now negligible" — [FAQ + Is Fine-tuning Right For Me?](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me)
+- Với Unsloth dynamic 4-bit, phần mất mát "is now largely recovered" — [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide)
+:::
 
 Docs có hai lời khuyên đáng nhớ:
 
@@ -189,6 +203,16 @@ max_steps = 60, # num_train_epochs = 1,
 learning_rate = 2e-4,
 ```
 
+::: warning Docs chưa thống nhất: các giá trị mẫu ở trên
+- `gradient_accumulation_steps`: 4 — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama), [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide); 8 — [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Studio](https://unsloth.ai/docs/new/studio/start).
+- `per_device_train_batch_size`: 2 — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama), [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide); 4 — [Studio](https://unsloth.ai/docs/new/studio/start).
+- `lora_alpha`: 16 — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama), [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide); 32 — [Studio](https://unsloth.ai/docs/new/studio/start), ví dụ [QAT](https://unsloth.ai/docs/blog/quantization-aware-training-qat) ở trên.
+- `lora_dropout`: 0 — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama), [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide); 0.05 — [Studio](https://unsloth.ai/docs/new/studio/start).
+- Số epoch: `max_steps = 60` / `num_train_epochs = 1` — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama); 3 — [Studio](https://unsloth.ai/docs/new/studio/start); 1–3 — [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+
+Bảng đầy đủ ở mục "So sánh mặc định: Studio vs Core" bên dưới.
+:::
+
 **Chỉ train trên câu trả lời** (train on completions — che phần input của user, chỉ tính loss trên phần assistant). Docs dẫn bài báo QLoRA rằng cách này tăng độ chính xác, nhất là với hội thoại nhiều lượt. Với Llama 3, 3.1, 3.2, 3.3 và 4:
 
 ```python
@@ -217,33 +241,71 @@ Sau khi train: gọi `FastLanguageModel.for_inference(model)` (docs nói inferen
 
 ## Hyperparameter khuyến nghị
 
-Docs khuyên **giữ mặc định của Unsloth** trừ khi cần train lâu hơn hoặc batch lớn hơn. Bảng dưới gom khuyến nghị từ hướng dẫn hyperparameter (cột "Đặt sai thì sao" diễn giải từ chính docs).
+Docs khuyên **giữ mặc định của Unsloth** trừ khi cần train lâu hơn hoặc batch lớn hơn. Nhưng "mặc định" ở Studio, ở tutorial/notebook và ở hướng dẫn hyperparameter **không trùng nhau** ở nhiều tham số — xem bảng so sánh ngay sau bảng này. Cột "Đặt sai thì sao" diễn giải từ chính docs. Tham số có dấu ⚠ là tham số docs ghi nhiều giá trị khác nhau (chi tiết trong hộp "Docs chưa thống nhất" bên dưới).
 
 | Tham số | Giá trị khuyến nghị (docs) | Ý nghĩa ngắn | Đặt sai thì sao |
 | --- | --- | --- | --- |
-| `learning_rate` | `2e-4` cho LoRA/QLoRA; `5e-6` cho RL (DPO, GRPO...); FFT dùng thấp hơn. Khoảng thường gặp `2e-4` → `5e-6` | Mức điều chỉnh trọng số mỗi bước | Quá cao: train bất ổn, dễ overfit trong run ngắn. Quá thấp: cần nhiều epoch hơn, có thể overfit hoặc không học được |
-| Epochs (`num_train_epochs`) | 1–3 | Số lần model đi qua toàn bộ dataset | Hơn 3 epoch với dataset instruction: lợi ích giảm, dễ học thuộc. Quá ít: train chưa đủ |
-| `r` (LoRA rank) | 8, 16, 32, 64, 128 — chọn 16 hoặc 32 | Số tham số train được trong adapter | Lớn: tốn bộ nhớ, chậm hơn, rank quá lớn có thể overfit. Nhỏ: có thể underfit |
-| `lora_alpha` | Bằng `r`, hoặc `r * 2`; giữ alpha/rank ≥ 1 | Hệ số scale độ mạnh của cập nhật LoRA | Lớn: học mạnh hơn nhưng dễ overfit |
-| `lora_dropout` | 0 (mặc định, được tối ưu) đến 0.1 | Regularization (điều chuẩn) — ngẫu nhiên tắt một phần activation | Docs: không hữu ích lắm với run ngắn; dùng giá trị khác 0 nếu nghi overfit |
-| `weight_decay` | 0.01 (khuyến nghị) – 0.1 | Phạt trọng số lớn để giảm overfit | Docs cảnh báo không dùng giá trị quá lớn |
-| Warmup | 5–10% tổng số bước | Tăng dần learning rate lúc đầu | — (docs không nêu) |
-| Scheduler | `linear` hoặc `cosine` | Điều chỉnh learning rate theo thời gian | — (docs không nêu) |
+| `learning_rate` | `2e-4` cho LoRA/QLoRA; `5e-6` cho RL (DPO, GRPO...); FFT dùng thấp hơn. Khoảng thường gặp `2e-4` → `5e-6`. Tutorial gợi ý thử `2e-4`, `1e-4`, `5e-5`, `2e-5` | Mức điều chỉnh trọng số mỗi bước | Quá cao: train bất ổn, dễ overfit trong run ngắn. Quá thấp: cần nhiều epoch hơn, có thể overfit hoặc không học được |
+| Epochs (`num_train_epochs`) ⚠ | Hướng dẫn hyperparameter: 1–3. Tutorial: `max_steps = 60` để chạy thử, chạy thật `num_train_epochs = 1`. Studio mặc định 3 | Số lần model đi qua toàn bộ dataset | Hơn 3 epoch với dataset instruction: lợi ích giảm, dễ học thuộc. Quá ít: train chưa đủ |
+| `r` (LoRA rank) ⚠ | Bảng khuyến nghị: 8, 16, 32, 64, 128 — chọn 16 hoặc 32. Mục underfitting cùng trang: "usually is between 4 and 64". Studio: slider 4–128 | Số tham số train được trong adapter | Lớn: tốn bộ nhớ, chậm hơn, rank quá lớn có thể overfit. Nhỏ: có thể underfit |
+| `lora_alpha` ⚠ | Bằng `r`, hoặc `r * 2`; giữ alpha/rank ≥ 1. Snippet mẫu dùng `16` (= r); Studio mặc định `32` | Hệ số scale độ mạnh của cập nhật LoRA | Lớn: học mạnh hơn nhưng dễ overfit |
+| `lora_dropout` ⚠ | Code mẫu: 0 (được tối ưu), khoảng 0 – 0.1. Studio mặc định `0.05` | Regularization (điều chuẩn) — ngẫu nhiên tắt một phần activation | Docs: không hữu ích lắm với run ngắn; dùng giá trị khác 0 nếu nghi overfit |
+| `weight_decay` | 0.01 (khuyến nghị) – 0.1; Studio mặc định 0.01 | Phạt trọng số lớn để giảm overfit | Docs cảnh báo không dùng giá trị quá lớn |
+| Warmup ⚠ | Hướng dẫn hyperparameter: 5–10% tổng số bước. Studio mặc định Warmup Steps = 5 | Tăng dần learning rate lúc đầu | — (docs không nêu) |
+| Scheduler | `linear` hoặc `cosine`; Studio mặc định `linear` | Điều chỉnh learning rate theo thời gian | — (docs không nêu) |
 | `random_state` (seed) | Số nguyên bất kỳ, ví dụ `42`, `3407` | Cố định ngẫu nhiên để tái lập kết quả | Không cố định: khó so sánh các lần chạy |
 | `target_modules` | Tất cả lớp linear chính: `q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj` | Các lớp được gắn LoRA (attention + MLP) | Bỏ bớt module: tiết kiệm bộ nhớ rất ít nhưng giảm chất lượng; docs "strongly advise against" |
-| `bias` | `"none"` | Có train bias hay không | Train bias: thêm tham số, gần như không lợi |
+| `bias` ⚠ | Code: `"none"`; lời giải thích trong tutorial lại ghi "Leave this as 0" | Có train bias hay không | Train bias: thêm tham số, gần như không lợi |
 | `use_gradient_checkpointing` | `"unsloth"` | Tiết kiệm bộ nhớ khi train | `"unsloth"` giảm thêm 30% bộ nhớ và hỗ trợ context rất dài so với các lựa chọn `True`/`False` |
-| `per_device_train_batch_size` | 2 | Số mẫu mỗi lượt forward/backward trên 1 GPU — **yếu tố chính quyết định VRAM** | Quá lớn: OOM (hết bộ nhớ); tăng batch còn có thể chậm hơn do padding |
-| `gradient_accumulation_steps` | 8 (bảng hyperparameter); tutorial/notebook mặc định 4 | Số micro-batch trước mỗi lần cập nhật — **yếu tố chính quyết định thời gian train** | Cao: mỗi epoch lâu hơn |
-| Effective batch size | 4–16, khuyến nghị 16 (= 2 × 8) | `batch_size * gradient_accumulation_steps` | Nhỏ: nhiều nhiễu hơn; lớn: ổn định hơn |
-| `use_rslora` | `False` (tính năng nâng cao) | Rank-Stabilized LoRA: scale theo `lora_alpha / sqrt(r)` | Có thể ổn định hơn với rank cao |
+| `per_device_train_batch_size` ⚠ | Tutorial và hướng dẫn hyperparameter: 2. Studio mặc định 4 | Số mẫu mỗi lượt forward/backward trên 1 GPU — **yếu tố chính quyết định VRAM** | Quá lớn: OOM (hết bộ nhớ); tăng batch còn có thể chậm hơn do padding |
+| `gradient_accumulation_steps` ⚠ | Hướng dẫn hyperparameter: 8. Tutorial và Fine-tuning LLMs Guide: 4. Studio mặc định 8 | Số micro-batch trước mỗi lần cập nhật — **yếu tố chính quyết định thời gian train** | Cao: mỗi epoch lâu hơn |
+| Effective batch size ⚠ | Hướng dẫn hyperparameter: 4–16, khuyến nghị 16 (= 2 × 8). Mặc định tutorial cho ra 8 (= 2 × 4); mặc định Studio cho ra 32 (= 4 × 8) | `batch_size * gradient_accumulation_steps` | Nhỏ: nhiều nhiễu hơn; lớn: ổn định hơn |
+| `use_rslora` ⚠ | `False` (tính năng nâng cao). Hai trang mô tả tác dụng khác nhau | Rank-Stabilized LoRA | Theo hướng dẫn hyperparameter: có thể ổn định hơn với rank cao |
 | `loftq_config` | `None` | Khởi tạo LoRA từ singular vectors của trọng số gốc | Có thể tăng độ chính xác nhưng tăng vọt bộ nhớ lúc bắt đầu |
-| `max_seq_length` | 2048 để thử nghiệm | Độ dài context khi train | — |
+| `max_seq_length` | 2048 để thử nghiệm; Studio mặc định 2048 (tùy chọn 512 → 32768) | Độ dài context khi train | — |
 
 Muốn effective batch = 32, các cấu hình `32×1`, `16×2`, `8×4`, `4×8`, `2×16`, `1×32` tương đương về cập nhật trọng số nhưng khác xa về VRAM. Docs khuyên: đặt `batch_size` nhỏ rồi tăng `gradient_accumulation_steps`. Unsloth đã sửa lỗi gradient accumulation nên hai cách này **tương đương hoàn toàn** trong Unsloth.
 
-::: info Mặc định trong Studio khác với notebook
-Studio điền sẵn: Learning Rate `2e-4`, Context Length `2048` (tùy chọn 512 → 32768), Rank `16` (slider 4–128), Alpha `32`, Dropout `0.05`, Epochs 3, Batch Size 4, Gradient Accumulation 8, Weight Decay 0.01, Optimizer AdamW 8-bit, LR Scheduler linear, Warmup Steps 5, Gradient Checkpointing `unsloth`, Seed 3407, Packing false, Train on Completions false. LoRA Variant chọn được `LoRA` / `RS-LoRA` / `LoftQ`.
+### So sánh mặc định: Studio vs Core
+
+"Core tutorial" là tutorial Llama-3 + Ollama (giá trị trong notebook; batch, gradient accumulation, max_steps, learning rate trùng với phần Training của Fine-tuning LLMs Guide). "—" nghĩa là trang đó không nêu giá trị.
+
+| Tham số | [Studio](https://unsloth.ai/docs/new/studio/start) | [Core tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama) | [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
+| --- | --- | --- | --- |
+| Batch size | 4 | `per_device_train_batch_size = 2` | 2 |
+| Gradient accumulation | 8 | `gradient_accumulation_steps = 4` | 8 |
+| Effective batch (tính ra) | 32 | 8 | 16 (khuyến nghị 4–16) |
+| Epochs / steps | Epochs 3; Max Steps `0` (= dùng Epochs) | `max_steps = 60` để chạy thử; chạy thật `num_train_epochs = 1`; gợi ý 1–3 lượt | 1–3 epoch |
+| Learning rate | `2e-4` | `2e-4` | `2e-4` (LoRA/QLoRA) |
+| Context length | 2048 (512 → 32768) | `max_seq_length = 2048` | — |
+| Rank `r` | 16 (slider 4–128) | `r = 16` | 16 hoặc 32 (khoảng 8–128; mục underfitting: 4–64) |
+| `lora_alpha` | 32 | `lora_alpha = 16` | `r` hoặc `r * 2`; snippet `lora_alpha = 16` |
+| `lora_dropout` | 0.05 | `lora_dropout = 0` | 0 (mặc định) – 0.1 |
+| `bias` | — | `bias = "none"` (lời giải thích ghi "Leave this as 0") | `"none"` |
+| Weight decay | 0.01 | — | 0.01 – 0.1 |
+| Warmup | 5 steps | — | 5–10% tổng số bước |
+| LR scheduler | linear | — | `linear` hoặc `cosine` |
+| Optimizer | AdamW 8-bit | — | — |
+| Gradient checkpointing | `unsloth` | `"unsloth"` | `"unsloth"` |
+| Seed | 3407 | `random_state = 3407` | Số nguyên bất kỳ (ví dụ 42, 3407) |
+| Target modules | Bật hết 7 module | Cả 7 module | Cả 7 module |
+| LoRA variant | `LoRA` / `RS-LoRA` / `LoftQ` (mặc định LoRA) | `use_rslora = False`, `loftq_config = None` | `use_rslora = False`, `loftq_config = None` |
+| Train on completions | false | — | Khuyên dùng (tăng độ chính xác, nhất là hội thoại nhiều lượt) |
+| Packing | false | — | — |
+| Save / Eval steps | 0 / 0 | — | — |
+
+::: warning Docs chưa thống nhất: giá trị mặc định/khuyến nghị
+Các trang docs không đưa cùng một bộ "mặc định". Trang này không chọn thay bạn:
+- **Batch size:** 4 — [Studio](https://unsloth.ai/docs/new/studio/start); 2 — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama), [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide).
+- **Gradient accumulation:** 8 — [Studio](https://unsloth.ai/docs/new/studio/start), [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide); 4 — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama), [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide).
+- **Epochs:** 3 — [Studio](https://unsloth.ai/docs/new/studio/start); `max_steps = 60` (chạy thử) hoặc `num_train_epochs = 1` (chạy thật) — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama), [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide); 1–3 — [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+- **`lora_alpha`:** 32 — [Studio](https://unsloth.ai/docs/new/studio/start); 16 — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama) và snippet của [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide); "`r` hoặc `r * 2`" — bảng của [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+- **`lora_dropout`:** 0.05 — [Studio](https://unsloth.ai/docs/new/studio/start); 0 — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama), [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) (khoảng 0–0.1).
+- **Warmup:** 5 steps — [Studio](https://unsloth.ai/docs/new/studio/start); 5–10% tổng số bước — [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+- **Train on completions:** mặc định false — [Studio](https://unsloth.ai/docs/new/studio/start); khuyên dùng — [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+- **Khoảng rank:** 8, 16, 32, 64, 128 (chọn 16 hoặc 32) — bảng khuyến nghị của [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide); "usually is between 4 and 64" — mục Underfitting cùng trang [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide); slider 4–128 — [Studio](https://unsloth.ai/docs/new/studio/start).
+- **`bias`:** code `bias = "none"` nhưng lời giải thích ghi "Leave this as 0" — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama); "Leave this as `"none"`" — [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+- **`use_rslora`:** "Advanced feature to set the `lora_alpha = 16` automatically" — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama); nếu `True` thì scaling thành `lora_alpha / sqrt(r)` thay vì `lora_alpha / r` — [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
 :::
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/new/studio/start
@@ -265,6 +327,12 @@ Các bước docs gợi ý:
 
 Instruct model dùng chat template hội thoại (ChatML, ShareGPT) và cần ít dữ liệu hơn; base model hợp với template dạng instruction (Alpaca, Vicuna). Với người mới, docs khuyên bắt đầu từ **instruct model nhỏ** như Llama 3.1 (8B). Nếu được, fine-tune thử cả hai rồi so sánh.
 
+::: warning Docs chưa thống nhất: chọn instruct hay base, và cần bao nhiêu dữ liệu
+- "We recommend starting with **Instruct models**" (không kèm điều kiện về lượng dữ liệu) — [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [What Model Should I Use?](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use)
+- Trên 1.000 dòng: "generally best to fine-tune the base model"; 300–1.000 dòng: base hoặc instruct; dưới 300 dòng: instruct — [What Model Should I Use?](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use)
+- Tối thiểu "at least 100 rows"; tối ưu "over 1,000 rows" (không gắn với việc chọn base hay instruct) — [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
+:::
+
 ::: tip Kiến thức nền
 Base vs instruct là gì? Xem [Phân loại mô hình](/kien-thuc-nen/phan-loai-mo-hinh). Cách đọc "8B" và ước tính VRAM: [Tham số và bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho).
 :::
@@ -283,7 +351,14 @@ Ví dụ tên model: `unsloth/llama-3.1-8b-unsloth-bnb-4bit`.
 
 ## Đánh giá và tránh overfitting
 
-**Đọc training loss.** Theo docs, loss khoảng 0.5–1.0 thường là dấu hiệu tốt (tùy dataset và tác vụ). Loss không giảm thì cần chỉnh cấu hình. Loss về 0 có thể là overfitting (học thuộc dữ liệu train). Hướng dẫn hyperparameter nói cụ thể hơn: loss dưới **0.2** thì nhiều khả năng đang overfit.
+**Đọc training loss.** Loss không giảm thì cần chỉnh cấu hình. Loss quá thấp có thể là overfitting (học thuộc dữ liệu train), nhưng docs đưa các ngưỡng khác nhau:
+
+::: warning Docs chưa thống nhất: ngưỡng loss
+- "a loss around 0.5 to 1.0 is a good sign"; "If the loss goes to 0, that could mean overfitting" — [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama)
+- "If your training loss drops below 0.2, your model is likely overfitting" — [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide)
+
+Hai trang đều nói ngưỡng phụ thuộc dataset/tác vụ và khuyên kiểm tra thêm bằng validation/eval loss.
+:::
 
 **Cách đánh giá docs gợi ý:**
 
@@ -292,6 +367,14 @@ Ví dụ tên model: `unsloth/llama-3.1-8b-unsloth-bnb-4bit`.
 - Bật evaluation trong Unsloth; có thể chậm với dataset lớn → giảm kích thước tập eval hoặc giãn số bước giữa các lần eval.
 - Công cụ eval tự động: dùng được nhưng có thể không khớp tiêu chí của bạn.
 - Trong Studio: chọn **Eval split** để có biểu đồ **Eval Loss**.
+
+::: warning Docs chưa thống nhất: tên tham số số bước giữa các lần eval
+- `evaluation_steps = 100` — [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide)
+- `eval_steps = 10` (cùng `eval_strategy = "steps"`, trong `SFTConfig`) — [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint)
+- "Eval Steps", mặc định `0` — [Studio](https://unsloth.ai/docs/new/studio/start)
+
+Tên tham số nào đúng với phiên bản TRL/Transformers bạn đang dùng: cần kiểm tra lại.
+:::
 
 **Early stopping theo eval loss** (dừng khi `eval_loss` không giảm sau vài lần eval):
 
@@ -376,13 +459,30 @@ trainer.add_callback(early_stopping_callback)
 | 48 GB | 12,106 | OOM |
 | 80 GB | 89,389 | 6,916 |
 
-Docs giải thích lượng VRAM tiết kiệm được đến từ thuật toán gradient checkpointing của Unsloth cộng thuật toán CCE của Apple. Các con số tổng quát khác trong docs: "2x faster, 70% less memory" (tutorial Llama-3), fine-tune từ 3GB VRAM (hướng dẫn fine-tuning), context dài gấp 4× khi fine-tune.
+Docs giải thích lượng VRAM tiết kiệm được đến từ thuật toán gradient checkpointing của Unsloth cộng thuật toán CCE của Apple.
+
+::: warning Docs chưa thống nhất: con số VRAM, context và điều kiện đo
+**Mức giảm VRAM của Unsloth:**
+- "70% less memory" (không kèm điều kiện đo) — [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama)
+- "trên 70%" (Llama 3.1 8B) và "trên 75%" (Llama 3.3 70B) — [Unsloth Benchmarks](https://unsloth.ai/docs/basics/unsloth-benchmarks)
+
+**VRAM tối thiểu / GPU miễn phí:**
+- Fine-tune hoặc RL "with just 3GB VRAM" (không ghi model, cấu hình) — [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide)
+- Llama-3 8B 4-bit fine-tune được trên "a free 16GB memory GPU" — [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama)
+- "Colab's free 15 GB VRAM tier" — [Unsloth Notebooks](https://unsloth.ai/docs/get-started/unsloth-notebooks)
+
+**Context dài hơn bao nhiêu lần:**
+- "Unsloth enables 4× longer context fine-tuning" — [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide); "4x longer context lengths than the best" — [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama)
+- 12× (Llama 3.1 8B) và 13× (Llama 3.3 70B) — [Unsloth Benchmarks](https://unsloth.ai/docs/basics/unsloth-benchmarks)
+
+**Điều kiện đo trong trang benchmark:** bảng tốc độ ghi "Tested on H100 and Blackwell GPUs" nhưng cột VRAM chỉ ghi 80GB và không tách theo GPU; bảng context Llama 3.1 (8B) không ghi GPU; bảng context Llama 3.3 (70B) ghi "80GB A100" — [Unsloth Benchmarks](https://unsloth.ai/docs/basics/unsloth-benchmarks). Cần kiểm tra lại trước khi dùng các số này để ước tính phần cứng.
+:::
 
 ::: warning Đo tốc độ đúng cách
 `torch.compile` thường mất khoảng 5 phút (hoặc lâu hơn) để khởi động và biên dịch, nên lúc đầu có vẻ chậm. Chỉ đo throughput **sau** khi đã nạp xong.
 :::
 
-**Nguồn:** https://unsloth.ai/docs/basics/unsloth-benchmarks, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide
+**Nguồn:** https://unsloth.ai/docs/basics/unsloth-benchmarks, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/unsloth-notebooks
 
 ## Mở rộng
 
@@ -509,7 +609,7 @@ Một số notebook tiêu biểu (Colab):
 | QAT | [Qwen3 (4B) QAT](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Qwen3_\(4B\)_Instruct-QAT.ipynb) |
 | Sinh dữ liệu tổng hợp | [Synthetic Data Llama 3.2 (3B)](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Meta_Synthetic_Data_Llama3_2_\(3B\).ipynb) |
 
-Model lớn (vượt 15 GB VRAM của Colab miễn phí) cần gói Colab trả phí hoặc credits; docs nói với GPU 80 GB trên Colab có thể fine-tune model 120B. Danh sách đầy đủ, gồm cả Kaggle, GRPO, TTS, embedding: [trang Unsloth Notebooks](https://unsloth.ai/docs/get-started/unsloth-notebooks) và [repo GitHub](https://github.com/unslothai/notebooks/).
+Model lớn (vượt 15 GB VRAM của Colab miễn phí theo trang Notebooks; tutorial Llama-3 lại ghi GPU miễn phí 16GB — xem hộp cảnh báo ở mục Hiệu năng và benchmark) cần gói Colab trả phí hoặc credits; docs nói với GPU 80 GB trên Colab có thể fine-tune model 120B. Danh sách đầy đủ, gồm cả Kaggle, GRPO, TTS, embedding: [trang Unsloth Notebooks](https://unsloth.ai/docs/get-started/unsloth-notebooks) và [repo GitHub](https://github.com/unslothai/notebooks/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/unsloth-notebooks, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama
 

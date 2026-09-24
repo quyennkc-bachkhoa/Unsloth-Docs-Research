@@ -53,15 +53,23 @@ Chi tiết cài đặt từng nền tảng: [Cài đặt & phần cứng](/cai-d
 | --- | --- | --- | --- |
 | **Dạng** | App native (Tauri) | Web UI trên trình duyệt | Thư viện Python |
 | **Ai dùng** | Người muốn cài nhanh, không code (README: khuyến nghị) | Người muốn UI no-code nhưng tự cài, chạy trên server/Colab/Docker | Người viết code train/inference, dùng notebook |
-| **Cài thế nào** | Tải `.dmg` / `.exe` / `.deb` / AppImage | Script `install.sh` / `install.ps1`, sau đó `unsloth studio`; hoặc Docker `unsloth/unsloth`; hoặc Colab | `uv pip install unsloth --torch-backend=auto` |
+| **Cài thế nào** | Tải `.dmg` / `.exe` / `.deb` / AppImage | Script `install.sh` / `install.ps1`, sau đó chạy lệnh khởi động Studio (các trang ghi lệnh khác nhau, xem mục CLI); hoặc Docker `unsloth/unsloth`; hoặc Colab | `uv pip install unsloth --torch-backend=auto` |
 | **Chạy (inference)** | Chat GGUF, MLX, safetensors, diffusion, audio; API | Chat GGUF, safetensors; so sánh model song song; API | Inference trong code (`FastLanguageModel`) |
 | **Train** | Không code: LoRA, full fine-tuning, pretraining; diffusion LoRA | QLoRA, LoRA, full fine-tuning; Text, Vision, Audio, Embeddings | LoRA, QLoRA, full fine-tuning, RL (GRPO, DPO...) qua code/notebook |
 | **Export** | Có (qua giao diện) | GGUF, safetensors, LoRA | Cần kiểm tra lại (không có trong các trang nguồn đã dùng) |
 | **Nền tảng** | macOS, Windows, Linux, WSL | macOS, Linux, WSL, Windows (PowerShell) | Linux, WSL, Windows theo README; macOS cần kiểm tra lại |
 | **Giấy phép** | Cần kiểm tra lại | Studio UI: AGPL-3.0 | Apache 2.0 |
 
-::: info Hỗ trợ phần cứng
-Docs ghi Unsloth chạy trên GPU NVIDIA, AMD, Intel, Mac và CPU; README thêm multi-GPU và backend Vulkan. Trang Studio lại ghi "start training instantly on NVIDIA" cho train no-code, trong khi cùng trang ghi macOS "Training, MLX and GGUF inference all work". Yêu cầu train trên Mac/AMD/Intel cần kiểm tra lại ở trang [Cài đặt & phần cứng](/cai-dat).
+::: warning Docs chưa thống nhất
+Các trang ghi khả năng **train** trên từng loại phần cứng khác nhau:
+
+- Train no-code "start training instantly on **NVIDIA**" (mục No-code training): [new/studio](https://unsloth.ai/docs/new/studio)
+- "**MacOS:** Training, MLX and GGUF inference all work inside of Unsloth": [new/studio](https://unsloth.ai/docs/new/studio)
+- "**AMD** training: Train, run RL, chat and deploy on AMD GPUs across Windows, WSL and Linux": [GitHub README](https://github.com/unslothai/unsloth)
+- Hỗ trợ "MacOS, Linux, Windows, NVIDIA, AMD, **Intel** and CPU setups", không tách riêng inference hay training: [docs](https://unsloth.ai/docs), [basics/api](https://unsloth.ai/docs/basics/api)
+- Hỗ trợ "NVIDIA, Intel, AMD and Mac GPUs/CPUs", phần cứng cũ có thể không được hỗ trợ tốt: [desktop](https://unsloth.ai/docs/desktop)
+
+Không trang nào trong các nguồn trên ghi rõ việc train trên GPU Intel hoặc chỉ dùng CPU.
 :::
 
 ::: warning Model GGUF chỉ dùng để inference
@@ -80,7 +88,8 @@ Sau khi cài Studio (hoặc Desktop), lệnh `unsloth` có trong terminal. Các 
 
 | Lệnh | Tác dụng |
 | --- | --- |
-| `unsloth studio -H 0.0.0.0 -p 8888` | Mở Studio, bind mọi địa chỉ mạng, cổng 8888 |
+| `unsloth studio -H 0.0.0.0 -p 8888` | Mở Studio, bind mọi địa chỉ mạng, cổng 8888 (lệnh trong trang cài đặt, Studio) |
+| `unsloth studio` | Mở Studio, không kèm flag (lệnh trong GitHub README) |
 | `unsloth studio --secure` | Mở Studio qua HTTPS bằng tunnel Cloudflare miễn phí |
 | `unsloth studio reset-password` | Đặt lại mật khẩu |
 | `unsloth run --model ...` | Nạp một model GGUF, bật server API, in ra URL endpoint và API key |
@@ -92,11 +101,20 @@ Ví dụ nạp model từ CLI (nguyên văn docs API):
 unsloth run --model unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL
 ```
 
-Mở Studio và truy cập qua trình duyệt tại `http://127.0.0.1:8888` (lần đầu phải tạo mật khẩu):
+Mở Studio theo trang Get started, rồi vào `http://127.0.0.1:8888` trên trình duyệt:
 
 ```bash
 unsloth studio -H 0.0.0.0 -p 8888
 ```
+
+::: warning Docs chưa thống nhất
+| Thông số | Nguồn A: [get-started/install](https://unsloth.ai/docs/get-started/install), [new/studio](https://unsloth.ai/docs/new/studio), [new/studio/start](https://unsloth.ai/docs/new/studio/start) | Nguồn B: [GitHub README](https://github.com/unslothai/unsloth) |
+| --- | --- | --- |
+| Lệnh khởi động Studio | `unsloth studio -H 0.0.0.0 -p 8888` | `unsloth studio` (mục Launch); `unsloth studio -p 8888` (mục cài bản developer) |
+| Địa chỉ bind | `-H 0.0.0.0` ngay trong lệnh khởi động cơ bản | `-H 0.0.0.0` được xếp vào mục "Remote HTTPS & LAN Access"; muốn không ra mạng thì dùng `-H 127.0.0.1` |
+| Tạo mật khẩu | Mở `http://127.0.0.1:8888` trên trình duyệt, tại đó tạo mật khẩu mới ([new/studio/start](https://unsloth.ai/docs/new/studio/start)) | Khi mở ra mạng (`--secure`, `--cloudflare` hoặc `-H` không phải loopback), terminal hỏi một lần mật khẩu admin mới; Ctrl+C sẽ hủy khởi động |
+| Cổng mặc định khi không có `-p` | Không ghi | Không ghi |
+:::
 
 Mục "Advanced Settings" của trang Studio còn mô tả một CLI `cli.py` với các lệnh `train`, `inference`, `export`, `list-checkpoints`, `ui`, `studio`:
 
@@ -112,12 +130,27 @@ Commands:
   studio            Launch the studio (alias)
 ```
 
-::: warning Cần kiểm tra lại
-Cấu trúc thư mục đi kèm `cli.py` có tên `new-ui-prototype/`. Nguồn không nói `cli.py` có tương ứng với lệnh `unsloth` đã cài hay không (ví dụ `unsloth train`). Đừng dùng các lệnh con này khi chưa đối chiếu với bản cài của bạn.
+::: warning Docs chưa thống nhất
+| Tác vụ | Nguồn A: `cli.py` trong [new/studio/start](https://unsloth.ai/docs/new/studio/start) | Nguồn B: lệnh `unsloth` trong [new/studio](https://unsloth.ai/docs/new/studio), [basics/api](https://unsloth.ai/docs/basics/api), [GitHub README](https://github.com/unslothai/unsloth) |
+| --- | --- | --- |
+| Mở giao diện Studio | `cli.py ui` hoặc `cli.py studio` | `unsloth studio` |
+| Fine-tune | `cli.py train` | Nguồn B không ghi lệnh CLI; train qua giao diện Studio/Desktop hoặc code Core |
+| Inference | `cli.py inference` | `unsloth run --model ...` |
+| Export | `cli.py export` | Nguồn B không ghi lệnh CLI; export qua mục Export của Studio |
+| Liệt kê checkpoint | `cli.py list-checkpoints` | Nguồn B không ghi |
+
+Nguồn A đặt `cli.py` trong cây thư mục tên `new-ui-prototype/`. Không nguồn nào nói `cli.py` và lệnh `unsloth` có quan hệ gì với nhau.
 :::
 
 ::: danger Mở server ra mạng
-Theo docs API, khi bind `0.0.0.0` thì server-side tools (web search, chạy code) tắt mặc định, vì lộ API key đồng nghĩa người khác chạy được code tùy ý trên máy. README thì ghi server-side tools bật mặc định và khuyên dùng `--disable-tools` khi mở Unsloth ra ngoài.
+Người có API key hoặc mật khẩu và truy cập được server sẽ gửi được request tới model đang nạp. Nếu server-side tools đang bật, họ còn chạy được code tùy ý trên máy host.
+:::
+
+::: warning Docs chưa thống nhất
+| Thông số | Nguồn A: [basics/api](https://unsloth.ai/docs/basics/api) | Nguồn B: [GitHub README](https://github.com/unslothai/unsloth) |
+| --- | --- | --- |
+| Server-side tools mặc định | Với `unsloth run`: bật khi bind `127.0.0.1`, **tắt** khi bind `0.0.0.0` hoặc địa chỉ không phải loopback | Mục "Remote HTTPS & LAN Access" của Studio: "Server-side tools are **on** by default - so be careful!" |
+| Cách bật/tắt | `--enable-tools` / `--disable-tools`; khi bind `0.0.0.0` thì `--enable-tools` hỏi xác nhận y/N, `--yes` / `-y` bỏ qua câu hỏi | Giữ mật khẩu an toàn hoặc dùng `--disable-tools` khi mở Unsloth ra ngoài |
 :::
 
 **Nguồn:** https://unsloth.ai/docs/new/studio, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs, https://github.com/unslothai/unsloth
@@ -132,14 +165,30 @@ Model đã nạp trong Unsloth (kể cả GGUF) được phơi ra thành API có
 | `POST /v1/chat/completions` | OpenAI Chat Completions API | OpenAI SDK, opencode, Cursor, Continue, Cline, Open WebUI, curl |
 | `GET /v1/models` | Danh sách model của OpenAI | Liệt kê model đang nạp |
 
-Phần mô tả của docs còn nhắc `/v1/responses` cho OpenAI SDK, nhưng endpoint này không có trong bảng.
+::: warning Docs chưa thống nhất
+Danh sách endpoint phía OpenAI khác nhau ngay trong cùng một trang [basics/api](https://unsloth.ai/docs/basics/api):
+
+- Đoạn giới thiệu: "OpenAI-compatible `/v1/chat/completions` **and `/v1/responses`**".
+- Bảng Endpoints: chỉ có `POST /v1/messages`, `POST /v1/chat/completions`, `GET /v1/models`, không có `/v1/responses`.
+:::
 
 Các điểm chính:
 
 - **API key:** tạo trong Settings → API, có tiền tố `sk-unsloth-`, chỉ hiện một lần. Gửi kèm header `Authorization: Bearer sk-unsloth-…` ở mọi request; sai hoặc thiếu key trả về `401 Unauthorized`.
-- **Cổng:** thường là `http://localhost:8000` hoặc `http://localhost:8888`.
+- **Cổng:** API chạy trên cổng mà Unsloth được khởi động (xem hộp bên dưới).
 - **Tool calling:** hỗ trợ `tools` / `tool_choice` theo cả định dạng OpenAI và Anthropic. Thêm `enable_tools` và `enabled_tools` để Unsloth tự chạy Python, web search, terminal phía server.
 - **API monitor:** Studio hiển thị trực tiếp từng request (token, time-to-first-token, lỗi).
+
+::: warning Docs chưa thống nhất
+Cổng (port) của API ghi khác nhau giữa các chỗ:
+
+- "typically `http://localhost:8000` or `http://localhost:8888`": bảng Endpoints trong [basics/api](https://unsloth.ai/docs/basics/api)
+- `unsloth run` "starts the server on the default port" nhưng không ghi số cổng: [basics/api](https://unsloth.ai/docs/basics/api)
+- Ví dụ `curl http://localhost:8888/v1/models` và base URL `http://127.0.0.1:8888` khi dùng `--secure`: [basics/api](https://unsloth.ai/docs/basics/api)
+- Docker map cả hai cổng `-p 8000:8000 -p 8888:8888`. README gọi cổng 8888 trong container là của **JupyterLab**, và bỏ `-p 8000:8000` khi thay bằng `-e UNSLOTH_STUDIO_SECURE=1`: [GitHub README](https://github.com/unslothai/unsloth)
+
+Base URL chính xác của máy bạn hiển thị ở đầu trang API monitor, hoặc được `unsloth run` in ra console ([basics/api](https://unsloth.ai/docs/basics/api)).
+:::
 
 Ví dụ lấy ID model (nguyên văn docs):
 
@@ -160,7 +209,7 @@ Tool calling, chat template và tham số sampling (temperature, top-p...): xem 
 
 Chi tiết: [Inference & API](/inference).
 
-**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/new/studio/start
+**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/new/studio/start, https://github.com/unslothai/unsloth
 
 ## Inference và Training
 
@@ -214,6 +263,17 @@ Ba phương pháp train trong Studio:
 - Dữ liệu: nạp từ Hugging Face Hub hoặc file local (`PDF`, `DOCX`, `JSONL`, `JSON`, `CSV`, `Parquet`); Data Recipes tạo dataset từ tài liệu.
 - Theo dõi: biểu đồ loss, learning rate, gradient norm, eval loss; GPU monitor (utilization, VRAM, nhiệt độ).
 - Export: GGUF, safetensors, LoRA để chạy trong Unsloth, llama.cpp, Ollama, vLLM, LM Studio.
+
+::: warning Docs chưa thống nhất
+Định dạng file dữ liệu tải lên để train được liệt kê khác nhau:
+
+- `PDF`, `DOCX`, `JSONL`, `JSON`, `CSV`, `Parquet` (tab Local của mục Dataset): [new/studio/start](https://unsloth.ai/docs/new/studio/start)
+- PDF, CSV, JSON, DOCX, **TXT** (Auto-create datasets): [new/studio](https://unsloth.ai/docs/new/studio)
+- PDF, CSV, JSON hoặc YAML config (mục No-code training): [new/studio](https://unsloth.ai/docs/new/studio)
+- PDF, CSV hoặc JSONL (mục Workflow): [new/studio](https://unsloth.ai/docs/new/studio)
+- PDF, CSV hoặc JSON (mục Train with no code): [desktop](https://unsloth.ai/docs/desktop)
+- PDF, CSV, DOCX "and more" (Data Recipes): [docs](https://unsloth.ai/docs)
+:::
 
 Chi tiết: [Fine-tuning](/fine-tuning), [Reinforcement Learning](/reinforcement-learning), [Dữ liệu](/du-lieu), [Export & deploy](/export-deploy).
 

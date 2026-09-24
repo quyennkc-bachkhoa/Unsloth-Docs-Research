@@ -108,7 +108,18 @@ unsloth run \
   --disable-tools
 ```
 
-Theo docs, `unsloth run` bind `0.0.0.0` thì tool **tắt mặc định**; chính sách này áp ở mức process, request không thể bật lại bằng `enable_tools=true`.
+Trang API ghi: `unsloth run` bind `0.0.0.0` thì tool **tắt mặc định**; chính sách này áp ở mức process, request không thể bật lại bằng `enable_tools=true`.
+
+::: warning Docs chưa thống nhất
+Tool phía server (web search, Python, terminal) **bật hay tắt mặc định** khi mở Unsloth ra mạng:
+
+| Thông số | Trang API ([api](https://unsloth.ai/docs/basics/api)) | Trang LAN ([lan](https://unsloth.ai/docs/basics/lan)) | Trang Cloudflare ([remote access](https://unsloth.ai/docs/basics/how-to-serve-local-llms-anywhere-secure-remote-access-with-cloudflare-and-unsloth)) |
+| --- | --- | --- | --- |
+| Lệnh được nói tới | `unsloth run` | Trang hướng dẫn `unsloth studio -H 0.0.0.0`; mục Security không ghi rõ lệnh | Trang hướng dẫn `unsloth studio --secure` / `--cloudflare`; mục Security không ghi rõ lệnh |
+| Tool mặc định | Bind `127.0.0.1`: bật; bind `0.0.0.0` / không phải loopback: **tắt** | "on by default" | "on by default" |
+
+Luôn truyền `--disable-tools` tường minh thay vì dựa vào mặc định.
+:::
 
 Kiểm tra từ máy backend:
 
@@ -116,6 +127,18 @@ Kiểm tra từ máy backend:
 curl http://localhost:8888/v1/models \
   -H "Authorization: Bearer sk-unsloth-xxxxxxxxxxxx"
 ```
+
+::: warning Docs chưa thống nhất
+Port mặc định của Unsloth API (ảnh hưởng `base_url`) được ghi khác nhau trên trang [api](https://unsloth.ai/docs/basics/api):
+
+| Chỗ trong docs | Giá trị |
+| --- | --- |
+| Quickstart ([api](https://unsloth.ai/docs/basics/api)) | `http://localhost:PORT` (không nêu số) |
+| Mục Endpoints ([api](https://unsloth.ai/docs/basics/api)) | "typically `http://localhost:8000` or `http://localhost:8888`" |
+| Mục kết nối từ máy khác và Troubleshooting ([api](https://unsloth.ai/docs/basics/api)) | `http://127.0.0.1:8888`, `http://localhost:8888` |
+
+Đặt `-p` tường minh (như lệnh ở trên) và đọc URL endpoint mà `unsloth run` in ra console.
+:::
 
 Phía FastAPI chỉ cần dùng OpenAI SDK với `base_url` trỏ tới địa chỉ LAN của máy GPU (dạng `http://<IP máy GPU>:8888/v1`) và API key `sk-unsloth-…`. Cách gọi giống ví dụ OpenAI SDK ở trang [Export & deploy](/export-deploy).
 
@@ -137,7 +160,7 @@ Khi bind wildcard (`0.0.0.0`), Unsloth tự kiểm tra port có lộ ra internet
 
 Docs cho biết fine-tune embedding model giúp vector "hiểu" đúng kiểu tương đồng mà bài toán cần, cải thiện search và RAG trên dữ liệu riêng. Unsloth hỗ trợ:
 
-- Train embedding, classifier, BERT, reranker nhanh hơn ~1.8–3.3 lần, ít hơn 20% bộ nhớ, context dài gấp 2 so với các bản Flash Attention 2 khác. EmbeddingGemma-300M: QLoRA cần 3GB VRAM (VRAM = bộ nhớ card đồ họa), LoRA cần 6GB.
+- Train embedding, classifier, BERT, reranker nhanh hơn (con số khác nhau theo chỗ: "~1.8-3.3x" ở đoạn mở đầu và mục Benchmarks; "1.8x to 2.6x" cho QLoRA 4-bit; "1.2x to 3.3x" cho LoRA 16-bit, đều so với SentenceTransformers + Flash Attention 2), ít hơn 20% bộ nhớ, context dài gấp 2 so với các bản Flash Attention 2 khác. EmbeddingGemma-300M: QLoRA cần 3GB VRAM (VRAM = bộ nhớ card đồ họa), LoRA cần 6GB.
 - LoRA/QLoRA hoặc full fine-tuning; hỗ trợ tốt nhất cho model `SentenceTransformer` encoder-only có `modules.json`. Model không có `modules.json` được hỗ trợ hạn chế (tự gán pooling mặc định) — cần kiểm tra lại output embedding.
 - Class trung tâm: `FastSentenceTransformer`.
 
@@ -203,6 +226,10 @@ print(query_embedding.shape, document_embedding.shape)
 similarity = model.similarity(query_embedding, document_embedding)
 print(similarity)
 ```
+
+::: warning Docs chưa thống nhất
+Dòng `SentenceTransformer("<your-unsloth-finetuned-model")` chép nguyên văn từ [embedding-finetuning](https://unsloth.ai/docs/basics/embedding-finetuning): placeholder mở bằng `<` nhưng **thiếu `>`** đóng. Đây là chỗ bạn thay bằng tên repo Hugging Face hoặc đường dẫn thư mục model đã fine-tune của mình; ví dụ load khác trong cùng trang dùng tên repo thật (`"sentence-transformers/all-MiniLM-L6-v2"`).
+:::
 
 Model sau fine-tune dùng được với transformers, sentence-transformers, LangChain, Weaviate, Text Embeddings Inference (TEI), vLLM, llama.cpp, pgvector, FAISS và framework RAG bất kỳ.
 

@@ -45,6 +45,15 @@ flowchart LR
 
 **Model GGUF đã tải sẵn từ trước:** Studio tự phát hiện model cũ tải qua Hugging Face, LM Studio… (cập nhật 27/3) và cho chọn một thư mục có sẵn để quét (cập nhật 1/4). Studio đọc từ Hugging Face Hub cache; file GGUF của LM Studio nằm ở thư mục riêng, không hiển thị với llama.cpp mặc định, nên cần chép/chuyển các file `.gguf` sang HF cache (hoặc đường dẫn llama.cpp đọc được).
 
+::: warning Docs chưa thống nhất
+Đường dẫn cache trên Windows được viết khác nhau, ngay trong cùng một trang [new/studio/chat](https://unsloth.ai/docs/new/studio/chat):
+
+| Thư mục | Cách viết 1 | Cách viết 2 |
+| --- | --- | --- |
+| Hugging Face Hub cache | `C:\Users{your_username}.cache\huggingface\hub` (mục "Using old / existing GGUF models") | `C:\Users\<username>\.cache\huggingface\hub\` và `%USERPROFILE%\.cache\huggingface\hub\` (mục "Deleting model files") |
+| Model của LM Studio | `C:\Users\{your_username}.cache\lm-studio\models` | `C:\Users{your_username}\lm-studio\models` |
+:::
+
 **Xóa model:** bấm biểu tượng thùng rác trong model search, hoặc xóa thư mục trong HF cache:
 
 - macOS, Linux, WSL: `~/.cache/huggingface/hub/`
@@ -80,6 +89,15 @@ Kết quả thử nghiệm của Unsloth với `unsloth/Qwen3.5-4B-GGUF (UD-Q4_K
 - Với model mới như Qwen3.5, Studio **tự đặt sẵn** temperature, top-p, top-k, MTP để ra kết quả tốt; vẫn chỉnh tay được, và sửa được system prompt lẫn chat template.
 - Không cần chỉnh context length (độ dài ngữ cảnh) nhờ "smart auto context" của llama.cpp: chỉ dùng phần context cần thiết.
 - Giá trị mặc định cụ thể của từng tham số trong giao diện Studio: **cần kiểm tra lại** (trang nguồn không ghi số).
+
+::: warning Docs chưa thống nhất
+Về việc có cần chỉnh context length hay không, các trang ghi khác nhau:
+
+- [new/studio/chat](https://unsloth.ai/docs/new/studio/chat): "Context length adjustment is no longer necessary" nhờ smart auto context của llama.cpp.
+- [integrations/unsloth-start](https://unsloth.ai/docs/integrations/unsloth-start): có cờ `--context-length` / `--max-seq-length`, ví dụ `--context-length 32768`; không truyền cờ thì Unsloth tự chọn context length.
+- [basics/api](https://unsloth.ai/docs/basics/api): ví dụ tăng context bằng `-c 131072`.
+- [basics/codex](https://unsloth.ai/docs/basics/codex): khi OOM giữa chừng, "Reduce context in Unsloth **Settings → Inference**".
+:::
 
 Khi chạy bằng dòng lệnh `unsloth run`, nếu không truyền cờ sampling nào thì Unsloth tự chọn cấu hình khuyến nghị cho model (context length, temperature…). Muốn ghi đè thì truyền cờ, các cờ này được chuyển thẳng xuống `llama-server`:
 
@@ -128,8 +146,32 @@ Unsloth nói "hai phương ngữ" trên **cùng một port**, đều hỗ trợ 
 | `POST /v1/responses` | OpenAI Responses API | Codex và các client OpenAI đời mới |
 | `GET /v1/models` | OpenAI models list | Liệt kê model đang nạp (lấy `id` để điền vào trường model) |
 
-- **Port:** tài liệu ghi "thường là" `http://localhost:8000` hoặc `http://localhost:8888`; các ví dụ dùng `8888`.
+::: warning Docs chưa thống nhất
+Danh sách endpoint khác nhau giữa các trang:
+
+- Bảng "Endpoints" của [basics/api](https://unsloth.ai/docs/basics/api) chỉ liệt kê `POST /v1/messages`, `POST /v1/chat/completions`, `GET /v1/models`, không có `/v1/responses`. Phần mở đầu của cùng trang lại ghi "OpenAI-compatible `/v1/chat/completions` and **`/v1/responses`**".
+- [integrations/connect-curl-and-http-to-unsloth](https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth) có ví dụ riêng cho `/v1/responses`; [basics/codex](https://unsloth.ai/docs/basics/codex) dùng endpoint `/v1/responses`.
+
+Dòng `/v1/responses` trong bảng trên được tổng hợp từ hai trang sau.
+:::
+
+- **Port:** xem hộp bên dưới; các ví dụ trên trang này dùng `8888` như trong docs.
 - **API key:** mọi request cần header `Authorization: Bearer sk-unsloth-…`.
+
+::: warning Docs chưa thống nhất
+Port và base URL mặc định của API Unsloth được ghi khác nhau:
+
+| Trang | Port / base URL ghi trong docs |
+| --- | --- |
+| [basics/api](https://unsloth.ai/docs/basics/api) | "typically `http://localhost:8000` or `http://localhost:8888`"; mục `--secure` nhắc `http://127.0.0.1:8888`; ví dụ curl dùng `8888` |
+| [integrations/connect-python-sdk-to-unsloth](https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth) | "typically `8000` or `8888`"; code dùng `http://localhost:8888/v1` (OpenAI SDK) và `http://localhost:8888` (Anthropic SDK) |
+| [integrations/connect-curl-and-http-to-unsloth](https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth) | "on the port Unsloth started on"; ví dụ dùng `8888` |
+| [basics/claude-code](https://unsloth.ai/docs/basics/claude-code) | `ANTHROPIC_BASE_URL="http://localhost:8888"` |
+| [basics/codex](https://unsloth.ai/docs/basics/codex) | `base_url = "http://localhost:8888/v1"`, và ghi `8888` là "Unsloth Studio's default" |
+| [integrations/opencode](https://unsloth.ai/docs/integrations/opencode) | `http://localhost:8888/v1/` (có dấu `/` cuối, "keep the trailing `/v1/`") |
+
+Muốn biết chắc port: `unsloth run` in endpoint URL ra console ([basics/api](https://unsloth.ai/docs/basics/api)).
+:::
 
 Tạo API key trong giao diện:
 
@@ -178,6 +220,20 @@ curl http://localhost:8888/v1/models \
   ]
 }
 ```
+
+::: warning Docs chưa thống nhất
+Model ID mà Unsloth trả về (và cần điền vào trường `model`) có hai dạng, có và không có tiền tố `unsloth/`:
+
+| Trang | Model ID ghi trong docs |
+| --- | --- |
+| [integrations/connect-curl-and-http-to-unsloth](https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth) | response mẫu: `unsloth/gemma-3-27b-it-GGUF` |
+| [basics/api](https://unsloth.ai/docs/basics/api) (Troubleshooting) | response mẫu: `"id": "gemma-4-26B-A4B-it-GGUF"` |
+| [basics/codex](https://unsloth.ai/docs/basics/codex) | "Unsloth Studio exposes the full repo id (for example `unsloth/gemma-4-26B-A4B-it-GGUF`)" |
+| [basics/claude-code](https://unsloth.ai/docs/basics/claude-code) | bash: `ANTHROPIC_MODEL="unsloth/gemma-4-26B-A4B-it-GGUF"`; PowerShell: `$env:ANTHROPIC_MODEL = "gemma-4-26B-A4B-it-GGUF"` |
+| [integrations/connect-python-sdk-to-unsloth](https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth) | `model="default"` ("the name you gave the model in unsloth or default"), cũng dùng `qwen-local`, `unsloth/Qwen3.6-27B-GGUF` |
+
+Các trang đều khuyên gọi `GET /v1/models` và chép nguyên trường `id`.
+:::
 
 Chat Completions (OpenAI):
 
@@ -343,7 +399,21 @@ unsloth run \
 ```
 
 - **Chính sách server-side tools** (công cụ do Unsloth tự chạy: web search, code execution…): trên `127.0.0.1` mặc định **bật**; trên `0.0.0.0` hoặc địa chỉ không phải loopback mặc định **tắt**, vì lộ API key trên server mở mạng đồng nghĩa với cho người khác chạy code tùy ý trên máy. Ép bật/tắt bằng `--enable-tools` / `--disable-tools` (trên `0.0.0.0`, `--enable-tools` hỏi xác nhận y/N; `--yes`/`-y` bỏ qua câu hỏi). Request không thể vượt chính sách này bằng `enable_tools=true`.
-- Truy cập từ xa qua Internet: chạy `unsloth studio --secure`, Unsloth vẫn bind localhost và mở một URL HTTPS Cloudflare miễn phí. SSE không đi qua được Cloudflare quick tunnel, nên đặt `stream: false`.
+- Truy cập từ xa qua Internet: chạy `unsloth studio --secure`, Unsloth vẫn bind localhost và mở một URL HTTPS Cloudflare miễn phí. SSE không đi qua được Cloudflare quick tunnel, nên đặt `stream: false`. Docs không nói chính sách server-side tools áp dụng thế nào trong trường hợp này (server bind localhost nhưng truy cập được từ Internet): **cần kiểm tra lại**.
+
+::: warning Docs chưa thống nhất
+Server-side tools "bật mặc định" hay "phải tự bật" được mô tả khác nhau:
+
+| Trang | Mô tả trong docs |
+| --- | --- |
+| [basics/api](https://unsloth.ai/docs/basics/api) (Server-side tool policy) | `127.0.0.1`: tools **on** by default; `0.0.0.0` hoặc địa chỉ non-loopback: tools **off** by default |
+| [basics/api](https://unsloth.ai/docs/basics/api) (Tool calling, Troubleshooting) | "Opt in by adding these extra fields"; "remember to set `enable_tools: true` **and** list the ones you want in `enabled_tools`" |
+| [integrations/connect-curl-and-http-to-unsloth](https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth), [integrations/connect-python-sdk-to-unsloth](https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth) | Opt in bằng `enable_tools: true` trong request |
+| [basics/claude-code](https://unsloth.ai/docs/basics/claude-code), [integrations/opencode](https://unsloth.ai/docs/integrations/opencode) | "By default Unsloth Studio runs its own server-side tools, which swallows the agent's tool calls"; khuyên thêm `--disable-tools` |
+| [basics/codex](https://unsloth.ai/docs/basics/codex) | "When driving an external coding agent, add `--disable-tools`" |
+
+Ví dụ LAN trong [basics/claude-code](https://unsloth.ai/docs/basics/claude-code) dùng `-H 0.0.0.0` mà không có `--disable-tools`; ví dụ LAN trong [integrations/opencode](https://unsloth.ai/docs/integrations/opencode) có `--disable-tools`.
+:::
 - **API monitor**: mọi request dùng API key hiện trong Studio (panel góc màn hình và trang **Settings → API Monitor**), gồm prompt, response, số token, time-to-first-token, throughput, lỗi, và **Context used**.
 
 **Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
@@ -381,6 +451,64 @@ unsloth start claude \
   --reasoning-effort medium
 ```
 
+::: warning Docs chưa thống nhất
+Lệnh nạp model kèm agent/server được viết khác nhau (tên model, tên agent, dấu `\` xuống dòng). Lệnh ở trên lấy từ [integrations/unsloth-start](https://unsloth.ai/docs/integrations/unsloth-start). Các biến thể khác trong docs, chép nguyên văn:
+
+[basics/claude-code](https://unsloth.ai/docs/basics/claude-code):
+
+```bash
+unsloth start claude \
+    --model unsloth/qwen3.8-27B-GGUF-GGUF:UD-Q4_K_XL
+    --temp 1.0 \
+    --top-p 0.95 \
+    --top-k 20 \
+    --min-p 0.0 \
+    --reasoning-effort medium
+```
+
+[basics/codex](https://unsloth.ai/docs/basics/codex) (mục "Run OpenAI Codex with `unsloth start`"; cùng trang ở dưới dùng `unsloth start codex`):
+
+```bash
+unsloth start Code \
+    --model unsloth/qwen3.8-27B-GGUF-GGUF:UD-Q4_K_XL
+    --temp 1.0 \
+    --top-p 0.95 \
+    --top-k 20 \
+    --min-p 0.0 \
+    --reasoning-effort medium
+```
+
+[integrations/opencode](https://unsloth.ai/docs/integrations/opencode):
+
+```bash
+unsloth start opencode \
+    --model unsloth/qwen3.8-27B-GGUF-GGUF:UD-Q4_K_XL
+    --temp 1.0 \
+    --top-p 0.95 \
+    --top-k 20 \
+    --min-p 0.0 \
+    --reasoning-effort medium
+```
+
+[basics/api](https://unsloth.ai/docs/basics/api) (mục "Unsloth run command"):
+
+```bash
+unsloth run --model unsloth/qwen3.8-27B-GGUF-GGUF:UD-Q4_K_XL
+    --temp 1.0 \
+    --top-p 0.95 \
+    --top-k 20 \
+    --min-p 0.0 \
+    --chat-template-kwargs '{"reasoning_effort":"medium"}'
+```
+
+| Thông số | [integrations/unsloth-start](https://unsloth.ai/docs/integrations/unsloth-start) | [basics/claude-code](https://unsloth.ai/docs/basics/claude-code), [basics/codex](https://unsloth.ai/docs/basics/codex), [integrations/opencode](https://unsloth.ai/docs/integrations/opencode), [basics/api](https://unsloth.ai/docs/basics/api) |
+| --- | --- | --- |
+| Tên model | `unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL` | `unsloth/qwen3.8-27B-GGUF-GGUF:UD-Q4_K_XL` |
+| `\` sau dòng `--model` | Có | Không |
+| Tên agent Codex | `codex` | `Code` (chỉ ở một khối của basics/codex) |
+| Reasoning effort | `--reasoning-effort medium` | `--reasoning-effort medium`; riêng basics/api dùng `--chat-template-kwargs '{"reasoning_effort":"medium"}'` |
+:::
+
 Tham số không thuộc Unsloth được chuyển nguyên cho agent:
 
 ```bash
@@ -402,6 +530,20 @@ Các tùy chọn đáng chú ý:
 | `--context-length`, `--max-seq-length` | Context length khi nạp model |
 | `--persist` / `--no-persist` | Giữ thư mục home do Unsloth quản lý |
 | `--yolo` | Chế độ không hỏi xác nhận của agent |
+
+::: warning Docs chưa thống nhất
+Ví dụ về cờ reasoning trong [basics/api](https://unsloth.ai/docs/basics/api) (mục "Control reasoning behavior") có comment và giá trị cờ ngược nhau, chép nguyên văn:
+
+```bash
+# Disable reasoning / thinking output
+unsloth run \
+  --model unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL \
+  --reasoning on  \
+  --reasoning-effort medium
+```
+
+Trong khi đó [integrations/connect-python-sdk-to-unsloth](https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth) và [basics/claude-code](https://unsloth.ai/docs/basics/claude-code) ghi: "Use `--reasoning off` to turn thinking off, or `--reasoning on` to turn it on". [integrations/unsloth-start](https://unsloth.ai/docs/integrations/unsloth-start) ghi `--reasoning` nhận `on`, `off` hoặc `auto`.
+:::
 
 Kết nối tới Unsloth server ở xa:
 
@@ -472,6 +614,20 @@ codex --oss --profile unsloth_api
 ```
 
 `env_key` là **tên** biến môi trường chứa key, không phải key. Đừng chạy `codex` trần trước khi cấu hình: nó mở màn hình "Sign in with ChatGPT" không thoát được.
+
+::: warning Docs chưa thống nhất
+Cấu hình Codex trong [basics/codex](https://unsloth.ai/docs/basics/codex) mô tả vị trí profile và cách chọn profile theo nhiều cách khác nhau:
+
+| Thông số | Cách ghi 1 | Cách ghi 2 |
+| --- | --- | --- |
+| Nơi đặt profile `unsloth_api` | Khối `model_provider = "unsloth_api"` / `model = ...` "create a Codex profile", không có tiêu đề bảng TOML; mục "Disconnect" nhắc khối `[profiles.unsloth_api]` trong `~/.codex/config.toml` | "The `--profile unsloth_api` flag tells Codex to load `~/.codex/unsloth_api.config.toml`" |
+| Lệnh chạy | `codex --oss --profile unsloth_api` | Mục Disconnect: "Launch Codex without `-p unsloth_api`" |
+| Lệnh chạy với llama.cpp | `codex --oss llama_cpp` (mục llama.cpp) | "use the same shape with the `llama_cpp` profile"; mục Setup: `codex --oss --profile llama_cpp` |
+| `requires_openai_auth` trong provider llama.cpp | Provider `unsloth_api` có `requires_openai_auth = false` | Provider `llama_cpp` không ghi dòng này (docs nói mặc định đã là `false`) |
+| Port | Unsloth Studio: `http://localhost:8888/v1` | llama-server: `http://localhost:8001/v1` |
+
+Ngoài ra `unsloth start codex` ([integrations/unsloth-start](https://unsloth.ai/docs/integrations/unsloth-start)) tạo Codex home riêng, không dùng `~/.codex`.
+:::
 
 **OpenCode Desktop:** `/model` → **Connect provider** → **Custom**, điền Provider ID `unsloth-studio`, Base URL `http://localhost:8888/v1/` (giữ đuôi `/v1/`), API key `sk-unsloth-…`, thêm model ID đúng như Unsloth phục vụ (vd `unsloth/Qwen3.6-27B-GGUF`). Khởi động lại opencode thì provider mới xuất hiện.
 
@@ -546,6 +702,24 @@ vllm serve unsloth/gemma-4-26B-A4B-it \
   --gpu-memory-utilization 0.9
 ```
 
+::: warning Docs chưa thống nhất
+Lệnh vLLM ở trên lấy từ mục "Common vLLM arguments" của [integrations/connections/vllm](https://unsloth.ai/docs/integrations/connections/vllm). Các biến thể lệnh tối thiểu trong docs, chép nguyên văn:
+
+[integrations/connections](https://unsloth.ai/docs/integrations/connections):
+
+```bash
+  vllm serve unsloth/gemma-4-26B-A4B-it \
+  --dtype auto \
+```
+
+[integrations/connections/vllm](https://unsloth.ai/docs/integrations/connections/vllm) (mục "Choose a model"):
+
+```bash
+vllm serve unsloth/gemma-4-26B-A4B-it 
+\ --dtype auto
+```
+:::
+
 Ollama:
 
 ```bash
@@ -554,6 +728,15 @@ ollama run qwen3.6:35b-a3b
 ```
 
 Sau đó: **Settings → Connections** → thêm kết nối → chọn llama.cpp / vLLM / Ollama → dán **Base URL** → bấm **Load Models** (hoặc nhập model ID tay nếu server không có `/models`) → lưu. Với vLLM, bật tùy chọn **Reasoning model** nếu model hỗ trợ thinking.
+
+::: warning Docs chưa thống nhất
+Base URL của Ollama khi thêm vào Connections:
+
+| Thông số | [integrations/connections](https://unsloth.ai/docs/integrations/connections) | [integrations/connections/ollama](https://unsloth.ai/docs/integrations/connections/ollama) |
+| --- | --- | --- |
+| Base URL | `http://localhost:11434/v1` | "In most local setups": `http://localhost:11434`; "If Unsloth asks for an OpenAI-compatible base URL": `http://localhost:11434/v1` |
+| Model mẫu | `qwen3:14b` | `qwen3.6:35b-a3b`; model ID nhập tay ví dụ `qwen3.6` |
+:::
 
 ### Tính năng đi kèm
 
@@ -648,6 +831,15 @@ Cơ chế tool calling và vai trò của chat template: xem [Suy luận & sampl
 | `enable_tools` | `boolean` | `true` để bật chạy tool phía server |
 | `enabled_tools` | `array<string>` | Tool model được gọi: `python`, `bash`, `web_search` |
 | `session_id` | `string` | Tùy chọn; giữ trạng thái tool (vd Python kernel) giữa các lần gọi |
+
+::: warning Docs chưa thống nhất
+Tên tool hợp lệ trong `enabled_tools`:
+
+| Thông số | [basics/api](https://unsloth.ai/docs/basics/api) | [integrations/connect-python-sdk-to-unsloth](https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth), [integrations/connect-curl-and-http-to-unsloth](https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth) |
+| --- | --- | --- |
+| Ví dụ JSON | `["python", "web_search","terminal"]` | `["python", "web_search"]`, `["python"]`, `["web_search", "python"]` |
+| Danh sách hỗ trợ | Văn bản: "execute Python, web search, and bash"; Troubleshooting ví dụ `["python", "web_search"]` | "supports `python`, `bash`, and `web_search`" |
+:::
 
 Ví dụ function calling với OpenAI SDK (client-side):
 

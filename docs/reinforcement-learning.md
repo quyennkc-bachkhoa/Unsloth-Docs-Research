@@ -155,6 +155,16 @@ Chưa rõ "8B tham số" hay cách ước tính VRAM (bộ nhớ card đồ họ
 | Kích thước model khuyến nghị | Tối thiểu 1.5B tham số | Để model sinh thinking token đúng; model nhỏ hơn có thể không làm được |
 | FP8 GRPO | Qwen3-1.7B chạy với 5GB VRAM | Cần GPU hỗ trợ FP8 (RTX 40, 50, H100...); T4 không hỗ trợ FP8 |
 
+::: warning Docs chưa thống nhất
+Các trang docs ghi yêu cầu VRAM và kích thước model khác nhau:
+
+| Thông số | Nguồn A | Nguồn B |
+| --- | --- | --- |
+| VRAM ~15–16GB train được model tối đa bao nhiêu | 15GB VRAM: model tới 17B ([RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide)) | GPU 16GB (Colab miễn phí): model tới 16B ([Tutorial GRPO](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo)) |
+| Mức 5GB VRAM | 5GB đủ cho model từ 1.5B tham số trở xuống ([RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide)) | Qwen3-1.7B FP8 GRPO chạy với 5GB VRAM ([FP8 RL](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning)) |
+| Kích thước model tối thiểu | Mức VRAM tối thiểu 5GB được nêu cho model từ 1.5B trở xuống ([RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), mục "What Unsloth offers") | Khuyên dùng model tối thiểu 1.5B để sinh thinking token đúng ([RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), mục "Basics/Tips") |
+:::
+
 Docs ghi GRPO trước đây chỉ hỗ trợ full fine-tuning; Unsloth đã làm cho nó chạy được với QLoRA và LoRA.
 
 ### Mẹo từ docs
@@ -164,6 +174,15 @@ Docs ghi GRPO trước đây chỉ hỗ trợ full fine-tuning; Unsloth đã là
 - Dùng base model thì phải có chat template.
 - Model không được vLLM hỗ trợ (vd Qwen3.5) vẫn chạy RL được bằng cách đặt `fast_inference=False`.
 - GRPOConfig hỗ trợ GSPO, Dr. GRPO, DAPO... qua tham số `loss_type`. Chi tiết xem hướng dẫn nâng cao trên docs.
+
+::: warning Docs chưa thống nhất
+Thời gian train và danh sách giá trị `loss_type` khác nhau giữa hai trang:
+
+| Thông số | Nguồn A: [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) | Nguồn B: [Tutorial GRPO](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo) |
+| --- | --- | --- |
+| Số bước / thời gian | Ít nhất 300 bước để reward tăng; để có kết quả tốt có thể cần tối thiểu 12 giờ; có khi 1000 bước hoặc hơn | Ít nhất 300 bước, có thể mất 30 phút; train lâu hơn để có kết quả tối ưu |
+| Giá trị `loss_type` được liệt kê | `'gspo'`, `'grpo'`, `'dr_grpo'` | `'bnpo'`, `'grpo'`, `'dr_grpo'`, `'dapo'` |
+:::
 
 Tutorial từng bước: https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo
 
@@ -249,14 +268,18 @@ Các điểm đáng chú ý trong đoạn code:
 - Model xuất phát là `zephyr-sft-bnb-4bit`, tức một model **đã qua SFT**.
 - `ref_model = None`: không nạp riêng model tham chiếu.
 - `beta = 0.1` là tham số riêng của DPO; docs không giải thích ý nghĩa của nó.
-- `max_seq_length` và `YOUR_DATASET_HERE` không được định nghĩa trong đoạn code. Bạn phải tự khai báo.
+::: warning Docs chưa thống nhất
+Đoạn code DPO trên [trang Preference Optimization](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto) không tự chạy được: `max_seq_length` và `YOUR_DATASET_HERE` được dùng nhưng không được định nghĩa ở đâu trong đoạn code, và docs không nêu giá trị hay định dạng dataset cần truyền vào. Hai giá trị này cần kiểm tra lại (ví dụ trong [notebook DPO Zephyr](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Zephyr_(7B)-DPO.ipynb)).
+:::
+
+[Nhận định] Tham số `tokenizer = tokenizer` của `DPOTrainer` có thể không khớp với các phiên bản TRL mới; nên đối chiếu với phiên bản TRL bạn cài.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto
 
 ## Khi nào dùng gì: SFT vs DPO vs GRPO
 
 | Tiêu chí | SFT | DPO (và ORPO/KTO) | GRPO |
-| --- | --- | --- | --- |
+| --- | --- | --- |
 | Tối ưu cái gì (theo docs) | Xác suất dự đoán từ tiếp theo | Căn chỉnh theo preference (sở thích) | Tối đa hóa reward từ reward function |
 | Dữ liệu cần | Cặp đầu vào → đầu ra mẫu | Dữ liệu preference (định dạng: cần kiểm tra lại) | Câu hỏi + đáp án (không kèm lập luận) + reward function/verifier |
 | Lượng dữ liệu theo docs | (xem trang [Fine-tuning](/fine-tuning)) | Docs không nêu | Tối ưu từ 500 dòng; thử được với 10 dòng |
@@ -311,6 +334,16 @@ Lưu ý khi đọc bảng: với GRPO, context 6,144 của Qwen3-32B thực ch�
 import os
 os.environ["UNSLOTH_VLLM_STANDBY"] = "1"
 ```
+
+::: warning Docs chưa thống nhất
+Mức tiết kiệm bộ nhớ và mức tăng context được ghi khác nhau:
+
+| Thông số | Nguồn A | Nguồn B |
+| --- | --- | --- |
+| Mức giảm VRAM của Unsloth khi làm RL | "reduces VRAM usage by 50–90%" so với các cách làm dùng FA2 ([Memory Efficient RL](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl)) | "over 90%" / "90% less", đo với Llama 3.1 8B, context 20K, 8 generation ([RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide)) |
+| Mức tiết kiệm khi bật Standby | Comment trong code: "Unsloth standby saves 30%+ memory for RL" ([FP8 RL](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning)) | 2GiB, tức 15%, với Qwen3 4B trên T4, `vllm_gpu_util 0.7`, 2 generation ("can be higher for longer sequences") ([Memory Efficient RL](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl)) |
+| Mức tăng context | "1.2 to 1.7x increased context lengths" ([Memory Efficient RL](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl), phần mở đầu) | Llama-3.1-8B QLoRA 4-bit: 47,500 so với 42,000, tức 1.13x ([Memory Efficient RL](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl), cùng trang) |
+:::
 
 Có Standby thì đặt `gpu_memory_utilization` ở 0.9 hoặc 0.95 là xong, không phải dò từ 30% đến 95% như trước. Không đặt 100% vì cần chừa chỗ cho các tensor nhỏ. Theo docs, mọi notebook GRPO của Unsloth đã bật sẵn Standby.
 
@@ -372,7 +405,7 @@ Theo docs, nên chọn ART khi agent phải làm nhiều bước hoặc gọi to
 
 ::: warning Cạm bẫy
 - **Model không học ra suy luận:** thường do train quá ít bước hoặc reward function/verifier chưa tốt. Docs khuyên thử notebook Advanced GRPO vì notebook này có reward function tốt hơn.
-- **Dừng quá sớm:** reward thường chỉ bắt đầu tăng sau khoảng 300 bước, có khi phải 1000 bước hoặc hơn.
+- **Dừng quá sớm:** reward thường chỉ bắt đầu tăng sau khoảng 300 bước, có khi phải 1000 bước hoặc hơn. Docs ghi thời gian khác nhau (30 phút hay tối thiểu 12 giờ); xem hộp "Docs chưa thống nhất" ở mục GRPO.
 - **Xác suất đáp án đúng bằng 0:** khi đó RL không bao giờ hoạt động. Hãy bắt đầu từ model đã instruction-finetune. Dùng base model thì phải có chat template.
 - **Model quá nhỏ:** docs khuyên dùng từ 1.5B tham số trở lên thì mới sinh thinking token ổn định.
 - **Chỉ 1 generation mỗi prompt:** advantage không xác định vì độ lệch chuẩn bằng 0. Cần tối thiểu 2.

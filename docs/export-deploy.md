@@ -200,7 +200,17 @@ Docs khuyến cáo quant dưới `UD-Q2_K_XL` (1-bit) không nên dùng cho tool
 
 ## NVFP4 (Unsloth Dynamic NVFP4)
 
-Unsloth Dynamic NVFP4 là định dạng quant 4-bit chạy trên **GPU NVIDIA Blackwell** (RTX 5050–5090, RTX 50X, DGX Spark, B200, B300, RTX PRO 6000). GPU cũ hơn: docs khuyên dùng GGUF.
+Unsloth Dynamic NVFP4 là định dạng quant 4-bit chạy trên **GPU NVIDIA Blackwell**. GPU cũ hơn: docs khuyên dùng GGUF.
+
+::: warning Docs chưa thống nhất
+Cùng một trang liệt kê hai danh sách GPU khác nhau:
+
+| Thông số | Đoạn mở đầu ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) | Mục Performance Analysis ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) |
+| --- | --- | --- |
+| GPU được nêu | RTX 5050-5090, B200, RTX PRO 6000 "and more" | "Blackwell GPUs like RTX 50X, DGX Spark, B200, B300" |
+
+Cả hai đều nói là Blackwell. GPU nằm ngoài cả hai danh sách: cần kiểm tra lại.
+:::
 
 Unsloth làm gì: giữ các layer quan trọng ở FP8 (W8A8) hoặc BF16, phần còn lại W4A4 (không phải W4A16) để tận dụng FP4 tensor core; kèm FP8 KV cache calibration cho context dài gấp 2; MTP tensors (phục vụ speculative decoding) có sẵn trong quant.
 
@@ -241,6 +251,10 @@ vllm serve unsloth/Qwen3.6-35B-A3B-NVFP4-Fast
     --speculative-config '{"method": "mtp", "num_speculative_tokens": 2}'
 ```
 
+::: warning Docs chưa thống nhất
+Lệnh trên chép nguyên văn từ [nvfp4](https://unsloth.ai/docs/basics/nvfp4): dòng đầu **không có** `\` ở cuối. Các lệnh nhiều dòng khác trong cùng trang (lệnh `uv pip install`, lệnh `sglang.launch_server`) đều có `\` nối dòng. Nếu chép y nguyên vào shell, dòng `--speculative-config` có thể bị chạy như một lệnh riêng — cần kiểm tra lại.
+:::
+
 DGX Spark phải dùng backend `flashinfer_b12x`:
 
 ```shellscript
@@ -250,13 +264,44 @@ vllm serve unsloth/Qwen3.6-35B-A3B-NVFP4-Fast --moe-backend flashinfer_b12x
 
 ### Chạy bằng SGLang
 
+Qwen3.6:
+
 ```bash
 python -m sglang.launch_server --model-path unsloth/Qwen3.6-27B-NVFP4 --speculative-algorithm NEXTN \
      --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4
 ```
 
+Gemma 4:
+
+```bash
+python -m sglang.launch_server --model-path unsloth/Gemma-4-31B-NVFP4 --speculative-algorithm NEXTN \
+     --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4
+```
+
+::: warning Docs chưa thống nhất
+Tên model trong lệnh/hướng dẫn khác tên repo trong bảng của cùng trang:
+
+| Thông số | Trong lệnh / hướng dẫn ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) | Trong bảng Overview ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) |
+| --- | --- | --- |
+| Gemma 4 31B | `unsloth/Gemma-4-31B-NVFP4` (lệnh SGLang) | `unsloth/gemma-4-31B-it-NVFP4` |
+| Qwen3.6 35B A3B | "you can change model name to `Qwen3.6-35-A3B-NVFP4`" | `unsloth/Qwen3.6-35B-A3B-NVFP4` |
+
+Kiểm tra tên repo chính xác trên Hugging Face trước khi chạy.
+:::
+
 ::: warning Đừng tự chọn MoE backend
-Trên GPU thường, **không** set MoE backend — để vLLM tự chọn. Kernel Marlin không hỗ trợ tốt W4A4, chậm hơn ~2.5 lần. Nếu gặp lỗi Torchcodec: cài `ffmpeg` (`sudo apt-get install -y ffmpeg`) rồi chạy lại vLLM.
+Trên GPU thường, **không** set MoE backend — để vLLM tự chọn (docs: Marlin không hỗ trợ tốt W4A4). DGX Spark thì ngược lại, phải set `--moe-backend flashinfer_b12x`. Nếu gặp lỗi Torchcodec: cài `ffmpeg` (`sudo apt-get install -y ffmpeg`) rồi chạy lại vLLM.
+:::
+
+::: warning Docs chưa thống nhất
+Mức tốc độ phụ thuộc cấu hình/backend được ghi khác nhau trong cùng trang [nvfp4](https://unsloth.ai/docs/basics/nvfp4):
+
+| Thông số | Nguồn A (link) | Nguồn B (link) |
+| --- | --- | --- |
+| DGX Spark không dùng `flashinfer_b12x` | "2x SLOWER inference" — mục DGX Spark Tutorial ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) | "much slower" (mục vLLM Tutorial) và "2.5x slower inference" (mục Marlin vs Flashinfer…) ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) |
+| Marlin với W4A4 | "2.5x performance degradation" / "Marlin is 2.5x slower" ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) | Bảng benchmark: unsloth 27B W4A4 marlin 105.6 decode tok/s, 2,127 thr out tok/s; cute-DSL (auto) 125.9 decode tok/s, 6,863 thr out tok/s ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) |
+| Qwen3.6-35B-A3B nhanh hơn | "1.7x faster on 32GB VRAM" — mục Performance Analysis ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) | 1.56× (NVFP4) và 1.79× (NVFP4-Fast) — bảng Overview ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) |
+| Gemma 4 nhanh hơn BF16 tối đa | "at most a 1.44x throughput boost" — mục Gemma 4 and others ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) | 1.45× (31B) — bảng Overview ([nvfp4](https://unsloth.ai/docs/basics/nvfp4)) |
 :::
 
 ::: info Export NVFP4 từ model tự fine-tune
@@ -274,7 +319,7 @@ Trong các nguồn đã đọc, không có trang hướng dẫn "xuất model fi
 Những gì trang FP8 RL nói:
 
 - Bật FP8 khi load model bằng `load_in_fp8 = True` trong `FastLanguageModel.from_pretrained`. Unsloth tự map sang bản Float8 nếu có, hoặc convert on-the-fly.
-- Chạy trên GPU NVIDIA ra đời sau RTX 4090 (RTX 40, RTX 50, L4, H100, H200, B200…). T4 miễn phí của Colab **không** hỗ trợ FP8.
+- GPU docs nêu: H100, L4, RTX 50x, RTX 40x, H200, B200 và "any NVIDIA GPU (consumer or data center grade) released after the RTX 4090". T4 miễn phí của Colab **không** hỗ trợ FP8.
 - Unsloth có upload sẵn model **FP8 Dynamic** và **FP8 Block** trên Hugging Face, dùng được cho FP8 training hoặc serve bằng vLLM/SGLang. FP8 Dynamic train nhanh hơn và tốn ít VRAM hơn FP8 Block, đổi lại giảm nhẹ độ chính xác.
 
 ```python
@@ -299,14 +344,28 @@ Unsloth hỗ trợ export sang Ollama qua GGUF và **tự tạo `Modelfile`** (f
 4. Dùng `Modelfile` Unsloth sinh ra để tạo model Ollama, rồi gọi inference.
 
 ::: info Code của trang Ollama bị thiếu
-Trong bản nguồn đã lọc, các khối code của trang Ollama nằm trong ảnh nên không chép được; lệnh duy nhất có dạng văn bản là `ollama serve`. Chi tiết xem tutorial "Finetune Llama-3 and Use In Ollama" — cần kiểm tra lại.
+Đã đối chiếu cả bản gốc chưa lọc của trang: các bước cài Ollama, export GGUF, in `Modelfile`, tạo model và gọi inference đều chỉ có dạng ảnh, không có khối code văn bản. Lệnh duy nhất có dạng văn bản là `ollama serve`. Chi tiết xem tutorial "Finetune Llama-3 and Use In Ollama" — cần kiểm tra lại.
 :::
 
 **Nguồn:** https://unsloth.ai/docs/basics/inference-and-deployment/saving-to-ollama
 
 ## Deploy: llama-server (OpenAI endpoint)
 
-`llama-server` của llama.cpp phục vụ file GGUF qua endpoint tương thích OpenAI. Build llama.cpp như ở mục GGUF (đổi `-DGGML_CUDA=ON` thành `-DGGML_CUDA=OFF` nếu chỉ chạy CPU hoặc Mac/Metal). Chạy server:
+`llama-server` của llama.cpp phục vụ file GGUF qua endpoint tương thích OpenAI. Build llama.cpp như ở mục GGUF (đổi `-DGGML_CUDA=ON` thành `-DGGML_CUDA=OFF` nếu chỉ chạy CPU hoặc Mac/Metal). Ví dụ trong docs dùng Devstral 2. Bước tải model:
+
+```python
+# !pip install huggingface_hub hf_transfer
+import os
+os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "1"
+from huggingface_hub import snapshot_download
+snapshot_download(
+    repo_id = "unsloth/Devstral-2-123B-Instruct-2512-GGUF",
+    local_dir = "Devstral-2-123B-Instruct-2512-GGUF",
+    allow_patterns = ["*UD-Q2_K_XL*", "*mmproj-F16*"],
+)
+```
+
+Chạy server:
 
 ```bash
 ./llama.cpp/llama-server \
@@ -321,6 +380,18 @@ Trong bản nguồn đã lọc, các khối code của trang Ollama nằm trong 
     --port 8001 \
     --jinja
 ```
+
+::: warning Docs chưa thống nhất
+Bước tải và bước serve trên cùng trang [llama-server & OpenAI endpoint](https://unsloth.ai/docs/basics/inference-and-deployment/llama-server-and-openai-endpoint) dùng **hai model khác nhau**, nên chép y nguyên sẽ không tìm thấy file `--model`:
+
+| Thông số | Bước tải `snapshot_download` ([nguồn](https://unsloth.ai/docs/basics/inference-and-deployment/llama-server-and-openai-endpoint)) | Bước `llama-server` ([nguồn](https://unsloth.ai/docs/basics/inference-and-deployment/llama-server-and-openai-endpoint)) |
+| --- | --- | --- |
+| Model | `unsloth/Devstral-2-123B-Instruct-2512-GGUF` | `Devstral-Small-2-24B-Instruct-2512` |
+| Thư mục | `Devstral-2-123B-Instruct-2512-GGUF` | `Devstral-Small-2-24B-Instruct-2512-GGUF` |
+| Quant | `*UD-Q2_K_XL*` | `UD-Q4_K_XL.gguf` |
+
+Khi làm theo, cho `--model`/`--mmproj` trỏ đúng file bạn đã thực sự tải về.
+:::
 
 Gọi từ Python (sau `pip install openai`):
 
@@ -430,7 +501,7 @@ Thiết bị cùng Wi-Fi/mạng dây truy cập qua địa chỉ dạng `http://
 unsloth studio -H 0.0.0.0 -p 8888
 ```
 
-- Khi đang chạy: **Settings → API → Remote & LAN** → thẻ **LAN access** → **Start**. Trạng thái **Online** nghĩa là địa chỉ đã phản hồi. Có toggle **Start automatically** để tự bật mỗi lần khởi động.
+- Khi đang chạy: mở trang cài đặt Remote & LAN (đường dẫn menu xem hộp bên dưới) → thẻ **LAN access** → **Start**. Trạng thái **Online** nghĩa là địa chỉ đã phản hồi. Có toggle **Start automatically** để tự bật mỗi lần khởi động.
 
 ### Remote qua Cloudflare tunnel
 
@@ -440,7 +511,20 @@ Unsloth tạo link HTTPS kiểu `https://<random>.trycloudflare.com`, không c�
 unsloth studio --secure -p 8888
 ```
 
-`--secure` giữ Unsloth bind ở `127.0.0.1` và chỉ publish qua tunnel; nếu tunnel lỗi, Unsloth **thoát** chứ không fallback sang port thô. Khi đang chạy: **Settings → API → Remote access** → **Start**, rồi copy **Remote URL** hoặc quét QR.
+`--secure` giữ Unsloth bind ở `127.0.0.1` và chỉ publish qua tunnel; nếu tunnel lỗi, Unsloth **thoát** chứ không fallback sang port thô. Khi đang chạy: tìm thẻ **Remote access** → **Start**, rồi copy **Remote URL** hoặc quét QR.
+
+::: warning Docs chưa thống nhất
+Đường dẫn menu tới thẻ LAN access / Remote access được ghi khác nhau:
+
+| Chỗ trong docs | Đường dẫn menu |
+| --- | --- |
+| Trang LAN, đoạn mở đầu và Quickstart ([lan](https://unsloth.ai/docs/basics/lan)) | Settings → API → **Remote & LAN** (thẻ LAN access) |
+| Trang Cloudflare, đoạn mở đầu ([remote access](https://unsloth.ai/docs/basics/how-to-serve-local-llms-anywhere-secure-remote-access-with-cloudflare-and-unsloth)) | Settings → API → **Remote access** |
+| Trang Cloudflare, mục Quickstart ([remote access](https://unsloth.ai/docs/basics/how-to-serve-local-llms-anywhere-secure-remote-access-with-cloudflare-and-unsloth)) | Settings → **Remote & LAN** → Remote access |
+| Trang Cloudflare, mục "UI: start a link…" ([remote access](https://unsloth.ai/docs/basics/how-to-serve-local-llms-anywhere-secure-remote-access-with-cloudflare-and-unsloth)) | Settings → API → tìm thẻ **Remote access** |
+
+Nếu không thấy menu theo một đường dẫn, thử các đường dẫn còn lại.
+:::
 
 Đặt mật khẩu cho launch headless (không có terminal):
 
@@ -459,11 +543,23 @@ UNSLOTH_STUDIO_PASSWORD='your-strong-password' unsloth studio --secure
 
 ::: warning Bảo mật khi mở Unsloth ra mạng
 - **LAN là HTTP thường, không mã hóa** — ai cùng phân đoạn mạng đều đọc được. Trên mạng không do bạn kiểm soát, dùng `--secure` (HTTPS).
-- **Tool phía server chạy dưới quyền user của bạn**: web search, Python, terminal bật mặc định trong Studio, nên ai có API key và truy cập được server là chạy được code trên máy. Thêm `--disable-tools` khi mở ra mạng và giữ kín API key.
+- **Tool phía server chạy dưới quyền user của bạn**: ai có API key và truy cập được server là chạy được code trên máy. Docs khuyên thêm `--disable-tools` khi mở ra mạng và giữ kín API key. Tool bật hay tắt mặc định: xem hộp "Docs chưa thống nhất" bên dưới.
 - Ai có **URL + mật khẩu** là đăng nhập được (user `unsloth`). URL tunnel đổi mỗi lần start, hãy coi URL là bí mật.
 - `-H 0.0.0.0` vẫn để port thô mở; chỉ `--secure` đóng nó.
 - Lần đầu publish công khai mà admin vẫn dùng mật khẩu tự sinh, Unsloth bắt đổi mật khẩu trước. Tránh `--password VALUE` trên dòng lệnh vì lộ trong `ps` và shell history.
 - Khi tunnel bật, các MCP server stdio cục bộ bị tắt (trừ khi đặt `UNSLOTH_STUDIO_ALLOW_STDIO_MCP=1`).
+:::
+
+::: warning Docs chưa thống nhất
+Tool phía server (web search, Python, terminal) **bật hay tắt mặc định** khi mở Unsloth ra mạng:
+
+| Thông số | Trang LAN ([lan](https://unsloth.ai/docs/basics/lan)) | Trang Cloudflare ([remote access](https://unsloth.ai/docs/basics/how-to-serve-local-llms-anywhere-secure-remote-access-with-cloudflare-and-unsloth)) | Trang API ([api](https://unsloth.ai/docs/basics/api)) |
+| --- | --- | --- | --- |
+| Lệnh được nói tới | Trang hướng dẫn `unsloth studio -H 0.0.0.0`; mục Security không ghi rõ lệnh | Trang hướng dẫn `unsloth studio --secure` / `--cloudflare`; mục Security không ghi rõ lệnh | `unsloth run` |
+| Tool mặc định | "on by default" | "on by default" | Bind `127.0.0.1`: bật; bind `0.0.0.0` hoặc địa chỉ không phải loopback: **tắt** |
+| Cách ép | `--disable-tools` | `--disable-tools` | `--enable-tools` / `--disable-tools` (trên `0.0.0.0`, `--enable-tools` hỏi y/N) |
+
+Khi mở ra mạng, luôn truyền `--disable-tools` tường minh thay vì dựa vào mặc định.
 :::
 
 **Nguồn:** https://unsloth.ai/docs/basics/lan, https://unsloth.ai/docs/basics/how-to-serve-local-llms-anywhere-secure-remote-access-with-cloudflare-and-unsloth

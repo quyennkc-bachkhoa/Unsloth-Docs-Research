@@ -68,8 +68,8 @@ Theo docs, Unsloth gom trọn chuỗi "chạy model → chuẩn bị dữ liệu
 
 | Vấn đề | Unsloth cung cấp (theo docs) |
 | --- | --- |
-| Train LLM tốn VRAM (bộ nhớ card đồ họa) và chậm | Fine-tune nhanh hơn 2 lần, dùng ít hơn 70% VRAM, "không giảm độ chính xác" |
-| Không muốn viết code train | Studio/Desktop: kéo thả PDF, CSV, JSON rồi bấm train (LoRA, full fine-tuning, pretraining) |
+| Train LLM tốn VRAM (bộ nhớ card đồ họa) và chậm | Trang docs chính ghi fine-tune nhanh hơn 2 lần, ít hơn 70% VRAM, "không giảm độ chính xác"; README ghi mức khác theo từng model (xem hộp bên dưới) |
+| Không muốn viết code train | Studio/Desktop: tải lên tài liệu (trang Desktop ghi PDF, CSV, JSON; các trang khác liệt kê định dạng khác, xem [Tổng quan](/tong-quan)) rồi bấm train (LoRA, full fine-tuning, pretraining) |
 | Không có dataset sẵn | Data Recipes: biến PDF, CSV, DOCX thành dataset qua workflow dạng graph-node |
 | Muốn dùng model local trong agent/ứng dụng | API tương thích OpenAI và Anthropic; lệnh `unsloth start claude` nối Claude Code, Codex với model local |
 | Muốn mang model đã train đi chỗ khác | Export sang GGUF, safetensors, NVFP4, FP8... cho llama.cpp, Ollama, vLLM, LM Studio |
@@ -77,8 +77,13 @@ Theo docs, Unsloth gom trọn chuỗi "chạy model → chuẩn bị dữ liệu
 
 Docs còn nêu Unsloth hỗ trợ inference và training cho hơn 500 model, và đội Unsloth từng phối hợp sửa lỗi nghiêm trọng cho các họ model như gpt-oss, Qwen3, Llama 4, Gemma, Phi-4.
 
-::: warning Về con số hiệu năng
-Các con số "2x nhanh hơn, ít hơn 70% VRAM" là số liệu docs công bố chung; bảng notebook trên GitHub cho mức khác nhau theo model (ví dụ Gemma 4 E2B: 1.5x nhanh hơn, ít hơn 50% bộ nhớ). Điều kiện đo cần kiểm tra lại.
+::: warning Docs chưa thống nhất
+Mức tăng tốc và mức tiết kiệm VRAM khi train ghi khác nhau, và không nguồn nào nêu điều kiện đo:
+
+| Thông số | Nguồn A: [docs](https://unsloth.ai/docs), [new/studio](https://unsloth.ai/docs/new/studio), [desktop](https://unsloth.ai/docs/desktop) | Nguồn B: bảng Free Notebooks, [GitHub README](https://github.com/unslothai/unsloth) |
+| --- | --- | --- |
+| Tốc độ train | 2x nhanh hơn | 1.5x (Gemma 4 E2B, Qwen3.5 4B, Orpheus-TTS 3B) đến 2x (gpt-oss 20B, Llama 3.1 8B...) |
+| Bộ nhớ | Ít hơn 70% VRAM | Ít hơn 20% (embeddinggemma 300M) đến 80% (gpt-oss 20B GRPO) |
 :::
 
 ::: tip Kiến thức nền
@@ -94,7 +99,7 @@ VRAM và cách ước lượng bộ nhớ cho một model: xem [Tham số & bộ
 - **Người mới fine-tune:** docs có mục "Fine-tuning for Beginners" trả lời các câu hỏi như chọn model instruct hay base, dataset cần bao lớn, GPU có đủ VRAM không.
 - **Người viết code train:** dùng Unsloth Core (gói Python) hoặc notebook Colab miễn phí.
 
-Nền tảng theo docs: macOS, Windows, Linux, WSL; GPU NVIDIA, AMD, Intel, Mac và CPU. Docs lưu ý phần cứng cũ có thể không được hỗ trợ tốt.
+Nền tảng theo docs: macOS, Windows, Linux, WSL; GPU NVIDIA, AMD, Intel, Mac và CPU. Docs lưu ý phần cứng cũ có thể không được hỗ trợ tốt. Các trang ghi khác nhau về việc train được trên phần cứng nào (xem hộp "Docs chưa thống nhất" ở [Tổng quan kiến trúc](/tong-quan)).
 
 **[Nhận định]** Website này viết cho người đã biết Python/FastAPI nhưng mới với AI: phần "Unsloth" tập trung vào thao tác, còn khái niệm (token, LoRA, quantization...) được tách sang route Kiến thức nền.
 
