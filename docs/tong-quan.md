@@ -229,7 +229,7 @@ Trang Studio liệt kê các route backend FastAPI dạng `/api/...`, ví dụ `
 Tool calling, chat template và tham số sampling (temperature, top-p...): xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling).
 :::
 
-Chi tiết: [Inference & API](/inference).
+Chi tiết: [Inference & API](/inference/).
 
 **Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/new/studio/start, https://github.com/unslothai/unsloth
 

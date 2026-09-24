@@ -11,7 +11,7 @@ Trang này giải thích điều gì xảy ra khi bạn chạy một model (infe
 - Các tham số `temperature`, `top_p`, `top_k`, `min_p`... điều khiển việc chọn token thế nào.
 - Vì sao sai chat template làm model trả lời hỏng.
 
-Nên đọc trang này trước khi chỉnh tham số trong Unsloth Studio, `llama-server` hay trang [Inference & API](/inference).
+Nên đọc trang này trước khi chỉnh tham số trong Unsloth Studio, `llama-server` hay trang [Inference & API](/inference/).
 
 ## Sinh token: autoregressive, prefill và decode
 
@@ -28,7 +28,7 @@ Model không viết cả câu trả lời một lần. Nó đoán từng token m
 
 **Ảnh hưởng khi dùng Unsloth.** Trang Qwen3.8 ghi tốc độ "generation" khoảng 20 tokens/s trên B200 nếu model vừa bộ nhớ. Nếu RAM + VRAM nhỏ hơn kích thước quant, model vẫn chạy nhưng chậm hơn nhiều do offload xuống ổ đĩa. **[Nhận định]** Con số "generation" đó là tốc độ pha decode. Decode bị giới hạn bởi băng thông bộ nhớ, nên offload làm chậm mạnh. Xem [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho).
 
-**Gặp ở đâu trong Unsloth.** [Inference & API](/inference), [Model catalog](/model-catalog).
+**Gặp ở đâu trong Unsloth.** [Inference & API](/inference/), [Model catalog](/model-catalog).
 
 **Nguồn:** https://unsloth.ai/docs/models/qwen3.8; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/llm_tutorial, https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/
 
@@ -54,7 +54,7 @@ Nguồn: https://developer.nvidia.com/blog/mastering-llm-techniques-inference-op
 - **Lượng tử hóa KV cache.** llama.cpp cho chọn kiểu lưu cache qua `--cache-type-k` và `--cache-type-v`. Các giá trị hỗ trợ: `f32`, `f16`, `bf16`, `q8_0`, `q4_0`, `q4_1`, `iq4_nl`, `q5_0`, `q5_1`. Mặc định là `f16`. Theo docs Unsloth, `q4_1` (khoảng 5 bit) cho context dài hơn khoảng 3.2 lần. Với Qwen3.5, docs gợi ý thử `--cache-type-k bf16 --cache-type-v bf16` nếu gặp output vô nghĩa.
 - **Giữ phần đầu prompt ổn định.** Cache chỉ dùng lại được khi phần đầu prompt giống hệt lần trước. Docs Unsloth ghi Claude Code chèn vào đầu system prompt một header thay đổi theo mỗi request. Header này làm KV cache mất hiệu lực, và inference với model local chậm đi khoảng 90%.
 
-**Gặp ở đâu trong Unsloth.** [Inference & API](/inference), [Reinforcement Learning](/reinforcement-learning) (bảng bộ nhớ GRPO), [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho), [Token & context](/kien-thuc-nen/token-va-context).
+**Gặp ở đâu trong Unsloth.** [Inference & API](/inference/), [Reinforcement Learning](/reinforcement-learning) (bảng bộ nhớ GRPO), [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho), [Token & context](/kien-thuc-nen/token-va-context).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/models/glm-5.3, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/deepseek-v4, https://unsloth.ai/docs/basics/claude-code; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/cache_explanation, https://huggingface.co/docs/transformers/kv_cache, https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/
 
@@ -72,7 +72,7 @@ xác_suất_i = exp(logit_i / T) / tổng_j exp(logit_j / T)      (T = temperatu
 
 **Ví dụ.** **[Ước tính]** Giả sử sau "Thủ đô của Pháp là" chỉ có 4 token ứng viên, với logit: Paris 5,0; Lyon 3,0; Nice 2,0; "một" 1,0. Softmax (T = 1) cho xác suất khoảng: Paris 0,831; Lyon 0,113; Nice 0,041; "một" 0,015. Các mục dưới dùng lại ví dụ này.
 
-**Gặp ở đâu trong Unsloth.** [Inference & API](/inference) (mục Tham số sampling).
+**Gặp ở đâu trong Unsloth.** [Inference & API](/inference/studio-chat) (mục Tham số sampling).
 
 **Nguồn:** **[Nguồn ngoài]** https://arxiv.org/abs/1904.09751, https://huggingface.co/docs/transformers/generation_strategies
 
@@ -209,7 +209,7 @@ Cùng một trang [qwen3.5](https://unsloth.ai/docs/models/qwen3.5), ba chỗ n�
 - Các lệnh `llama-cli` và `llama-server` mẫu cho đúng các chế độ này (ví dụ `--temp 1.0 --top-p 0.95 --top-k 20 --min-p 0.00`) không truyền presence penalty. Tức là chúng chạy với mặc định 0.0 của llama-server.
 :::
 
-**Gặp ở đâu trong Unsloth.** [Inference & API](/inference), [Model catalog](/model-catalog).
+**Gặp ở đâu trong Unsloth.** [Inference & API](/inference/), [Model catalog](/model-catalog).
 
 **Nguồn:** https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune, https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/basics/tool-calling-guide-for-local-llms, https://unsloth.ai/docs/new/studio/chat; **[Nguồn ngoài]** https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md, https://github.com/ggml-org/llama.cpp/blob/master/src/llama-sampler.cpp, https://arxiv.org/abs/1904.09751
 
@@ -252,7 +252,7 @@ Docs Unsloth còn ghi hai trường hợp khác:
 - **Khi chạy `llama-server`:** `--jinja` bật engine Jinja cho chat template (mặc định bật theo README hiện tại). Tham số riêng của template truyền qua `--chat-template-kwargs '{"enable_thinking":false}'`.
 - **[Nguồn ngoài]** TRL nhắc: với base model đã có template sẵn (ví dụ Qwen), phải căn chỉnh EOS token với chat template để câu trả lời kết thúc đúng: https://huggingface.co/docs/trl/sft_trainer
 
-**Gặp ở đâu trong Unsloth.** [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy), [Inference & API](/inference).
+**Gặp ở đâu trong Unsloth.** [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy), [Inference & API](/inference/).
 
 **Nguồn:** https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference, https://unsloth.ai/docs/new/studio/chat, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/chat_templating, https://huggingface.co/docs/transformers/llm_tutorial, https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
 
@@ -271,7 +271,7 @@ Model thinking "nghĩ nháp" trước khi trả lời. Mỗi họ model bật, t
 
 **Ảnh hưởng khi dùng Unsloth.** Thinking và non-thinking thường có bộ tham số sampling khác nhau (bảng ở trên). Đoạn thinking cũng chiếm context và KV cache như token thường. **[Nhận định]** Qwen3.8 khuyến khích giữ thinking cũ, còn Gemma 4 yêu cầu bỏ; hãy làm theo trang của đúng model. **[Nguồn ngoài]** `llama-server` có `--reasoning-format` để tách phần suy nghĩ vào trường riêng (ví dụ `reasoning_content`), và `--reasoning-budget` để giới hạn số token suy nghĩ: https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
 
-**Gặp ở đâu trong Unsloth.** [Inference & API](/inference), [Model catalog](/model-catalog).
+**Gặp ở đâu trong Unsloth.** [Inference & API](/inference/), [Model catalog](/model-catalog).
 
 **Nguồn:** https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune; **[Nguồn ngoài]** https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
 
@@ -317,7 +317,7 @@ Hàm `terminal` trong ví dụ tự chặn các lệnh chứa `rm`, `sudo`, `dd`
 - **Studio Chat:** bật tool calling sẵn, có "self-healing" (tự sửa tool call hỏng), dừng vòng gọi tool ổn định hơn và chặn XML lọt ra output.
 - **[Nhận định]** Không cho model gọi hàm nguy hiểm mà không kiểm soát. Ví dụ `terminal` và `python` trong docs chạy code thật trên máy bạn.
 
-**Gặp ở đâu trong Unsloth.** [Inference & API](/inference) (mục Tool calling), [Ứng dụng & RAG](/ung-dung-rag).
+**Gặp ở đâu trong Unsloth.** [Inference & API](/inference/tool-calling) (mục Tool calling), [Ứng dụng & RAG](/ung-dung-rag).
 
 **Nguồn:** https://unsloth.ai/docs/basics/tool-calling-guide-for-local-llms, https://unsloth.ai/docs/new/studio/chat; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/chat_extras, https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
 
@@ -325,11 +325,11 @@ Hàm `terminal` trong ví dụ tự chặn các lệnh chứa `rm`, `sudo`, `dd`
 
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 | --- | --- | --- |
-| Autoregressive, prefill, decode | [Inference & API](/inference) | [Qwen3.8](https://unsloth.ai/docs/models/qwen3.8) |
-| KV cache, `--cache-type-k/v` | [Inference & API](/inference), [Reinforcement Learning](/reinforcement-learning) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), [GLM-5.3](https://unsloth.ai/docs/models/glm-5.3), [Claude Code](https://unsloth.ai/docs/basics/claude-code) |
-| Greedy vs sampling, logits, softmax | [Inference & API](/inference) | [API](https://unsloth.ai/docs/basics/api) |
-| temperature, top_p, top_k, min_p | [Inference & API](/inference), [Model catalog](/model-catalog) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5), [Qwen3.8](https://unsloth.ai/docs/models/qwen3.8), [Gemma 4](https://unsloth.ai/docs/models/gemma-4), [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
-| repetition / presence penalty | [Inference & API](/inference) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5), [API](https://unsloth.ai/docs/basics/api) |
+| Autoregressive, prefill, decode | [Inference & API](/inference/) | [Qwen3.8](https://unsloth.ai/docs/models/qwen3.8) |
+| KV cache, `--cache-type-k/v` | [Inference & API](/inference/), [Reinforcement Learning](/reinforcement-learning) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), [GLM-5.3](https://unsloth.ai/docs/models/glm-5.3), [Claude Code](https://unsloth.ai/docs/basics/claude-code) |
+| Greedy vs sampling, logits, softmax | [Inference & API](/inference/) | [API](https://unsloth.ai/docs/basics/api) |
+| temperature, top_p, top_k, min_p | [Inference & API](/inference/), [Model catalog](/model-catalog) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5), [Qwen3.8](https://unsloth.ai/docs/models/qwen3.8), [Gemma 4](https://unsloth.ai/docs/models/gemma-4), [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
+| repetition / presence penalty | [Inference & API](/inference/) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5), [API](https://unsloth.ai/docs/basics/api) |
 | Chat template, EOS, BOS | [Dữ liệu](/du-lieu), [Export & deploy](/export-deploy) | [Chat Templates](https://unsloth.ai/docs/basics/chat-templates), [Troubleshooting Inference](https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference) |
-| Thinking / reasoning mode | [Inference & API](/inference), [Model catalog](/model-catalog) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5), [Gemma 4](https://unsloth.ai/docs/models/gemma-4), [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
-| Tool calling | [Inference & API](/inference) | [Tool Calling Guide](https://unsloth.ai/docs/basics/tool-calling-guide-for-local-llms), [Studio Chat](https://unsloth.ai/docs/new/studio/chat) |
+| Thinking / reasoning mode | [Inference & API](/inference/), [Model catalog](/model-catalog) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5), [Gemma 4](https://unsloth.ai/docs/models/gemma-4), [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
+| Tool calling | [Inference & API](/inference/) | [Tool Calling Guide](https://unsloth.ai/docs/basics/tool-calling-guide-for-local-llms), [Studio Chat](https://unsloth.ai/docs/new/studio/chat) |

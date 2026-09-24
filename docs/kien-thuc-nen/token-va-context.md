@@ -30,7 +30,7 @@ flowchart LR
 
 **Tiếng Việt tốn bao nhiêu token?** Các nguồn đã duyệt không đưa con số cho tiếng Việt. Nguồn HF chỉ nói: tokenizer huấn luyện trên tiếng Anh sẽ làm việc kém với ngôn ngữ có cách dùng khoảng trắng và dấu câu khác, ví dụ tiếng Nhật **[Nguồn ngoài]** https://huggingface.co/learn/llm-course/chapter6/1. **[Nhận định]** Tiếng Việt có dấu thanh và nhiều âm tiết, nên có thể tốn nhiều token hơn tiếng Anh cho cùng nội dung, tùy tokenizer. Đừng giả định; hãy tự đo bằng tokenizer của chính model bạn dùng. Cách đo: đối tượng `tokenizer` trả về từ `FastLanguageModel.from_pretrained(...)` có phương thức `tokenize()`, trả về danh sách token của một chuỗi, như mô tả trong Transformers glossary và LLM Course chương 2 **[Nguồn ngoài]** https://huggingface.co/docs/transformers/glossary , https://huggingface.co/learn/llm-course/chapter2/4 . Đưa vào cùng một đoạn văn bằng tiếng Việt và tiếng Anh, rồi so độ dài hai danh sách.
 
-**Gặp ở đâu trong Unsloth.** [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/), [Inference](/inference).
+**Gặp ở đâu trong Unsloth.** [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/), [Inference](/inference/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://huggingface.co/docs/transformers/glossary, https://huggingface.co/learn/llm-course/chapter6/1
 
@@ -122,7 +122,7 @@ Model chat còn có token đánh dấu vai trò người nói, ví dụ `<|im_st
   Cách tránh: dùng cùng một template lúc train và lúc chạy.
 - **[Nguồn ngoài]** Nếu đã format bằng `apply_chat_template(tokenize=False)` rồi mới tokenize, cần `add_special_tokens=False` để không chèn BOS/EOS hai lần. https://huggingface.co/docs/transformers/chat_templating
 
-**Gặp ở đâu trong Unsloth.** [Dữ liệu — Chat template](/du-lieu), [Export & deploy — Troubleshooting](/export-deploy), [Inference](/inference).
+**Gặp ở đâu trong Unsloth.** [Dữ liệu — Chat template](/du-lieu), [Export & deploy — Troubleshooting](/export-deploy), [Inference](/inference/).
 
 **Nguồn:** https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference, https://huggingface.co/docs/transformers/chat_templating, https://huggingface.co/docs/transformers/glossary
 
@@ -160,7 +160,7 @@ Với model đa phương thức, ảnh cũng chiếm chỗ trong context. Model 
 **[Ước tính]** Cài `max_seq_length = 2048` và prompt RAG đã chiếm 1.800 token thì model chỉ còn tối đa `2048 − 1800 = 248` token để trả lời. Phép tính này dựa trên quy tắc prompt + phần sinh không vượt quá context (https://unsloth.ai/docs/get-started/install/intel dùng đúng phép trừ này cho GRPO).
 :::
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Inference](/inference), [Model catalog](/model-catalog), [Reinforcement learning](/reinforcement-learning).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Inference](/inference/), [Model catalog](/model-catalog), [Reinforcement learning](/reinforcement-learning).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/install/google-colab, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/new/studio/chat, https://unsloth.ai/docs/basics/unsloth-benchmarks, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune, https://unsloth.ai/docs/models/ibm-granite-4.1, https://unsloth.ai/docs/models/deepseek-v4, https://unsloth.ai/docs/models/glm-5.3, https://unsloth.ai/docs/models/kimi-k3, https://unsloth.ai/docs/get-started/install/intel, https://huggingface.co/Qwen/Qwen3-8B, https://huggingface.co/google/gemma-3-4b-it
 
@@ -190,7 +190,7 @@ trainer = train_on_responses_only(
 
 - Cách chọn token ở mỗi bước (temperature, top-p, top-k) xem ở [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling). Quá trình train xem ở [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen).
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Dữ liệu — Chỉ train trên câu trả lời](/du-lieu), [Inference](/inference).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Dữ liệu — Chỉ train trên câu trả lời](/du-lieu), [Inference](/inference/).
 
 **Nguồn:** https://huggingface.co/docs/transformers/glossary, https://huggingface.co/learn/llm-course/chapter1/4, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference, https://unsloth.ai/docs/new/studio/start
 
@@ -204,5 +204,5 @@ Bảng này gom lại các khái niệm trên trang, kèm trang Unsloth trên we
 | Tokenizer | [Model catalog](/model-catalog), [Export & deploy](/export-deploy) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
 | Vocabulary, `add_new_tokens`, `embed_tokens`/`lm_head` | [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/continued-pretraining |
 | Special token BOS/EOS, chat template | [Dữ liệu](/du-lieu), [Export & deploy](/export-deploy) | https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference |
-| Context window, `max_seq_length`, `max_new_tokens` | [Fine-tuning](/fine-tuning/), [Inference](/inference), [Model catalog](/model-catalog) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/basics/unsloth-benchmarks |
+| Context window, `max_seq_length`, `max_new_tokens` | [Fine-tuning](/fine-tuning/), [Inference](/inference/), [Model catalog](/model-catalog) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/basics/unsloth-benchmarks |
 | Next-token prediction, `train_on_responses_only` | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide |

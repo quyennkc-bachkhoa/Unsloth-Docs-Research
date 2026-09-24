@@ -148,7 +148,7 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 
 | Thuật ngữ | Giải thích | Xem |
 | --- | --- | --- |
-| Inference (suy luận) | Dùng model để sinh kết quả; model không học thêm gì | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Inference & API](/inference) |
+| Inference (suy luận) | Dùng model để sinh kết quả; model không học thêm gì | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Inference & API](/inference/) |
 | Autoregressive | Sinh từng token một, nối vào chuỗi rồi đoán token tiếp theo | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
 | Prefill / decode | Prefill: pha xử lý cả prompt song song. Decode: pha sinh từng token | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
 | Greedy / sampling | Greedy: luôn chọn token có xác suất cao nhất. Sampling: bốc ngẫu nhiên theo xác suất | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
@@ -157,16 +157,16 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Repetition / presence / frequency penalty | Phạt các token đã xuất hiện để model bớt lặp lại | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
 | Chat template | Quy tắc đổi danh sách tin nhắn thành một chuỗi token, có chèn các token điều khiển | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Dữ liệu](/du-lieu) |
 | `add_generation_prompt` | Thêm phần mở đầu lượt của assistant vào cuối prompt, để model biết tới lượt nó trả lời | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
-| Thinking / reasoning mode, `reasoning_effort` | Model viết ra một đoạn suy nghĩ trước khi trả lời. `reasoning_effort` chỉnh mức độ suy nghĩ | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Inference & API](/inference) |
-| Tool calling (function calling) | Model sinh ra yêu cầu gọi hàm (dạng JSON). App chạy hàm đó rồi trả kết quả lại | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Inference & API](/inference) |
-| Self-healing tool calling | Unsloth tự sửa các tool call bị lỗi | [Inference & API](/inference) |
-| Server-side tools | Các công cụ Unsloth tự chạy, như Python, bash, web search | [Inference & API](/inference) |
-| MCP (Model Context Protocol) | Giao thức chuẩn để model kết nối và gọi dịch vụ bên ngoài | [Inference & API](/inference) |
-| OpenAI-compatible API, endpoint | API có cùng định dạng với API của OpenAI. Endpoint là địa chỉ HTTP nhận request | [Inference & API](/inference) |
-| API key (`sk-unsloth-…`), Bearer token | Khóa xác thực, gửi kèm request qua header `Authorization: Bearer` | [Inference & API](/inference) |
-| Streaming / SSE | Trả kết quả từng phần ngay khi có, qua một luồng sự kiện | [Inference & API](/inference) |
-| Coding agent | Tác tử (agent) lập trình, ví dụ Claude Code, Codex, OpenCode | [Inference & API](/inference) |
-| Prompt injection | Lệnh độc hại được chèn vào nội dung mà model đọc | [Inference & API](/inference), [Ứng dụng RAG](/ung-dung-rag) |
+| Thinking / reasoning mode, `reasoning_effort` | Model viết ra một đoạn suy nghĩ trước khi trả lời. `reasoning_effort` chỉnh mức độ suy nghĩ | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Inference & API](/inference/api) |
+| Tool calling (function calling) | Model sinh ra yêu cầu gọi hàm (dạng JSON). App chạy hàm đó rồi trả kết quả lại | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Inference & API](/inference/tool-calling) |
+| Self-healing tool calling | Unsloth tự sửa các tool call bị lỗi | [Inference & API](/inference/tool-calling) |
+| Server-side tools | Các công cụ Unsloth tự chạy, như Python, bash, web search | [Inference & API](/inference/tool-calling) |
+| MCP (Model Context Protocol) | Giao thức chuẩn để model kết nối và gọi dịch vụ bên ngoài | [Inference & API](/inference/mcp) |
+| OpenAI-compatible API, endpoint | API có cùng định dạng với API của OpenAI. Endpoint là địa chỉ HTTP nhận request | [Inference & API](/inference/api) |
+| API key (`sk-unsloth-…`), Bearer token | Khóa xác thực, gửi kèm request qua header `Authorization: Bearer` | [Inference & API](/inference/api) |
+| Streaming / SSE | Trả kết quả từng phần ngay khi có, qua một luồng sự kiện | [Inference & API](/inference/api) |
+| Coding agent | Tác tử (agent) lập trình, ví dụ Claude Code, Codex, OpenCode | [Inference & API](/inference/coding-agent) |
+| Prompt injection | Lệnh độc hại được chèn vào nội dung mà model đọc | [Inference & API](/inference/mcp), [Ứng dụng RAG](/ung-dung-rag) |
 | MTP, speculative decoding | Đoán trước nhiều token để decode nhanh hơn | [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho), [Export & deploy](/export-deploy) |
 | RAG | Tìm tài liệu liên quan, đưa vào prompt, rồi để model dựa vào đó trả lời | [Ứng dụng RAG](/ung-dung-rag) |
 | Vector DB, reranker | Vector DB: cơ sở dữ liệu lưu vector. Reranker: model xếp hạng lại kết quả tìm được | [Ứng dụng RAG](/ung-dung-rag) |
@@ -179,9 +179,9 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Unsloth Desktop | App native cài trên macOS, Windows, Linux | [Tổng quan](/tong-quan) |
 | Unsloth Studio | Giao diện web không cần code (no-code), cài thủ công | [Tổng quan](/tong-quan) |
 | Unsloth Core | Thư viện Python gốc, dùng bằng cách viết code | [Tổng quan](/tong-quan) |
-| `unsloth run`, `unsloth start` | `unsloth run`: nạp model và mở API. `unsloth start`: nối coding agent với model local | [Inference & API](/inference) |
+| `unsloth run`, `unsloth start` | `unsloth run`: nạp model và mở API. `unsloth start`: nối coding agent với model local | [Inference & API](/inference/coding-agent) |
 | safetensors | Định dạng lưu trọng số chuẩn của Hugging Face | [Export & deploy](/export-deploy) |
-| llama.cpp, llama-server | llama.cpp: engine inference viết bằng C/C++. llama-server: server HTTP của llama.cpp | [Inference & API](/inference), [Export & deploy](/export-deploy) |
+| llama.cpp, llama-server | llama.cpp: engine inference viết bằng C/C++. llama-server: server HTTP của llama.cpp | [Inference & API](/inference/), [Export & deploy](/export-deploy) |
 | vLLM, SGLang | Engine inference hiệu năng cao cho production | [Export & deploy](/export-deploy) |
 | Ollama, LM Studio | Ứng dụng chạy model local | [Export & deploy](/export-deploy) |
 | Modelfile | File cấu hình model của Ollama | [Export & deploy](/export-deploy) |

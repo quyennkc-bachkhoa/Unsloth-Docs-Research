@@ -11,7 +11,7 @@ Trang này giúp bạn làm ba việc:
 - Đọc hiểu bảng yêu cầu RAM và VRAM trong docs Unsloth.
 - Giải mã tên file model.
 
-Nên đọc trước khi chọn model và mức quant ở [Model catalog](/model-catalog), [Inference](/inference), hoặc trước khi fine-tune ở [Fine-tuning](/fine-tuning/).
+Nên đọc trước khi chọn model và mức quant ở [Model catalog](/model-catalog), [Inference](/inference/), hoặc trước khi fine-tune ở [Fine-tuning](/fine-tuning/).
 
 ## Tham số là gì
 
@@ -114,7 +114,7 @@ Paper PagedAttention dùng đúng cách tính này cho OPT-13B: `2 (K và V) × 
 - **Lựa chọn của Hugging Face Transformers.** Có cache lượng tử hóa (`cache_implementation="quantized"`) và cache offload sang CPU (`cache_implementation="offloaded"`), đổi lại tốc độ chậm hơn **[Nguồn ngoài]** https://huggingface.co/docs/transformers/kv_cache .
 - Khái niệm token và context length: xem [Token & context](/kien-thuc-nen/token-va-context).
 
-**Gặp ở đâu trong Unsloth.** [Inference](/inference), [Model catalog](/model-catalog).
+**Gặp ở đâu trong Unsloth.** [Inference](/inference/), [Model catalog](/model-catalog).
 
 **Nguồn:** https://unsloth.ai/docs/basics/nvfp4, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/basics/claude-code ; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/cache_explanation , https://huggingface.co/docs/transformers/kv_cache , https://arxiv.org/abs/2309.06180 , https://huggingface.co/Qwen/Qwen3-8B , https://huggingface.co/Qwen/Qwen3.8-27B
 
@@ -129,7 +129,7 @@ Paper PagedAttention dùng đúng cách tính này cho OPT-13B: `2 (K và V) × 
 
 **Ảnh hưởng khi dùng Unsloth.** Để chừa khoảng trống, đừng chọn file quant có dung lượng sát bằng bộ nhớ bạn có.
 
-**Gặp ở đâu trong Unsloth.** [Inference](/inference).
+**Gặp ở đâu trong Unsloth.** [Inference](/inference/).
 
 **Nguồn:** https://unsloth.ai/docs/models/qwen3.8 ; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/model_memory_anatomy
 
@@ -259,7 +259,7 @@ Tên file model thường nói sẵn kích thước, biến thể, định dạn
 - **Chọn quant khi tải:** khi tải bằng `hf download … --include "*UD-Q4_K_XL*"`, sai một ký tự là tải nhầm quant hoặc không tải được gì.
 - **Model MoE:** với model `A3B`, bộ nhớ cần tính theo **tổng** tham số, không theo số tham số kích hoạt. Bảng Qwen3.5 ghi 35B-A3B ở 4-bit cần 22 GB, lớn hơn 27B dense (17 GB). Dù vậy docs nói 35B-A3B cho inference nhanh hơn nhiều.
 
-**Gặp ở đâu trong Unsloth.** [Model catalog](/model-catalog), [Inference](/inference), [Fine-tuning](/fine-tuning/).
+**Gặp ở đâu trong Unsloth.** [Model catalog](/model-catalog), [Inference](/inference/), [Fine-tuning](/fine-tuning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/basics/dynamic-3.0-ggufs, https://unsloth.ai/docs/basics/nvfp4, https://unsloth.ai/docs/get-started/unsloth-model-catalog ; **[Nguồn ngoài]** https://github.com/ggml-org/ggml/blob/master/docs/gguf.md
 
@@ -284,7 +284,7 @@ Model không nhất thiết phải nằm gọn trong VRAM mới chạy được.
 - **Khi fine-tune:** `use_gradient_checkpointing = "unsloth"` offload activation sang RAM hệ thống. Hugging Face có cơ chế tương tự cho KV cache khi inference **[Nguồn ngoài]** https://huggingface.co/docs/transformers/kv_cache .
 - **[Nhận định]** "Unified memory" trong paper QLoRA (paged optimizer) là tính năng phần mềm của NVIDIA, tự chuyển trang giữa CPU và GPU. Nó khác với unified memory phần cứng của Mac trong các bảng Unsloth.
 
-**Gặp ở đâu trong Unsloth.** [Inference](/inference), [Cài đặt & phần cứng](/cai-dat), [Model catalog](/model-catalog).
+**Gặp ở đâu trong Unsloth.** [Inference](/inference/), [Cài đặt & phần cứng](/cai-dat), [Model catalog](/model-catalog).
 
 **Nguồn:** https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/basics/dynamic-3.0-ggufs, https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide ; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/kv_cache , https://arxiv.org/abs/2305.14314
 
@@ -357,8 +357,8 @@ Cần kiểm tra lại bằng số đo thực tế trên máy của bạn.
 |---|---|---|
 | Số tham số, bảng VRAM fine-tune | [/cai-dat](/cai-dat), [/fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements |
 | Byte mỗi tham số, `load_in_4bit`/`load_in_8bit`/`load_in_16bit` | [/fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
-| KV cache, context length, FP8 KV cache | [/inference](/inference) | https://unsloth.ai/docs/basics/nvfp4 |
+| KV cache, context length, FP8 KV cache | [/inference](/inference/) | https://unsloth.ai/docs/basics/nvfp4 |
 | Gradient, optimizer state, activation, gradient checkpointing | [/fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide |
 | LoRA/QLoRA và VRAM | [/fine-tuning](/fine-tuning/), [/reinforcement-learning](/reinforcement-learning) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
-| Tên model: `UD-`, `bnb-4bit`, `A3B`, shard | [/model-catalog](/model-catalog), [/inference](/inference) | https://unsloth.ai/docs/models/qwen3.8 |
-| RAM + VRAM, unified memory, offload | [/inference](/inference), [/cai-dat](/cai-dat) | https://unsloth.ai/docs/models/qwen3.5 |
+| Tên model: `UD-`, `bnb-4bit`, `A3B`, shard | [/model-catalog](/model-catalog), [/inference](/inference/) | https://unsloth.ai/docs/models/qwen3.8 |
+| RAM + VRAM, unified memory, offload | [/inference](/inference/), [/cai-dat](/cai-dat) | https://unsloth.ai/docs/models/qwen3.5 |

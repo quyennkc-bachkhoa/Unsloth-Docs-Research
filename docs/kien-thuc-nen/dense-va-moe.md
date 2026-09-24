@@ -134,7 +134,7 @@ Không phải tên nào cũng theo đúng mẫu này:
 - Docs Qwen3.5: giữa 27B (dense) và 35B-A3B (MoE), chọn 27B nếu muốn kết quả chính xác hơn một chút, chọn 35B-A3B nếu muốn suy luận nhanh hơn nhiều.
 - Docs Gemma 4: 26B-A4B nhanh hơn 31B nhờ MoE với 4B tham số kích hoạt, đổi lại chất lượng thấp hơn một chút.
 
-**Gặp ở đâu trong Unsloth.** [/model-catalog](/model-catalog), [/inference](/inference).
+**Gặp ở đâu trong Unsloth.** [/model-catalog](/model-catalog), [/inference](/inference/).
 
 **Nguồn:** Unsloth Qwen3.5, Gemma 4, Qwen3-2507, Qwen3.8, GLM-5.3, Model Catalog, Faster MoE; HF Qwen3MoE model doc.
 
@@ -158,7 +158,7 @@ Không phải tên nào cũng theo đúng mẫu này:
 
 **Ảnh hưởng khi dùng Unsloth.** Docs Unsloth lặp lại một quy tắc ở nhiều trang: tổng bộ nhớ khả dụng (VRAM + RAM hệ thống) nên lớn hơn kích thước file quant bạn tải. Nếu không đủ, llama.cpp vẫn chạy được nhờ offload ra SSD hoặc HDD, nhưng chậm hơn. Với MoE, quy tắc này áp dụng cho **tổng** tham số. Cách chọn quant: [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
 
-**Gặp ở đâu trong Unsloth.** [/model-catalog](/model-catalog), [/inference](/inference).
+**Gặp ở đâu trong Unsloth.** [/model-catalog](/model-catalog), [/inference](/inference/).
 
 **Nguồn:** HF blog MoE (khái niệm); HF Mixtral model doc; Unsloth Qwen3.5, gpt-oss.
 
@@ -190,7 +190,7 @@ Hai ví dụ thực tế trong docs:
 
 Theo gợi ý của docs, bắt đầu với `-ot ".ffn_.*_exps.=CPU"`, rồi giảm dần phần offload khi còn VRAM.
 
-**Gặp ở đâu trong Unsloth.** [/inference](/inference); [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune), [Qwen3-2507](https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-2507).
+**Gặp ở đâu trong Unsloth.** [/inference](/inference/); [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune), [Qwen3-2507](https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-2507).
 
 **Nguồn:** Unsloth gpt-oss, Qwen3-2507, Qwen3.5, Qwen3.8, GLM-5.3.
 
@@ -284,5 +284,5 @@ Trang [Faster MoE](https://unsloth.ai/docs/basics/faster-moe) và các trang li�
 | Dense vs MoE, chọn model | [/model-catalog](/model-catalog) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5), [Gemma 4](https://unsloth.ai/docs/models/gemma-4) |
 | Expert, router, top-k | [/fine-tuning](/fine-tuning/) | [Faster MoE](https://unsloth.ai/docs/basics/faster-moe), [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
 | Tổng tham số vs kích hoạt, ký hiệu "A3B" | [/model-catalog](/model-catalog) | [Model Catalog](https://unsloth.ai/docs/get-started/unsloth-model-catalog), [Qwen3.8](https://unsloth.ai/docs/models/qwen3.8), [GLM-5.3](https://unsloth.ai/docs/models/glm-5.3) |
-| Bộ nhớ MoE, offload expert (`-ot`) | [/inference](/inference) | [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune), [Qwen3-2507](https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-2507), [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5) |
+| Bộ nhớ MoE, offload expert (`-ot`) | [/inference](/inference/) | [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune), [Qwen3-2507](https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-2507), [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5) |
 | Faster MoE, `UNSLOTH_MOE_BACKEND`, `gate_up_proj` | [/fine-tuning](/fine-tuning/) | [Faster MoE](https://unsloth.ai/docs/basics/faster-moe), [Qwen3.5 Fine-tuning](https://unsloth.ai/docs/models/qwen3.5/fine-tune) |

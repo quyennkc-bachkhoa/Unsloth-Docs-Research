@@ -15,7 +15,20 @@ const unslothSidebar = [
     text: 'Sử dụng',
     items: [
       { text: 'Cài đặt & phần cứng', link: '/cai-dat' },
-      { text: 'Inference & API', link: '/inference' },
+      {
+        text: 'Inference & API',
+        link: '/inference/',
+        collapsed: false,
+        items: [
+          { text: 'Studio Chat', link: '/inference/studio-chat' },
+          { text: 'API OpenAI & Anthropic', link: '/inference/api' },
+          { text: 'Coding agent', link: '/inference/coding-agent' },
+          { text: 'Connections', link: '/inference/connections' },
+          { text: 'MCP', link: '/inference/mcp' },
+          { text: 'Tool calling', link: '/inference/tool-calling' },
+          { text: 'Cạm bẫy', link: '/inference/cam-bay' }
+        ]
+      },
       { text: 'Model catalog', link: '/model-catalog' }
     ]
   },

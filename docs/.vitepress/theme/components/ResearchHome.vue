@@ -51,7 +51,7 @@ const unsloth = [
     group: 'Sử dụng',
     items: [
       { t: 'Cài đặt & phần cứng', d: 'Windows, macOS, Linux, AMD, Intel, CPU', l: '/cai-dat' },
-      { t: 'Inference & API', d: 'Chạy model, endpoint /v1, agent, MCP', l: '/inference' },
+      { t: 'Inference & API', d: 'Chạy model, endpoint /v1, agent, MCP', l: '/inference/' },
       { t: 'Model catalog', d: 'Tham số, kiến trúc, bộ nhớ theo docs', l: '/model-catalog' }
     ]
   },

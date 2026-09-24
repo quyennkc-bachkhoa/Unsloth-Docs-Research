@@ -160,7 +160,7 @@ Cổng trong base URL của API được ghi khác nhau:
 Cách chắc chắn nhất: base URL thực tế của máy bạn hiển thị ở đầu trang API monitor ([basics/api](https://unsloth.ai/docs/basics/api)).
 :::
 
-**Trang nội bộ:** [Inference & API](/inference), [Model catalog](/model-catalog).
+**Trang nội bộ:** [Inference & API](/inference/), [Model catalog](/model-catalog).
 
 **Docs Unsloth gốc:** [Unsloth API](https://unsloth.ai/docs/basics/api), [Studio Chat](https://unsloth.ai/docs/new/studio/chat), [Unsloth Start](https://unsloth.ai/docs/integrations/unsloth-start).
 

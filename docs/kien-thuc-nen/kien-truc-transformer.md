@@ -110,7 +110,7 @@ Lợi ích: mỗi head có thể học một kiểu quan hệ khác nhau, ví d�
 
 **Ảnh hưởng khi dùng Unsloth.** Bạn không chỉnh được số head bằng tham số Unsloth nào. Số head do kiến trúc model quyết định. Số head ảnh hưởng tới kích thước KV cache (xem mục GQA bên dưới).
 
-**Gặp ở đâu trong Unsloth.** Gián tiếp qua KV cache ở [/inference](/inference).
+**Gặp ở đâu trong Unsloth.** Gián tiếp qua KV cache ở [/inference](/inference/).
 
 **Nguồn:** arXiv 1706.03762; HF LlamaConfig.
 
@@ -132,7 +132,7 @@ Vấn đề nó giải quyết: khi sinh văn bản, mô hình lưu lại K và 
 - Với GQA, đầu ra của `k_proj` và `v_proj` nhỏ hơn `q_proj`: `num_key_value_heads × head_dim` so với `num_attention_heads × head_dim` (theo code attention trong HF Modular Transformers). Vì vậy adapter LoRA trên `k_proj` và `v_proj` cũng nhỏ hơn. **[Nhận định]**
 - Khi chạy suy luận, KV cache là phần bộ nhớ tăng theo độ dài context. Docs Unsloth dùng `--cache-type-k q8_0 --cache-type-v q8_0` để lượng tử hóa KV cache cho đỡ tốn VRAM. Docs cũng cảnh báo: nếu prompt đổi liên tục, KV cache mất hiệu lực và suy luận chậm hơn 90%. Ví dụ là header attribution của Claude Code. Xem [Claude Code](https://unsloth.ai/docs/basics/claude-code).
 
-**Gặp ở đâu trong Unsloth.** [/inference](/inference); tính bộ nhớ: [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho).
+**Gặp ở đâu trong Unsloth.** [/inference](/inference/); tính bộ nhớ: [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho).
 
 **Nguồn:** arXiv 2305.13245; HF Llama/Mixtral/Qwen3MoE model doc; Unsloth Claude Code guide.
 
@@ -175,7 +175,7 @@ Trong LLM, softmax xuất hiện ở ba chỗ:
 
 **Ảnh hưởng khi dùng Unsloth.** Docs Unsloth khuyến nghị các tham số sampling như `temperature`, `top_p`, `top_k`, `min_p` cho từng model. Các tham số này đều can thiệp vào logits hoặc vào phân phối sau softmax. Chi tiết ở [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling).
 
-**Gặp ở đâu trong Unsloth.** [/inference](/inference).
+**Gặp ở đâu trong Unsloth.** [/inference](/inference/).
 
 **Nguồn:** PyTorch `torch.nn.functional.softmax`; HF LlamaForCausalLM (mô tả `logits`).
 
@@ -278,7 +278,7 @@ Vị trí đặt norm khác nhau giữa các model:
 - Khi chạy GGUF bằng llama.cpp theo docs Unsloth, `--n-gpu-layers` quy định số layer đưa lên GPU. Docs dùng `99` để đưa hết lên GPU. Nếu GPU hết bộ nhớ thì giảm số này; nếu chỉ chạy CPU thì bỏ cờ đi.
 - Tên tensor trong regex của `-ot` cũng đánh số theo layer. Ví dụ, docs gpt-oss có regex chỉ offload expert từ layer thứ 6 trở đi. Xem [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune).
 
-**Gặp ở đâu trong Unsloth.** [/inference](/inference); offload expert: [Dense & MoE](/kien-thuc-nen/dense-va-moe).
+**Gặp ở đâu trong Unsloth.** [/inference](/inference/); offload expert: [Dense & MoE](/kien-thuc-nen/dense-va-moe).
 
 **Nguồn:** HF Modular Transformers; HF Llama/Qwen3MoE model doc; Unsloth gpt-oss guide.
 
@@ -361,9 +361,9 @@ Mỗi layer có đủ 7 module, và tổng này nhân với 32 layer.
 |---|---|---|
 | Embedding (`embed_tokens`), LM head (`lm_head`) | [/fine-tuning](/fine-tuning/) | [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining) |
 | Self-attention, `q_proj`/`k_proj`/`v_proj`/`o_proj` | [/fine-tuning](/fine-tuning/), [/cai-dat](/cai-dat) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
-| GQA, KV cache | [/inference](/inference) | [Claude Code](https://unsloth.ai/docs/basics/claude-code) |
-| RoPE | [/inference](/inference) | [Dynamic 3.0 GGUFs](https://unsloth.ai/docs/basics/dynamic-3.0-ggufs) |
-| Softmax, sampling | [/inference](/inference) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5) |
+| GQA, KV cache | [/inference](/inference/) | [Claude Code](https://unsloth.ai/docs/basics/claude-code) |
+| RoPE | [/inference](/inference/) | [Dynamic 3.0 GGUFs](https://unsloth.ai/docs/basics/dynamic-3.0-ggufs) |
+| Softmax, sampling | [/inference](/inference/) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5) |
 | FFN/MLP, SwiGLU, `gate_proj`/`up_proj`/`down_proj` | [/fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Faster MoE](https://unsloth.ai/docs/basics/faster-moe) |
-| Layer, `--n-gpu-layers`, `-ot` | [/inference](/inference) | [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
+| Layer, `--n-gpu-layers`, `-ot` | [/inference](/inference/) | [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
 | Decoder-only, train trên completions | [/fine-tuning](/fine-tuning/), [/model-catalog](/model-catalog) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
