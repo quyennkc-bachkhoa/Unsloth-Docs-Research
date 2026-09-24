@@ -243,6 +243,10 @@ Sau khi train: gọi `FastLanguageModel.for_inference(model)` (docs nói inferen
 
 Docs khuyên **giữ mặc định của Unsloth** trừ khi cần train lâu hơn hoặc batch lớn hơn. Nhưng "mặc định" ở Studio, ở tutorial/notebook và ở hướng dẫn hyperparameter **không trùng nhau** ở nhiều tham số — xem bảng so sánh ngay sau bảng này. Cột "Đặt sai thì sao" diễn giải từ chính docs. Tham số có dấu ⚠ là tham số docs ghi nhiều giá trị khác nhau (chi tiết trong hộp "Docs chưa thống nhất" bên dưới).
 
+::: tip Kiến thức nền
+`q_proj` … `down_proj` là các lớp nào trong model: xem [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer). `max_seq_length` và context: xem [Token & context](/kien-thuc-nen/token-va-context). Model MoE (vd `30B-A3B`): xem [Dense & MoE](/kien-thuc-nen/dense-va-moe).
+:::
+
 | Tham số | Giá trị khuyến nghị (docs) | Ý nghĩa ngắn | Đặt sai thì sao |
 | --- | --- | --- | --- |
 | `learning_rate` | `2e-4` cho LoRA/QLoRA; `5e-6` cho RL (DPO, GRPO...); FFT dùng thấp hơn. Khoảng thường gặp `2e-4` → `5e-6`. Tutorial gợi ý thử `2e-4`, `1e-4`, `5e-5`, `2e-5` | Mức điều chỉnh trọng số mỗi bước | Quá cao: train bất ổn, dễ overfit trong run ngắn. Quá thấp: cần nhiều epoch hơn, có thể overfit hoặc không học được |

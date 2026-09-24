@@ -87,7 +87,7 @@ Kết quả thử nghiệm của Unsloth với `unsloth/Qwen3.5-4B-GGUF (UD-Q4_K
 ### Tham số sampling
 
 - Với model mới như Qwen3.5, Studio **tự đặt sẵn** temperature, top-p, top-k, MTP để ra kết quả tốt; vẫn chỉnh tay được, và sửa được system prompt lẫn chat template.
-- Không cần chỉnh context length (độ dài ngữ cảnh) nhờ "smart auto context" của llama.cpp: chỉ dùng phần context cần thiết.
+- Không cần chỉnh context length (độ dài ngữ cảnh) nhờ "smart auto context" của llama.cpp: chỉ dùng phần context cần thiết. Context length là gì và vì sao nó quyết định KV cache: xem [Token & context](/kien-thuc-nen/token-va-context), [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho).
 - Giá trị mặc định cụ thể của từng tham số trong giao diện Studio: **cần kiểm tra lại** (trang nguồn không ghi số).
 
 ::: warning Docs chưa thống nhất
