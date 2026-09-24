@@ -1,9 +1,264 @@
 ---
 title: Model catalog
+description: Bảng tra các họ model tiêu biểu mà Unsloth cung cấp (Qwen, Gemma, gpt-oss, DeepSeek, GLM, Kimi, Nemotron, Mistral, Granite, Llama), kèm yêu cầu bộ nhớ và khả năng fine-tune theo docs.
 ---
 
 # Model catalog
 
-::: info Đang viết
-Trang này sẽ được hoàn thiện ở bước tiếp theo.
+::: warning Dữ liệu có hạn dùng
+Dữ liệu truy cập ngày **2026-09-24**; catalog thay đổi nhanh (model mới, quant mới, số liệu bộ nhớ được cập nhật lại). Luôn đối chiếu với [Unsloth Model Catalog gốc](https://unsloth.ai/docs/get-started/unsloth-model-catalog) và trang hướng dẫn của từng model trước khi tải.
 :::
+
+Unsloth Model Catalog là danh mục các bản model mà Unsloth đưa lên Hugging Face: bản GGUF (định dạng file model cho llama.cpp) đã lượng tử hóa kiểu Dynamic, bản 4-bit và bản NVFP4. Trang này chọn ra 13 họ model có trang hướng dẫn riêng, tóm tắt thông số và yêu cầu bộ nhớ đúng như docs ghi.
+
+## Cách đọc bảng
+
+::: tip Kiến thức nền
+- "35B-A3B", "tổng tham số" và "tham số kích hoạt" nghĩa là gì? Xem [Dense & MoE](/kien-thuc-nen/dense-va-moe).
+- "27B" nghĩa là gì, vì sao model 27B cần khoảng 17 GB? Xem [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho).
+- 4-bit, 8-bit, BF16, NVFP4, MXFP4, `UD-Q4_K_XL` là gì? Xem [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
+:::
+
+Quy ước trong bảng:
+
+- **Tổng tham số / Tham số kích hoạt**: chép theo docs. Model MoE (Mixture of Experts, kiến trúc chỉ kích hoạt một phần mạng cho mỗi token) có hai con số; model dense (mọi tham số đều tham gia tính toán) chỉ có một.
+- **Kiến trúc**: chỉ ghi "dense" hoặc "MoE" khi docs nói rõ. Ký hiệu **MoE\*** nghĩa là docs chỉ ghi số tham số kích hoạt (vd "13B active", hậu tố "A3B") chứ không dùng chữ MoE; **[Nhận định]** xếp chúng vào MoE vì chỉ model MoE mới có khái niệm tham số kích hoạt.
+- **Yêu cầu bộ nhớ**: hầu hết trang docs tính theo **tổng bộ nhớ** = RAM (bộ nhớ hệ thống) + VRAM (bộ nhớ card đồ họa), hoặc unified memory (bộ nhớ dùng chung CPU/GPU như trên Mac). Con số luôn đi kèm mức quant (mức lượng tử hóa) cụ thể.
+- **"—"**: docs được dùng làm nguồn không ghi thông tin này. Trang này không tự điền thay.
+
+Quy tắc chung mà nhiều trang docs lặp lại: tổng bộ nhớ khả dụng nên **lớn hơn kích thước file quant** bạn tải. Nếu không đủ, llama.cpp vẫn chạy được nhờ offload (đẩy một phần sang RAM/ổ đĩa) nhưng sinh token chậm hơn.
+
+**Nguồn:** https://unsloth.ai/docs/get-started/unsloth-model-catalog, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/gemma-4
+
+## Bảng model tiêu biểu
+
+| Tên | Tổng tham số | Tham số kích hoạt | Kiến trúc | Loại | Yêu cầu bộ nhớ theo docs | Fine-tune với Unsloth? | Docs |
+|---|---|---|---|---|---|---|---|
+| Qwen3.8-27B | 27B | — | — | Text + vision, hybrid thinking | ~16–19 GB RAM+VRAM cho 4-bit; 56 GB cho BF16 | — | [Qwen3.8](https://unsloth.ai/docs/models/qwen3.8) |
+| Qwen3.8-2.4T-A95B | 2.4T | 95B | MoE\* | LLM, thinking-only | 397 GB cho Dynamic 1-bit XXXS; tutorial khuyên ≥ 450 GB RAM cho quant này; BF16 4.9 TB | — | [Qwen3.8](https://unsloth.ai/docs/models/qwen3.8) |
+| Qwen3.5-9B | 9B | — | — | Multimodal, hybrid reasoning | 6.5 GB RAM+VRAM cho 4-bit; 19 GB cho BF16 | Có (trang có mục "Fine-tune Qwen3.5") | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5) |
+| Qwen3.5-35B-A3B | 35B | 3B | MoE\* | Multimodal, hybrid reasoning | 22 GB RAM+VRAM cho 4-bit; 70 GB cho BF16 | Có | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5) |
+| Qwen3.5-397B-A17B | 397B | 17B | MoE\* | Multimodal, hybrid reasoning | 214 GB cho 4-bit (`UD-Q4_K_XL`); 180 GB cho 3-bit | Có | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5) |
+| Gemma 4 E4B | — | — | Dense + PLE | Text, image, audio | 5.5–6 GB RAM+VRAM cho 4-bit; 16 GB cho BF16 | Có | [Gemma 4](https://unsloth.ai/docs/models/gemma-4) |
+| Gemma 4 26B-A4B | 26B | 4B | MoE | Text, image | 16–18 GB RAM+VRAM cho 4-bit; 52 GB cho BF16 | Có | [Gemma 4](https://unsloth.ai/docs/models/gemma-4) |
+| Gemma 4 31B | 31B | — | Dense | Text, image | 17–20 GB RAM+VRAM cho 4-bit; 62 GB cho BF16 | Có | [Gemma 4](https://unsloth.ai/docs/models/gemma-4) |
+| gpt-oss-20b | 20B | — (chọn 4/32 expert mỗi token) | MoE | Text, reasoning | Chạy: ≥ 14 GB (unified hoặc RAM) cho Dynamic 4-bit; QLoRA: 14 GB VRAM | Có (QLoRA, BF16 LoRA, GRPO) | [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
+| gpt-oss-120b | 120B | — (chọn 4/128 expert mỗi token) | MoE | Text, reasoning | Chạy: ≥ 66 GB cho quant 1-bit; QLoRA: 65 GB VRAM | Có | [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
+| DeepSeek-V4-Flash-0731 | 284B | 13B | MoE\* | LLM (coding, agent, chat) | File `UD-IQ3_XXS` 103 GB, nên có ≥ 110 GB RAM; `UD-Q8_K_XL` (lossless) 162 GB, nên có ≥ 169 GB | Trang ghi "run and trained in Unsloth", không có hướng dẫn fine-tune riêng | [DeepSeek-V4](https://unsloth.ai/docs/models/deepseek-v4) |
+| DeepSeek-V4-Pro-0813 | 1.6T | 49B | MoE\* | LLM | — | — | [DeepSeek-V4](https://unsloth.ai/docs/models/deepseek-v4) |
+| GLM-5.3 | 744B | 40B | MoE\* | LLM, luôn bật thinking | 223 GB cho 1-bit; `UD-IQ2_M` 239 GB trên đĩa, chạy tốt trên máy 256 GB RAM; 810 GB cho 8-bit | — | [GLM-5.3](https://unsloth.ai/docs/models/glm-5.3) |
+| Kimi K3 | 2.8T | 104B | MoE (trọng số MoE ở MXFP4) | Text + vision, thinking-only | `UD-IQ1_S` 594 GB, cần ≥ 610 GB RAM+VRAM; Q8 lossless 1.6 TB | — | [Kimi K3](https://unsloth.ai/docs/models/kimi-k3) |
+| Nemotron-3-Nano-4B | 4B | — | "Hybrid MoE" | LLM (coding, math, agent) | ~3 GB cho 4-bit; 5 GB cho 8-bit | Có (vừa GPU Colab miễn phí) | [Nemotron 3](https://unsloth.ai/docs/models/nemotron-3) |
+| Nemotron-3-Nano-30B-A3B | 30B | 3B | MoE\* | LLM | ~24 GB RAM cho 4-bit; 36 GB cho 8-bit | Có; LoRA 16-bit dùng khoảng 60 GB VRAM | [Nemotron 3](https://unsloth.ai/docs/models/nemotron-3) |
+| Mistral-Medium-3.5-128B | 128B | — | Dense | Text + image vào, text ra | 64 GB RAM+VRAM cho 3-bit; 80 GB cho 4-bit; 128–170 GB cho 8-bit | Mô tả trang nhắc "run or fine-tune", không có hướng dẫn fine-tune | [Mistral 3.5](https://unsloth.ai/docs/models/mistral-3.5) |
+| Granite-4.1-3B | 3B | — | Dense | Text (chat, RAG, tool calling) | — | Có | [Granite 4.1](https://unsloth.ai/docs/models/ibm-granite-4.1) |
+| Granite-4.1-8B | 8B | — | Dense | Text | — | Có | [Granite 4.1](https://unsloth.ai/docs/models/ibm-granite-4.1) |
+| Granite-4.1-30B | 30B | — | Dense | Text | — | Có | [Granite 4.1](https://unsloth.ai/docs/models/ibm-granite-4.1) |
+| Llama-4-Scout (17B-16E) | 109B | — | MoE (docs nhắc các lớp MoE) | Text + vision | Bản 1.78-bit 33.8 GB, vừa GPU 24 GB VRAM (~20 token/s); bản gốc 113 GB | Tiêu đề trang "Run & Fine-tune", có bản bnb-4bit; trang không có hướng dẫn fine-tune | [Llama 4](https://unsloth.ai/docs/models/tutorials/llama-4-how-to-run-and-fine-tune) |
+| Llama-4-Maverick (17B-128E) | 402B | — | MoE (xen kẽ lớp dense và MoE) | Text + vision | Bản 1.78-bit 122 GB, vừa 2×48 GB VRAM (~40 token/s); bản gốc 422 GB | Như trên | [Llama 4](https://unsloth.ai/docs/models/tutorials/llama-4-how-to-run-and-fine-tune) |
+| Qwen3-VL-8B | 8B | — | Dense | Vision, video, OCR | — | Có (notebook SFT và GRPO miễn phí trên Colab) | [Qwen3-VL](https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-vl-how-to-run-and-fine-tune) |
+| Qwen3-VL-30B-A3B | 30B | 3B | MoE | Vision, video, OCR | — | Có (docs nói hỗ trợ fine-tune và RL cho Qwen3-VL) | [Qwen3-VL](https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-vl-how-to-run-and-fine-tune) |
+| Qwen3-VL-235B-A22B | 235B | 22B | MoE | Vision, video, OCR | — | Có (docs nêu rõ gồm cả 235B) | [Qwen3-VL](https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-vl-how-to-run-and-fine-tune) |
+| DeepSeek-OCR 2 | 3B | — | — | OCR / hiểu tài liệu (image-to-text) | — | Có (notebook Colab miễn phí) | [DeepSeek-OCR 2](https://unsloth.ai/docs/models/tutorials/deepseek-ocr-2) |
+
+::: info Về cột "Fine-tune"
+Hầu như trang model nào cũng có đoạn giới thiệu chung về Unsloth Desktop/Studio ("Train LLMs 2x faster with 70% less VRAM"). Trang này **không** coi đoạn quảng bá đó là bằng chứng model đó fine-tune được. Chỉ ghi "Có" khi trang của model nói rõ fine-tune model đó.
+:::
+
+**Nguồn:** https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune, https://unsloth.ai/docs/models/deepseek-v4, https://unsloth.ai/docs/models/glm-5.3, https://unsloth.ai/docs/models/kimi-k3, https://unsloth.ai/docs/models/nemotron-3, https://unsloth.ai/docs/models/mistral-3.5, https://unsloth.ai/docs/models/ibm-granite-4.1, https://unsloth.ai/docs/models/tutorials/llama-4-how-to-run-and-fine-tune, https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-vl-how-to-run-and-fine-tune, https://unsloth.ai/docs/models/tutorials/deepseek-ocr-2
+
+## Các nhóm trong catalog
+
+Catalog gốc chia bảng theo **họ model** (New & recommended, DeepSeek, Llama, Gemma, Qwen, GLM, Mistral, Phi, Other). Mỗi dòng có các cột định dạng tải về:
+
+| Nhóm / cột | Ý nghĩa theo docs | Dùng khi |
+|---|---|---|
+| **GGUF** (Unsloth [Dynamic](https://unsloth.ai/docs/basics/dynamic-3.0-ggufs)) | File cho [Unsloth Desktop](https://unsloth.ai/docs/desktop) và llama.cpp. Bản Dynamic không hạ mọi lớp xuống cùng mức bit: vd 4-bit vẫn giữ các lớp quan trọng ở 8 hoặc 16-bit (trang Qwen3.5). | Chạy local trên CPU/GPU/Mac |
+| **4-bit / Instruct (4-bit)** | Safetensors 4-bit "cho inference hoặc fine-tune qua Unsloth". Nhiều link có tên repo đuôi `bnb-4bit` / `unsloth-bnb-4bit`; trang Qwen3-VL gọi là "4-bit BnB Unsloth Dynamic". | Nạp vào Unsloth để fine-tune (QLoRA) |
+| **NVFP4** | Quant 4-bit của NVIDIA. Trang Qwen3.8 ghi: nhanh hơn BF16 khoảng 1.5×, **chỉ chạy trên GPU Blackwell** (RTX 50, DGX Spark, B200, B300), hiện chỉ dùng qua vLLM (và SGLang v0.5.19). | Serve trên GPU Blackwell |
+| **MTP** (vd Qwen3.6-27B-MTP-GGUF) | GGUF có bật MTP (multi-token prediction, đoán trước nhiều token) để suy luận nhanh hơn; trang Qwen3.8 dặn chừa thêm 1–2 GB bộ nhớ. | Muốn tăng tốc decode |
+| **QAT** (Gemma 4) | Bản quantization-aware training; trang Gemma 4 ghi giảm yêu cầu bộ nhớ khoảng 3× mà vẫn giữ chất lượng. | Máy ít bộ nhớ |
+
+Catalog **không** có nhóm FP8 riêng. Trang Gemma 4 và GLM-5.3 có nhắc thêm bản MLX (định dạng cho Apple Silicon), nhưng bảng catalog không có cột MLX.
+
+::: warning Phần cứng
+- NVFP4 cần GPU Blackwell. Với GPU đời cũ, docs khuyên dùng GGUF.
+- Qwen3.5 GGUF và GGUF có vision của Mistral 3.5 **không chạy được trong Ollama** vì file vision `mmproj` tách riêng; docs khuyên dùng backend tương thích llama.cpp.
+- Trang Mistral 3.5 và Granite 4.1 cảnh báo **không dùng CUDA 13.2** vì có thể sinh ra chữ vô nghĩa.
+:::
+
+**Nguồn:** https://unsloth.ai/docs/get-started/unsloth-model-catalog, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-vl-how-to-run-and-fine-tune, https://unsloth.ai/docs/models/mistral-3.5, https://unsloth.ai/docs/models/ibm-granite-4.1
+
+## Qwen3.8
+
+Họ model mới nhất của Qwen trong catalog, gồm 27B, 2.4T-A95B và Max. Bản 27B có vision và reasoning, là **hybrid thinking** (có cả chế độ thinking và non-thinking), GGUF dùng Unsloth Dynamic V3.0. Bản 2.4T-A95B là **thinking-only**; bản đầy đủ cần 4.9 TB, bản Dynamic 1-bit còn 397 GB.
+
+- Context window (độ dài ngữ cảnh tối đa): 27B là `262,144` token (mở rộng tới 1M bằng YaRN); 2.4T tới `1,010,000`.
+- Sampling khuyến nghị cho 27B: thinking `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=0.0`; non-thinking `temperature=0.7, top_p=0.80, top_k=20, presence_penalty=1.5`.
+- Có `reasoning_effort` (`xhigh` mặc định, `medium`, `low`, none) và "Preserve Thinking" (giữ thinking trace của lượt trước).
+- Phần cứng: 27B 4-bit chạy trên 16–19 GB VRAM (RTX 5080, 4090) hoặc Mac 24 GB RAM. Bản NVFP4 chạy trên 24 GB VRAM, cần GPU Blackwell.
+
+::: tip Kiến thức nền
+Temperature, top_p, top_k là gì? Xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling). Context window: xem [Token & context](/kien-thuc-nen/token-va-context).
+:::
+
+**Nguồn:** https://unsloth.ai/docs/models/qwen3.8
+
+## Qwen3.5
+
+Họ model đa phương thức (multimodal: nhận cả text và ảnh), hybrid reasoning, gồm nhóm Medium (27B, 35B-A3B, 122B-A10B, 397B-A17B) và nhóm Small (0.8B, 2B, 4B, 9B). Hỗ trợ 201 ngôn ngữ. Trang docs có mục riêng để fine-tune Qwen3.5 với Unsloth.
+
+- Context: `262,144` token (mở rộng tới 1M qua YaRN); nên để độ dài output `32,768` token cho đa số truy vấn.
+- Sampling thinking cho tác vụ chung: `temperature=1.0, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=1.5`; cho code chính xác: `temperature=0.6, presence_penalty=0.0`.
+- Nhóm Small **tắt reasoning mặc định**; bật bằng `--chat-template-kwargs '{"enable_thinking":true}'`.
+- Bảng bộ nhớ 4-bit: 0.8B/2B 3.5 GB, 4B 5.5 GB, 9B 6.5 GB, 27B 17 GB, 35B-A3B 22 GB, 122B-A10B 70 GB, 397B-A17B 214 GB. Bản 397B chạy được trên một GPU 24 GB + 256 GB RAM nhờ MoE offloading, đạt 25+ token/s.
+
+**Nguồn:** https://unsloth.ai/docs/models/qwen3.5
+
+## Gemma 4
+
+Họ model mở của Google DeepMind (giấy phép Apache-2.0), hybrid thinking, hơn 140 ngôn ngữ, có cả dense lẫn MoE: E2B, E4B (dense + PLE), 12B Unified (dense), 26B-A4B (MoE) và 31B (dense). E2B, E4B và 12B nhận được text, ảnh và audio; 26B-A4B và 31B nhận text và ảnh. Trang docs hướng dẫn fine-tune Gemma 4 trong Unsloth Studio.
+
+- Context: 128K cho E2B/E4B; `262,144` cho 12B, 26B-A4B, 31B.
+- Sampling: `temperature=1.0, top_p=0.95, top_k=64`. Bật thinking bằng cách thêm token `<|think|>` vào đầu system prompt.
+- Audio chỉ có ở 12B, E2B, E4B, tối đa 30 giây.
+- Bảng bộ nhớ 4-bit: E2B 4 GB, E4B 5.5–6 GB, 12B 7–8 GB, 26B-A4B 16–18 GB, 31B 17–20 GB.
+
+**Nguồn:** https://unsloth.ai/docs/models/gemma-4
+
+## gpt-oss
+
+Hai model mở của OpenAI (Apache 2.0): gpt-oss-20b và gpt-oss-120b, đều là MoE, chuyên reasoning, function calling. Unsloth sửa lỗi chat template (định dạng Harmony) và hỗ trợ fine-tune QLoRA, LoRA BF16 và RL (GRPO).
+
+- Context: tối thiểu nên dùng `16,384`, tối đa `131,072`.
+- Sampling (OpenAI khuyến nghị): `temperature=1.0, top_p=1.0, top_k=0`. Có `reasoning_effort` low/medium/high.
+- Fine-tune: QLoRA 20b cần 14 GB VRAM, 120b cần 65 GB VRAM; LoRA BF16 cần 44 GB và 210 GB. Docs nói các cách train khác (upcast lên bf16) cần tối thiểu 65 GB VRAM cho bản 20b.
+- Dataset: muốn giữ khả năng reasoning thì trộn ít nhất 75% mẫu reasoning và 25% mẫu không reasoning.
+- Phần cứng: trọng số gốc ở MXFP4; trên GPU cũ như T4 (không hỗ trợ bfloat16), Unsloth dùng float32 để tránh tràn số.
+
+::: tip Kiến thức nền
+QLoRA, LoRA là gì? Xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora). GRPO: xem [RL & preference](/kien-thuc-nen/rl-va-preference).
+:::
+
+**Nguồn:** https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune
+
+## DeepSeek-V4
+
+Họ gồm V4-Flash (284B tổng, 13B kích hoạt), V4-Pro (1.6T, 49B kích hoạt) và bản Flash-Vision-Exp. Context 1M. Trọng số gốc của Flash lưu các routed expert (96% model) ở MXFP4, nên bản `UD-Q8_K_XL` của Unsloth giữ nguyên bit-for-bit, được docs gọi là **lossless** (không mất chất lượng).
+
+- Context tối đa: `1,048,576`; chế độ Think Max cần context ít nhất 384K.
+- Ba chế độ: Non-think, Think High (mặc định), Think Max.
+- Sampling: `temperature=1.0, top_p=1.0`; với Flash-0731 trong tác vụ agent dùng `top_p=0.95`.
+- Phần cứng: khuyên dùng `UD-IQ3_XXS` (103 GB) với ít nhất 110 GB RAM. Bật DSpark (speculative decoding, tăng tốc decode tới ~2×) cần thêm ~10 GB.
+
+**Nguồn:** https://unsloth.ai/docs/models/deepseek-v4
+
+## GLM-5.3
+
+Model của Z.ai, 744B tổng, 40B kích hoạt, context 1M, dùng chung base model với GLM-5.2. Có ba mức thinking (Low, High, Max); thinking **không tắt được**. Muốn chạy bản nhỏ hơn thì xem trang riêng của GLM-5.3-Flash.
+
+- Context tối đa: `1,048,576`.
+- Sampling: mặc định `temperature=1.0, top_p=0.95`; tác vụ agent dài dùng `top_p=1.0`. Khuyên đặt `clear_thinking=true` cho hội thoại nhiều lượt.
+- Dynamic 1-bit đạt ~76% top-1 accuracy (tỉ lệ trùng token dự đoán hàng đầu với model gốc) và nhỏ hơn 85%; 2-bit đạt ~81%.
+- Phần cứng: `UD-IQ2_M` (239 GB) chạy tốt trên máy 256 GB RAM như 2× DGX Spark hoặc Mac Studio.
+
+**Nguồn:** https://unsloth.ai/docs/models/glm-5.3
+
+## Kimi K3
+
+Model của Moonshot AI, 2.8T tổng, 104B kích hoạt, có vision gốc, context 1M, trọng số MoE ở MXFP4. **Thinking-only**, luôn bật `preserve_thinking`, mặc định mức thinking max; không có chế độ instant. Vision cần bản fork llama.cpp của Unsloth.
+
+- Context: tới `1,048,576`.
+- Sampling: mặc định `temperature=1.0, top_p=0.95`; tác vụ agent `top_p=1.0`.
+- Docs khuyên dùng `UD-IQ1_S` (594 GB, ~78.9% top-1 accuracy) vì cân bằng dung lượng và chất lượng.
+- Phần cứng: nếu model vừa bộ nhớ, trên B200 đạt ~20 token/s. Quy tắc: RAM+VRAM ≈ kích thước quant; thiếu thì vẫn chạy nhưng chậm hơn nhiều do offload xuống ổ đĩa.
+
+**Nguồn:** https://unsloth.ai/docs/models/kimi-k3
+
+## NVIDIA Nemotron 3
+
+Họ model của NVIDIA gồm Nano-4B, Nano-30B-A3B và Super-120B-A12B, context 1M, hướng đến coding, math, agent. Docs gọi Nano-4B là "hybrid MoE". Unsloth hỗ trợ fine-tune mọi model Nemotron, gồm cả Super và Nano, và RL qua NeMo Gym.
+
+- Sampling: chat chung `temperature=1.0, top_p=1.0`; tool calling `temperature=0.6, top_p=0.95`.
+- Context mặc định `262,144`; đặt 1M có thể gây lỗi CUDA OOM (hết bộ nhớ GPU).
+- Fine-tune: bản 4B vừa GPU Colab miễn phí; bản 30B không vừa, có notebook cho A100 80 GB. Router của MoE mặc định không được fine-tune.
+
+**Nguồn:** https://unsloth.ai/docs/models/nemotron-3
+
+## Mistral 3.5
+
+Mistral-Medium-3.5-128B là model **dense** 128B, đa phương thức (nhận text và ảnh, trả về text), hybrid reasoning, context 256K. Docs khuyên bắt đầu với GGUF Dynamic 4-bit.
+
+- Context tối đa: `262,144`.
+- `reasoning_effort="high"` dùng `temperature=0.7`; `reasoning_effort="none"` dùng `temperature` từ 0.0 tới 0.7 tùy tác vụ.
+- Phần cứng: 3-bit 64 GB, 4-bit 80 GB. Cần thêm bộ nhớ khi context dài, batch lớn hoặc có ảnh.
+- Ngày 1/5/2026 GGUF được phát hành lại để sửa lỗi phân tích YaRN (lỗi không do Unsloth).
+
+**Nguồn:** https://unsloth.ai/docs/models/mistral-3.5
+
+## IBM Granite 4.1
+
+Họ model **dense** của IBM gồm 3B, 8B và 30B, train trên 15T token, dùng cho instruction following, tool calling, chat, RAG (tra cứu tài liệu rồi trả lời) và coding. Unsloth hỗ trợ fine-tune cả ba cỡ; notebook mẫu (viết cho Granite-4.0, đổi tên model sang 4.1) train một trợ lý hỗ trợ khách hàng.
+
+- Sampling cho kết quả tất định (deterministic): `temperature=0.0, top_p=1.0, top_k=0`.
+- Context: tối thiểu nên dùng `16,384`, tối đa `131,072`.
+- Docs không ghi yêu cầu bộ nhớ.
+
+**Nguồn:** https://unsloth.ai/docs/models/ibm-granite-4.1
+
+## Llama 4
+
+Hai model của Meta: Scout (109B) và Maverick (402B), đều hỗ trợ text và vision. GGUF Dynamic của Unsloth chỉ hạ bit mạnh ở các lớp MoE, giữ attention ở 4 hoặc 6-bit. Maverick xen kẽ lớp dense và lớp MoE.
+
+- Sampling (Meta khuyến nghị): `temperature=0.6, top_p=0.9, min_p=0.01`.
+- Docs ghi Llama 4 hỗ trợ context 10M; ví dụ lệnh dùng `--ctx-size 16384`.
+- Docs khuyên dùng bản 2.42-bit (`IQ2_XXS`) trở lên để có kết quả tốt nhất.
+- Phần cứng: Scout 1.78-bit vừa GPU 24 GB; với Maverick, docs khuyên dùng 2× RTX 4090.
+
+**Nguồn:** https://unsloth.ai/docs/models/tutorials/llama-4-how-to-run-and-fine-tune
+
+## Qwen3-VL
+
+Họ model vision của Qwen, có bản instruct và thinking. 2B, 4B, 8B, 32B là dense; 30B và 235B là MoE. Có vision, video, OCR, context 256K (mở rộng tới 1M). Unsloth hỗ trợ fine-tune và RL, gồm cả 32B, 235B, fine-tune cho video và object detection (nhận diện vật thể).
+
+- Sampling instruct: `temperature=0.7, top_p=0.8, top_k=20, presence_penalty=1.5`; thinking: `temperature=1.0, top_p=0.95, top_k=20, presence_penalty=0.0`.
+- Docs ghi train nhanh hơn 1.7×, tốn ít VRAM hơn 60%, context dài hơn 8×. Có hai notebook Colab miễn phí cho 8B (SFT và GRPO/GSPO).
+- Bản thinking bị lỗi chat template sau lượt hội thoại thứ hai; Unsloth đã sửa và upload lại quant.
+
+**Nguồn:** https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-vl-how-to-run-and-fine-tune
+
+## DeepSeek-OCR 2
+
+Model 3B của DeepSeek cho hiểu ảnh và tài liệu, phát hành 27/1/2026. Bộ mã hóa DeepEncoder V2 đọc ảnh theo thứ tự logic giống người, giúp đọc tốt hơn các bố cục phức tạp (nhiều cột, bảng). Fine-tune được qua notebook miễn phí; docs ghi train nhanh hơn 1.4×, tốn ít VRAM hơn 40%, context dài hơn 5×.
+
+- Thiết lập khuyến nghị: `temperature=0.0`, `max_tokens=8192`, `ngram_size=30`, `window_size=90`.
+- Cần dùng bản upload đã chỉnh của Unsloth để chạy/train trên `transformers` mới.
+- Docs không ghi yêu cầu bộ nhớ.
+
+**Nguồn:** https://unsloth.ai/docs/models/tutorials/deepseek-ocr-2
+
+## Chọn model thế nào
+
+Các gợi ý có trong docs:
+
+1. **Chạy hay fine-tune?** Catalog: GGUF dùng để chạy trong Unsloth Desktop và llama.cpp; bản Instruct 4-bit safetensors dùng để chạy hoặc fine-tune qua Unsloth.
+2. **So bộ nhớ trước.** Tổng RAM+VRAM nên lớn hơn file quant; thiếu thì vẫn chạy nhưng chậm (Qwen3.5, Gemma 4, gpt-oss, Kimi K3).
+3. **Dense hay MoE cùng cỡ.**
+   - Qwen3.5: chọn 27B nếu cần chính xác hơn một chút; chọn 35B-A3B nếu cần suy luận nhanh hơn nhiều.
+   - Gemma 4: 26B-A4B cân bằng tốc độ và độ chính xác, hợp khi ít RAM; 31B mạnh nhất nhưng chậm hơn.
+4. **Theo thiết bị.** Gemma 4 E2B/E4B nhắm tới điện thoại và laptop; model lớn nhắm tới PC có GPU NVIDIA RTX.
+5. **Fine-tune local.** Granite-4.1-3B và 8B là điểm khởi đầu tốt, 8B là "lựa chọn mặc định" cân bằng chất lượng và bộ nhớ. Nemotron-3-Nano-4B và Qwen3-VL-8B có notebook Colab miễn phí; gpt-oss-20b QLoRA vừa 14 GB VRAM.
+6. **Chọn quant.**
+   - Qwen3.5: dùng ít nhất `UD-Q2_K_XL`.
+   - Llama 4: dùng `IQ2_XXS` trở lên.
+   - DeepSeek-V4 và Kimi K3: `UD-Q8_K_XL` là bản lossless.
+   - Gemma 4: bắt đầu với 8-bit cho model nhỏ và Dynamic 4-bit cho model lớn.
+7. **Cần OCR/vision?** DeepSeek-OCR 2 (tài liệu), Qwen3-VL (vision, video, OCR); ngoài ra Gemma 4, Qwen3.5, Qwen3.8-27B, Kimi K3, Mistral Medium 3.5 cũng nhận ảnh.
+
+**[Nhận định]** Với người mới có một GPU 16–24 GB, các model có con số rõ ràng trong docs và vừa tầm là Qwen3.5-9B/27B, Gemma 4 E4B/26B-A4B/31B và gpt-oss-20b (chạy lẫn QLoRA). Các model hàng trăm GB trở lên (GLM-5.3, Kimi K3, DeepSeek-V4, Qwen3.8-2.4T) chủ yếu để tham khảo nếu không có máy nhiều RAM.
+
+**[Nhận định]** Nếu mục tiêu là fine-tune, nên ưu tiên model mà trang docs có notebook hoặc số VRAM cho training cụ thể (gpt-oss, Nemotron 3, Qwen3-VL, Granite 4.1, DeepSeek-OCR 2), thay vì model chỉ có hướng dẫn chạy.
+
+Xem tiếp: [Inference](/inference), [Fine-tuning](/fine-tuning), [Cài đặt](/cai-dat).
+
+**Nguồn:** https://unsloth.ai/docs/get-started/unsloth-model-catalog, https://unsloth.ai/docs/models/tutorials, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/ibm-granite-4.1, https://unsloth.ai/docs/models/tutorials/llama-4-how-to-run-and-fine-tune
