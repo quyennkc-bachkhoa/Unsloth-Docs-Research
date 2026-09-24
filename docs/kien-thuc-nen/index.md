@@ -5,9 +5,13 @@ description: Các khái niệm về cấu tạo, huấn luyện và suy luận c
 
 # Kiến thức nền LLM
 
-Docs Unsloth viết cho người đã quen với LLM (Large Language Model, mô hình ngôn ngữ lớn). Nhiều khái niệm như `r`, `lora_alpha`, `UD-Q4_K_XL`, "A3B", KV cache hay `min_p` xuất hiện mà không được giải thích. Route này giải thích các khái niệm đó, đủ để bạn đọc hiểu docs Unsloth và tự chọn tham số. Mục tiêu không phải là dạy toán ML.
+Route này giải thích những khái niệm mà docs Unsloth dùng nhưng không giải thích. Mức độ vừa đủ để bạn đọc hiểu docs và tự chọn tham số, không đi sâu vào toán ML.
+
+Docs Unsloth viết cho người đã quen với LLM (Large Language Model, mô hình ngôn ngữ lớn). Vì vậy nhiều khái niệm xuất hiện mà không có lời giải thích, ví dụ `r`, `lora_alpha`, `UD-Q4_K_XL`, "A3B", KV cache hay `min_p`.
 
 ## Đọc route này khi nào
+
+Bạn không cần đọc hết route. Tìm việc bạn sắp làm ở cột đầu, đọc nhóm trang tương ứng, rồi sang trang Unsloth ở cột cuối.
 
 | Bạn sắp làm gì | Đọc trước | Trang Unsloth tương ứng |
 | --- | --- | --- |
@@ -21,12 +25,16 @@ Thứ tự gợi ý nằm ở trang [Lộ trình học](/lo-trinh-hoc).
 
 ## Các nhóm
 
+Các trang được chia thành bốn nhóm, đi từ cấu tạo model đến lúc dùng model:
+
 - **A. Cấu tạo mô hình:** [Token & context](/kien-thuc-nen/token-va-context), [Phân loại mô hình](/kien-thuc-nen/phan-loai-mo-hinh), [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer), [Dense & MoE](/kien-thuc-nen/dense-va-moe).
 - **B. Số học & bộ nhớ:** [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho) (có công cụ ước tính VRAM), [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
 - **C. Huấn luyện:** [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen), [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora), [RL & preference](/kien-thuc-nen/rl-va-preference).
 - **D. Suy luận:** [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling).
 
 ## Bảng tra khái niệm
+
+Gặp một khái niệm lạ trong docs Unsloth? Tra ở bảng này để biết trang nào giải thích nó, và trang Unsloth nào dùng tới nó.
 
 | Khái niệm | Trang giải thích | Trang Unsloth dùng khái niệm |
 | --- | --- | --- |
@@ -57,7 +65,9 @@ Danh sách đầy đủ các thuật ngữ nằm ở trang [Thuật ngữ](/thua
 
 ## Quy ước nhãn
 
-- **[Nguồn ngoài]:** nội dung lấy từ nguồn ngoài docs Unsloth (paper arXiv, tài liệu chính thức của Hugging Face, PyTorch, llama.cpp, NVIDIA, model card chính thức), có kèm URL.
+Các trang trong route gắn nhãn để bạn biết mỗi thông tin đến từ đâu:
+
+- **[Nguồn ngoài]:** nội dung lấy từ nguồn nằm ngoài docs Unsloth, có kèm URL. Nguồn ngoài gồm paper arXiv, tài liệu chính thức của Hugging Face, PyTorch, llama.cpp, NVIDIA và model card chính thức.
 - **[Nhận định]:** ý kiến của người viết, không có trong nguồn.
-- **[Ước tính]:** con số người viết tự tính từ một công thức có nguồn.
-- **Docs chưa thống nhất:** các trang docs Unsloth ghi giá trị khác nhau. Website liệt kê đủ các giá trị và không tự chọn giá trị nào.
+- **[Ước tính]:** con số do người viết tự tính, dựa trên một công thức có nguồn.
+- **Docs chưa thống nhất:** các trang docs Unsloth ghi giá trị khác nhau cho cùng một thứ. Website liệt kê đủ mọi giá trị và không tự chọn giá trị nào.

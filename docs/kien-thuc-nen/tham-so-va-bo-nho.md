@@ -5,15 +5,23 @@ description: Tham số là gì, mỗi tham số tốn bao nhiêu byte, bộ nh�
 
 # Tham số & bộ nhớ
 
-Trang này giúp bạn tự ước lượng một model cần bao nhiêu bộ nhớ, đọc hiểu bảng yêu cầu RAM/VRAM trong docs Unsloth và giải mã tên file model. Nên đọc trước khi chọn model và mức quant ở [Model catalog](/model-catalog), [Inference](/inference) hoặc trước khi fine-tune ở [Fine-tuning](/fine-tuning).
+Trang này giúp bạn làm ba việc:
+
+- Tự ước lượng một model cần bao nhiêu bộ nhớ.
+- Đọc hiểu bảng yêu cầu RAM và VRAM trong docs Unsloth.
+- Giải mã tên file model.
+
+Nên đọc trước khi chọn model và mức quant ở [Model catalog](/model-catalog), [Inference](/inference), hoặc trước khi fine-tune ở [Fine-tuning](/fine-tuning).
 
 ## Tham số là gì
 
-**Khái niệm.** Tham số (parameter, còn gọi là trọng số/weight) là các con số model học được trong lúc huấn luyện. Chữ `B` trong tên model là "billion" (tỷ): model 7B có khoảng 7 tỷ con số như vậy. Toàn bộ các con số này phải được nạp vào bộ nhớ thì model mới chạy được, nên số tham số là yếu tố đầu tiên quyết định dung lượng.
+Số tham số cho biết model "to" cỡ nào, và là yếu tố đầu tiên quyết định model cần bao nhiêu bộ nhớ.
 
-**Ví dụ.** Docs Unsloth viết: "Llama 70B has 70 billion numbers". Model card chính thức của Qwen3-8B ghi số tham số thực là 8.2B (tên làm tròn thành 8B).
+**Khái niệm.** Tham số (parameter, còn gọi là trọng số hay weight) là các con số model học được trong lúc huấn luyện. Chữ `B` trong tên model là "billion" (tỷ). Model 7B có khoảng 7 tỷ con số như vậy. Toàn bộ các con số này phải được nạp vào bộ nhớ thì model mới chạy được.
 
-**Ảnh hưởng khi dùng Unsloth.** Bảng yêu cầu VRAM của Unsloth được sắp xếp theo đúng cột "Model parameters" (3B, 7B, 8B, … 405B). Biết số tham số là bạn tra được ngay hàng cần xem.
+**Ví dụ.** Docs Unsloth viết: "Llama 70B has 70 billion numbers". Model card chính thức của Qwen3-8B ghi số tham số thực là 8.2B; tên model làm tròn thành 8B.
+
+**Ảnh hưởng khi dùng Unsloth.** Bảng yêu cầu VRAM của Unsloth được sắp theo cột "Model parameters" (3B, 7B, 8B, … 405B). Biết số tham số là bạn tra được ngay hàng cần xem.
 
 **Gặp ở đâu trong Unsloth.** [Cài đặt – Yêu cầu VRAM](/cai-dat), [Fine-tuning](/fine-tuning).
 
@@ -21,7 +29,7 @@ Trang này giúp bạn tự ước lượng một model cần bao nhiêu bộ nh
 
 ### Số byte mỗi tham số theo dtype
 
-**Khái niệm.** Mỗi tham số được lưu theo một kiểu số (dtype, data type). Kiểu càng ít bit thì càng tốn ít bộ nhớ nhưng càng kém chính xác. Chi tiết các kiểu số ở trang [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
+**Khái niệm.** Mỗi tham số được lưu theo một kiểu số (dtype, data type). Kiểu càng ít bit thì càng tốn ít bộ nhớ, nhưng càng kém chính xác. Chi tiết các kiểu số ở trang [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
 
 | dtype | Số bit | Byte mỗi tham số | Ghi chú |
 |---|---|---|---|
@@ -30,23 +38,27 @@ Trang này giúp bạn tự ước lượng một model cần bao nhiêu bộ nh
 | FP8 / INT8 | 8 | 1 | Cộng thêm một ít cho hệ số scale |
 | 4-bit (INT4, NF4, NVFP4, MXFP4, Q4 GGUF) | 4 | 0.5 | Thực tế hơn 0.5 vì có scale theo khối |
 
-**[Nguồn ngoài]** Số bit của từng dtype theo bảng dtype của PyTorch (https://docs.pytorch.org/docs/stable/tensor_attributes.html) và trang tổng quan quantization của Hugging Face (https://huggingface.co/docs/transformers/quantization/overview). Byte = bit ÷ 8.
+**[Nguồn ngoài]** Số bit của từng dtype lấy theo bảng dtype của PyTorch (https://docs.pytorch.org/docs/stable/tensor_attributes.html) và trang tổng quan quantization của Hugging Face (https://huggingface.co/docs/transformers/quantization/overview). Byte = bit ÷ 8.
 
-Công thức cơ bản:
+Từ đó có công thức cơ bản:
 
 ```text
 bộ nhớ trọng số ≈ số tham số × số byte mỗi tham số
 ```
 
-**Ví dụ.** **[Ước tính]** 8B ở BF16: `8 tỷ × 2 byte = 16 GB`. Ở 4-bit: `8 tỷ × 0.5 byte = 4 GB`. Đối chiếu: README công cụ quantize của llama.cpp ghi Llama 3.1 8B bản gốc 32.1 GB (**[Nhận định]** khớp với 4 byte/tham số) và bản `Q4_K_M` 4.9 GB **[Nguồn ngoài]** https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md . Bản 4-bit lớn hơn 4 GB vì `Q4_K_M` thực tế dùng 4.89 bit/trọng số (cùng README).
+**Ví dụ.** **[Ước tính]** Model 8B ở BF16 cần `8 tỷ × 2 byte = 16 GB`. Ở 4-bit cần `8 tỷ × 0.5 byte = 4 GB`.
 
-**Ảnh hưởng khi dùng Unsloth.** Khi nạp model bằng `FastLanguageModel.from_pretrained`, các cờ `load_in_4bit`, `load_in_8bit`, `load_in_16bit`, `load_in_fp8` quyết định số byte mỗi tham số của model gốc trong VRAM. Docs Unsloth ghi `load_in_4bit = True` "reducing memory use 4×".
+Đối chiếu với số thật: README công cụ quantize của llama.cpp ghi Llama 3.1 8B bản gốc nặng 32.1 GB (**[Nhận định]** khớp với 4 byte/tham số) và bản `Q4_K_M` nặng 4.9 GB **[Nguồn ngoài]** https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md . Bản 4-bit lớn hơn 4 GB vì `Q4_K_M` thực tế dùng 4.89 bit/trọng số (cùng README).
+
+**Ảnh hưởng khi dùng Unsloth.** Khi nạp model bằng `FastLanguageModel.from_pretrained`, bạn chọn số byte mỗi tham số của model gốc trong VRAM qua các cờ `load_in_4bit`, `load_in_8bit`, `load_in_16bit`, `load_in_fp8`. Docs Unsloth ghi `load_in_4bit = True` "reducing memory use 4×".
 
 **Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning), [Reinforcement Learning](/reinforcement-learning) (FP8).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide ; **[Nguồn ngoài]** các URL PyTorch, Hugging Face, llama.cpp ghi trong mục.
 
 ## Bộ nhớ khi chạy model (inference)
+
+Khi chỉ chạy model, bộ nhớ không chỉ dành cho trọng số. Phần KV cache tăng theo độ dài hội thoại, nên cùng một model có thể vừa hoặc không vừa máy tùy context.
 
 **Khái niệm.** Khi chạy (inference, suy luận: dùng model để sinh chữ, không học thêm), bộ nhớ gồm ba phần:
 
@@ -61,13 +73,21 @@ flowchart LR
   A --> D["Phần phụ: activation tạm, buffer"]
 ```
 
-**Ví dụ.** Paper PagedAttention mô tả một model 13B chạy trên GPU A100 40GB: khoảng 65% bộ nhớ dành cho trọng số, gần 30% cho trạng thái động của các request (KV cache), phần còn lại cho activation tạm **[Nguồn ngoài]** https://arxiv.org/abs/2309.06180 .
+**Ví dụ.** Paper PagedAttention mô tả một model 13B chạy trên GPU A100 40GB. Khoảng 65% bộ nhớ dành cho trọng số. Gần 30% dành cho trạng thái động của các request (KV cache). Phần còn lại dành cho activation tạm **[Nguồn ngoài]** https://arxiv.org/abs/2309.06180 .
 
 **Nguồn:** **[Nguồn ngoài]** https://arxiv.org/abs/2309.06180 , https://huggingface.co/docs/transformers/model_memory_anatomy
 
 ### KV cache
 
-**Khái niệm.** Model sinh từng token một, mỗi token mới phải "nhìn lại" toàn bộ token trước đó qua cơ chế attention (xem [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer)). Để khỏi tính lại, model lưu vector key (K) và value (V) của các token cũ vào KV cache. Hugging Face mô tả cache là một danh sách theo layer; mỗi layer có một tensor key và một tensor value, hình dạng `[batch_size, num_heads, seq_len, head_dim]`, và chiều `seq_len` tăng thêm 1 sau mỗi token mới. Vì vậy bộ nhớ KV cache tăng tuyến tính theo độ dài ngữ cảnh **[Nguồn ngoài]** https://huggingface.co/docs/transformers/cache_explanation .
+**Khái niệm.** Model sinh từng token một. Mỗi token mới phải "nhìn lại" toàn bộ token trước đó qua cơ chế attention (xem [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer)). Để khỏi tính lại, model lưu vector key (K) và value (V) của các token cũ vào KV cache.
+
+Hugging Face mô tả cấu trúc cache như sau:
+
+- Cache là một danh sách theo layer.
+- Mỗi layer có một tensor key và một tensor value, hình dạng `[batch_size, num_heads, seq_len, head_dim]`.
+- Chiều `seq_len` tăng thêm 1 sau mỗi token mới.
+
+Vì vậy bộ nhớ KV cache tăng tuyến tính theo độ dài ngữ cảnh **[Nguồn ngoài]** https://huggingface.co/docs/transformers/cache_explanation .
 
 Nhân các chiều của tensor đó lại, ta được:
 
@@ -80,18 +100,18 @@ Diễn giải bằng lời:
 - `số layer`: mỗi layer attention có cache riêng.
 - `số KV head × head_dim`: kích thước vector K (hoặc V) của một token trong một layer. Model dùng GQA (grouped-query attention) có ít KV head hơn query head, nên cache nhỏ hơn. Ví dụ model card Qwen3-8B ghi "32 for Q and 8 for KV", tức chỉ 8 head được lưu vào cache.
 - `số token`: prompt cộng phần đã sinh.
-- `số byte mỗi phần tử`: 2 nếu cache ở BF16/FP16, 1 nếu cache ở FP8.
+- `số byte mỗi phần tử`: 2 nếu cache ở BF16 hoặc FP16, 1 nếu cache ở FP8.
 
-Paper PagedAttention dùng đúng cách tính này cho OPT-13B: `2 (K và V) × 5120 (hidden size) × 40 (layer) × 2 (byte FP16)` = 800 KB cho mỗi token, tức khoảng 1.6 GB cho một chuỗi 2048 token **[Nguồn ngoài]** https://arxiv.org/abs/2309.06180 . OPT-13B không dùng GQA nên `số KV head × head_dim` bằng hidden size.
+Paper PagedAttention dùng đúng cách tính này cho OPT-13B: `2 (K và V) × 5120 (hidden size) × 40 (layer) × 2 (byte FP16)` = 800 KB cho mỗi token, tức khoảng 1.6 GB cho một chuỗi 2048 token **[Nguồn ngoài]** https://arxiv.org/abs/2309.06180 . OPT-13B không dùng GQA, nên `số KV head × head_dim` bằng hidden size.
 
 **Ví dụ.**
-- **[Ước tính]** Qwen3-8B (36 layer, 8 KV head, `head_dim` 128 theo model card và `config.json` chính thức), cache BF16: `2 × 36 × 8 × 128 × 2 = 147,456 byte ≈ 144 KiB mỗi token`. Ngữ cảnh 32,768 token: `147,456 × 32,768 ≈ 4.83 GB`. Trọng số BF16 của model này là `8.2 tỷ × 2 ≈ 16.4 GB`, nên ở ngữ cảnh dài KV cache đã bằng gần 1/3 trọng số.
-- **[Ước tính]** Qwen3.8-27B là kiến trúc lai: model card ghi 64 layer theo bố cục `16 × (3 × Gated DeltaNet → 1 × Gated Attention)`, phần Gated Attention có "24 for Q and 4 for KV", head dimension 256. Chỉ 16 layer attention đầy đủ lưu K/V theo từng token: `2 × 16 × 4 × 256 × 2 = 65,536 byte = 64 KiB mỗi token`. Ở ngữ cảnh tối đa 262,144 token: `65,536 × 262,144 ≈ 17.2 GB`. Hugging Face ghi các layer linear-attention (loại của Gated DeltaNet) bỏ trạng thái cũ khi chạy tiếp, nên **[Nhận định]** phần này không tăng theo số token; dung lượng trạng thái cố định của chúng cần kiểm tra lại.
+- **[Ước tính]** Qwen3-8B có 36 layer, 8 KV head, `head_dim` 128 (theo model card và `config.json` chính thức). Với cache BF16: `2 × 36 × 8 × 128 × 2 = 147,456 byte ≈ 144 KiB mỗi token`. Ngữ cảnh 32,768 token cần `147,456 × 32,768 ≈ 4.83 GB`. Trọng số BF16 của model này là `8.2 tỷ × 2 ≈ 16.4 GB`. Vậy ở ngữ cảnh dài, KV cache đã bằng gần 1/3 trọng số.
+- **[Ước tính]** Qwen3.8-27B là kiến trúc lai. Model card ghi 64 layer theo bố cục `16 × (3 × Gated DeltaNet → 1 × Gated Attention)`. Phần Gated Attention có "24 for Q and 4 for KV", head dimension 256. Chỉ 16 layer attention đầy đủ lưu K, V theo từng token: `2 × 16 × 4 × 256 × 2 = 65,536 byte = 64 KiB mỗi token`. Ở ngữ cảnh tối đa 262,144 token: `65,536 × 262,144 ≈ 17.2 GB`. Hugging Face ghi các layer linear-attention (loại của Gated DeltaNet) bỏ trạng thái cũ khi chạy tiếp, nên **[Nhận định]** phần này không tăng theo số token; dung lượng trạng thái cố định của chúng cần kiểm tra lại.
 
 **Ảnh hưởng khi dùng Unsloth.**
-- Độ dài ngữ cảnh (context length, `--ctx-size` trong llama.cpp/`unsloth run`, ô context length trong Unsloth Studio) quyết định KV cache. **[Ước tính]** Với Qwen3.8-27B, ngữ cảnh 262,144 token cần khoảng 17.2 GB KV cache, còn 8,192 token chỉ cần `65,536 × 8,192 ≈ 0.54 GB`. Docs Unsloth về Claude Code khuyên giảm `--ctx-size` nếu thấy hiệu năng kém.
-- Unsloth Dynamic NVFP4 có "FP8 KV cache calibration" cho ngữ cảnh dài gấp 2 lần. **[Nhận định]** Điều này khớp với công thức: cache 1 byte thay vì 2 byte mỗi phần tử thì cùng dung lượng chứa được gấp đôi số token.
-- Hugging Face Transformers có cache lượng tử hóa (`cache_implementation="quantized"`) và cache offload sang CPU (`cache_implementation="offloaded"`), đổi lại tốc độ chậm hơn **[Nguồn ngoài]** https://huggingface.co/docs/transformers/kv_cache .
+- **Độ dài ngữ cảnh quyết định KV cache.** Bạn chỉnh nó qua `--ctx-size` trong llama.cpp và `unsloth run`, hoặc ô context length trong Unsloth Studio. **[Ước tính]** Với Qwen3.8-27B, ngữ cảnh 262,144 token cần khoảng 17.2 GB KV cache, còn 8,192 token chỉ cần `65,536 × 8,192 ≈ 0.54 GB`. Docs Unsloth về Claude Code khuyên giảm `--ctx-size` nếu thấy hiệu năng kém.
+- **Cache ít byte hơn thì chứa nhiều token hơn.** Unsloth Dynamic NVFP4 có "FP8 KV cache calibration" cho ngữ cảnh dài gấp 2 lần. **[Nhận định]** Điều này khớp với công thức: cache 1 byte thay vì 2 byte mỗi phần tử thì cùng dung lượng chứa được gấp đôi số token.
+- **Lựa chọn của Hugging Face Transformers.** Có cache lượng tử hóa (`cache_implementation="quantized"`) và cache offload sang CPU (`cache_implementation="offloaded"`), đổi lại tốc độ chậm hơn **[Nguồn ngoài]** https://huggingface.co/docs/transformers/kv_cache .
 - Khái niệm token và context length: xem [Token & context](/kien-thuc-nen/token-va-context).
 
 **Gặp ở đâu trong Unsloth.** [Inference](/inference), [Model catalog](/model-catalog).
@@ -100,7 +120,10 @@ Paper PagedAttention dùng đúng cách tính này cho OPT-13B: `2 (K và V) × 
 
 ### Phần phụ khi chạy
 
-**Khái niệm.** Ngoài trọng số và KV cache còn có tensor tạm do các phép như softmax, nhân ma trận tạo ra rồi giải phóng. Nếu một phép tạo đỉnh bộ nhớ lớn, nó có thể gây tràn bộ nhớ (OOM, out of memory) dù model "vừa" **[Nguồn ngoài]** https://huggingface.co/docs/transformers/model_memory_anatomy . Các module đi kèm như MTP (multi-token prediction, đầu dự đoán nhiều token để tăng tốc) hay `mmproj` (bộ mã hóa ảnh cho model vision) cũng chiếm chỗ.
+**Khái niệm.** Ngoài trọng số và KV cache, còn có tensor tạm do các phép như softmax, nhân ma trận tạo ra rồi giải phóng. Nếu một phép tạo đỉnh bộ nhớ lớn, nó có thể gây tràn bộ nhớ (OOM, out of memory) dù model "vừa" **[Nguồn ngoài]** https://huggingface.co/docs/transformers/model_memory_anatomy . Các module đi kèm cũng chiếm chỗ, ví dụ:
+
+- MTP (multi-token prediction): đầu dự đoán nhiều token để tăng tốc.
+- `mmproj`: bộ mã hóa ảnh cho model vision.
 
 **Ví dụ.** Docs Qwen3.8 dặn: nếu dùng MTP, chuẩn bị dư thêm 1-2GB.
 
@@ -112,13 +135,15 @@ Paper PagedAttention dùng đúng cách tính này cho OPT-13B: `2 (K và V) × 
 
 ## Bộ nhớ khi fine-tune
 
-**Khái niệm.** Huấn luyện cần nhiều bộ nhớ hơn chạy vì phải giữ thêm (xem thêm [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen)):
+Fine-tune cần nhiều bộ nhớ hơn chạy model, vì ngoài trọng số còn phải giữ thêm dữ liệu phục vụ việc học. Mục này cho biết từng khoản tốn bao nhiêu và Unsloth giảm chúng bằng cách nào.
+
+**Khái niệm.** Huấn luyện phải giữ thêm ba thứ (xem thêm [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen)):
 
 - **Gradient**: đạo hàm của loss theo từng tham số, cho biết mỗi tham số nên chỉnh theo hướng nào.
 - **Optimizer state**: trạng thái riêng của thuật toán cập nhật. AdamW giữ hai tensor cho mỗi tham số (momentum và variance).
-- **Activation**: kết quả trung gian của lượt forward được giữ lại để tính gradient ở lượt backward.
+- **Activation**: kết quả trung gian của lượt forward, được giữ lại để tính gradient ở lượt backward.
 
-Theo tài liệu "GPU memory usage" của Hugging Face **[Nguồn ngoài]** https://huggingface.co/docs/transformers/model_memory_anatomy :
+Mức tốn của từng khoản, theo tài liệu "GPU memory usage" của Hugging Face **[Nguồn ngoài]** https://huggingface.co/docs/transformers/model_memory_anatomy :
 
 | Thành phần | Byte mỗi tham số được train | Ghi chú |
 |---|---|---|
@@ -132,10 +157,10 @@ Theo tài liệu "GPU memory usage" của Hugging Face **[Nguồn ngoài]** http
 - Đối chiếu: paper QLoRA ghi fine-tune 16-bit thông thường LLaMA 65B cần "more than 780 GB" bộ nhớ GPU **[Nguồn ngoài]** https://arxiv.org/abs/2305.14314 .
 
 **Ảnh hưởng khi dùng Unsloth.**
-- Batch size là "Primary Driver of VRAM Usage". Khi OOM, docs Unsloth khuyên đặt `per_device_train_batch_size` về 1, 2 hoặc 3 và tăng `gradient_accumulation_steps` để giữ effective batch size.
-- Notebook Unsloth dùng `optim = "adamw_8bit"` (AdamW 8-bit), tức optimizer state khoảng 2 byte thay vì 8 byte mỗi tham số được train.
-- Gradient checkpointing chỉ giữ một phần activation, phần còn lại tính lại ở lượt backward: tiết kiệm bộ nhớ, đổi lại chậm hơn **[Nguồn ngoài]** https://huggingface.co/docs/transformers/grad_checkpointing . Unsloth khuyên `use_gradient_checkpointing = "unsloth"`, "reduces memory usage by an extra 30%". Docs RL mô tả phiên bản này offload activation sang RAM hệ thống một cách bất đồng bộ, "only 1% slower".
-- `full_finetuning = True` là trường hợp tốn bộ nhớ nhất vì mọi tham số đều có gradient và optimizer state.
+- **Batch size** là "Primary Driver of VRAM Usage". Khi OOM, docs Unsloth khuyên đặt `per_device_train_batch_size` về 1, 2 hoặc 3, và tăng `gradient_accumulation_steps` để giữ effective batch size.
+- **Optimizer 8-bit:** notebook Unsloth dùng `optim = "adamw_8bit"` (AdamW 8-bit). Optimizer state khi đó khoảng 2 byte thay vì 8 byte mỗi tham số được train.
+- **Gradient checkpointing** chỉ giữ một phần activation, phần còn lại được tính lại ở lượt backward. Cách này tiết kiệm bộ nhớ, đổi lại chậm hơn **[Nguồn ngoài]** https://huggingface.co/docs/transformers/grad_checkpointing . Unsloth khuyên `use_gradient_checkpointing = "unsloth"`, "reduces memory usage by an extra 30%". Docs RL mô tả phiên bản này offload activation sang RAM hệ thống một cách bất đồng bộ, "only 1% slower".
+- **Full fine-tune:** `full_finetuning = True` là trường hợp tốn bộ nhớ nhất, vì mọi tham số đều có gradient và optimizer state.
 
 **Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning), [Reinforcement Learning](/reinforcement-learning).
 
@@ -143,9 +168,13 @@ Theo tài liệu "GPU memory usage" của Hugging Face **[Nguồn ngoài]** http
 
 ### LoRA và QLoRA: chỉ adapter có gradient
 
-**Khái niệm.** LoRA đóng băng (freeze) toàn bộ trọng số gốc và chỉ train thêm các ma trận nhỏ A, B gắn vào từng lớp (adapter). Docs Unsloth: "we only optimize 1% of weights". Vì trọng số gốc không đổi nên chúng không cần gradient hay optimizer state; hai khoản này chỉ tính cho adapter. QLoRA giữ nguyên ý tưởng đó nhưng lưu trọng số gốc ở 4-bit. Chi tiết ở [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora).
+**Khái niệm.** LoRA đóng băng (freeze) toàn bộ trọng số gốc. Nó chỉ train thêm các ma trận nhỏ A, B gắn vào từng lớp (adapter). Docs Unsloth viết: "we only optimize 1% of weights". Trọng số gốc không đổi nên không cần gradient hay optimizer state; hai khoản này chỉ tính cho adapter. QLoRA giữ nguyên ý tưởng đó nhưng lưu trọng số gốc ở 4-bit. Chi tiết ở [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora).
 
-**Ví dụ.** **[Ước tính]** Model 8B, adapter giả định bằng 1% tham số (0.08 tỷ). Mỗi tham số của adapter tốn 12 byte: 6 byte trọng số mixed precision, 4 byte gradient, 2 byte optimizer state của `adamw_8bit` (optimizer notebook Unsloth dùng), theo bảng Hugging Face ở trên:
+**Ví dụ.** **[Ước tính]** Model 8B, adapter giả định bằng 1% tham số (0.08 tỷ). Theo bảng Hugging Face ở trên, mỗi tham số của adapter tốn 12 byte:
+
+- 6 byte trọng số mixed precision.
+- 4 byte gradient.
+- 2 byte optimizer state của `adamw_8bit` (optimizer notebook Unsloth dùng).
 
 | Cách train | Trọng số gốc | Adapter (`0.08 tỷ × 12`) | Tổng chưa kể activation | Bảng Unsloth (tối thiểu) |
 |---|---|---|---|---|
@@ -154,7 +183,11 @@ Theo tài liệu "GPU memory usage" của Hugging Face **[Nguồn ngoài]** http
 
 **[Nhận định]** Phần chênh so với bảng Unsloth có thể đến từ activation, buffer và phần scale của 4-bit; docs không nêu cách đo. Tỷ lệ adapter thực tế phụ thuộc vào rank `r` và `target_modules`. Công cụ bên dưới tính số tham số LoRA chính xác từ kiến trúc. Ví dụ với Llama 3.1 8B, r = 16, đủ 7 module, adapter có khoảng 42 triệu tham số (≈ 0,5%).
 
-**Ảnh hưởng khi dùng Unsloth.** Docs Unsloth: LoRA dùng khoảng 4× VRAM so với QLoRA; QLoRA "reducing VRAM usage by over 75%". Với GRPO dùng QLoRA 4-bit, quy tắc của Unsloth là số tham số (tỷ) ≈ số GB VRAM cần, ngữ cảnh càng dài càng tốn thêm. Với FP8 RL, Unsloth ghi mức tiết kiệm xấp xỉ bằng bộ nhớ trọng số (khoảng 8 GB cho Qwen3-8B).
+**Ảnh hưởng khi dùng Unsloth.** Docs Unsloth đưa ra ba mốc:
+
+- LoRA dùng khoảng 4× VRAM so với QLoRA; QLoRA "reducing VRAM usage by over 75%".
+- Với GRPO dùng QLoRA 4-bit, quy tắc của Unsloth là số tham số (tỷ) ≈ số GB VRAM cần. Ngữ cảnh càng dài càng tốn thêm.
+- Với FP8 RL, Unsloth ghi mức tiết kiệm xấp xỉ bằng bộ nhớ trọng số (khoảng 8 GB cho Qwen3-8B).
 
 **Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning), [Reinforcement Learning](/reinforcement-learning).
 
@@ -162,7 +195,7 @@ Theo tài liệu "GPU memory usage" của Hugging Face **[Nguồn ngoài]** http
 
 ### Bảng VRAM fine-tune của Unsloth
 
-Unsloth công bố bảng VRAM tối thiểu theo số tham số, với QLoRA = 4-bit và LoRA = 16-bit. Docs ghi đây là "absolute minimum", một số model cần nhiều hơn. Trích một số dòng:
+Unsloth công bố bảng VRAM tối thiểu theo số tham số, trong đó QLoRA = 4-bit và LoRA = 16-bit. Docs ghi đây là "absolute minimum"; một số model cần nhiều hơn. Trích một số dòng:
 
 | Model parameters | QLoRA (4-bit) VRAM | LoRA (16-bit) VRAM |
 |---|---|---|
@@ -179,7 +212,9 @@ Bảng đầy đủ và cách kiểm tra GPU: [Cài đặt & phần cứng](/cai
 
 ## Ví dụ bộ nhớ trọng số theo kích thước model
 
-Ba cột đầu **[Ước tính]** chỉ tính trọng số: `số tham số × byte mỗi tham số` (BF16 = 2, FP8/INT8 = 1, 4-bit = 0.5), 1 GB = 10^9 byte. Cột cuối là số có trong tài liệu, kèm điều kiện, để thấy chênh lệch.
+Bảng này đặt ước tính theo công thức cạnh số thật trong tài liệu, để bạn thấy số trong docs thường lớn hơn ước tính và vì sao.
+
+Ba cột đầu **[Ước tính]** chỉ tính trọng số: `số tham số × byte mỗi tham số` (BF16 = 2, FP8/INT8 = 1, 4-bit = 0.5), với 1 GB = 10^9 byte. Cột cuối là số có trong tài liệu, kèm điều kiện, để thấy chênh lệch.
 
 | Kích thước | BF16 | FP8/INT8 | 4-bit | Số liệu trong tài liệu (điều kiện) |
 |---|---|---|---|---|
@@ -189,15 +224,17 @@ Ba cột đầu **[Ước tính]** chỉ tính trọng số: `số tham số × 
 | 70B | 140 GB | 70 GB | 35 GB | Llama 3.1 70B: bản gốc 280.9 GB, `Q4_K_M` 43.1 GB (README llama.cpp **[Nguồn ngoài]**). Fine-tune QLoRA 41 GB (Unsloth) |
 
 Vì sao số trong docs lớn hơn ước tính:
-- "4-bit" trong GGUF không đúng 4 bit: `Q4_K_M` là 4.89 bit/trọng số (README llama.cpp **[Nguồn ngoài]**). Unsloth Dynamic giữ một số lớp quan trọng ở 8 hoặc 16-bit ("4-bit has important layers upcasted to 8 or 16-bit").
-- Bảng RAM + VRAM của Unsloth là tổng bộ nhớ để chạy, không chỉ file trọng số. **[Nhận định]** Chênh lệch gồm cả KV cache, buffer runtime và phần vision của model đa phương thức.
-- **[Nhận định]** "Bản gốc" của Llama 3.1 trong README llama.cpp khớp với 4 byte/tham số (8B × 4 ≈ 32 GB), tức cỡ FP32, không phải BF16; README không ghi rõ dtype.
+- **"4-bit" trong GGUF không đúng 4 bit.** `Q4_K_M` là 4.89 bit/trọng số (README llama.cpp **[Nguồn ngoài]**). Unsloth Dynamic giữ một số lớp quan trọng ở 8 hoặc 16-bit ("4-bit has important layers upcasted to 8 or 16-bit").
+- **Bảng RAM + VRAM của Unsloth là tổng bộ nhớ để chạy**, không chỉ file trọng số. **[Nhận định]** Chênh lệch gồm cả KV cache, buffer runtime và phần vision của model đa phương thức.
+- **[Nhận định]** "Bản gốc" của Llama 3.1 trong README llama.cpp khớp với 4 byte/tham số (8B × 4 ≈ 32 GB), tức cỡ FP32, không phải BF16. README không ghi rõ dtype.
 
 **Nguồn:** https://unsloth.ai/docs/basics/dynamic-3.0-ggufs, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements ; **[Nguồn ngoài]** https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md
 
 ## Cách đọc tên model
 
-**Khái niệm.** Tên repo và tên file model thường mã hóa kích thước, biến thể, định dạng và mức quant. ggml đề xuất quy ước tên file GGUF gồm các phần nối bằng dấu `-`: `BaseName`, `SizeLabel`, `FineTune`, `Version`, `Encoding`, `Type`, `Shard`; ngoài ra có tiền tố `mmproj` hoặc `mtp` cho module phụ **[Nguồn ngoài]** https://github.com/ggml-org/ggml/blob/master/docs/gguf.md . Unsloth không đặt tên theo đúng từng phần của quy ước này (ví dụ thường bỏ `Version`), nên chỉ dùng quy ước để đoán ý nghĩa từng phần.
+Tên file model thường nói sẵn kích thước, biến thể, định dạng và mức quant. Đọc được tên là bạn biết nên tải file nào và nó cần cỡ bao nhiêu bộ nhớ.
+
+**Khái niệm.** ggml đề xuất quy ước tên file GGUF gồm các phần nối bằng dấu `-`: `BaseName`, `SizeLabel`, `FineTune`, `Version`, `Encoding`, `Type`, `Shard`. Ngoài ra có tiền tố `mmproj` hoặc `mtp` cho module phụ **[Nguồn ngoài]** https://github.com/ggml-org/ggml/blob/master/docs/gguf.md . Unsloth không đặt tên theo đúng từng phần của quy ước này; ví dụ thường bỏ `Version`. Vì vậy chỉ nên dùng quy ước để đoán ý nghĩa từng phần.
 
 **Ví dụ.** Giải mã các phần hay gặp:
 
@@ -217,13 +254,18 @@ Vì sao số trong docs lớn hơn ước tính:
 | Không có hậu tố | | Định dạng gốc 16-bit hoặc 8-bit; Unsloth đôi khi đã sửa chat template/tokenizer | Unsloth |
 | `-NVFP4` | `unsloth/Qwen3.8-27B-NVFP4` | Quant Unsloth Dynamic NVFP4, chỉ chạy trên GPU Blackwell | Unsloth |
 
-**Ảnh hưởng khi dùng Unsloth.** Lệnh `unsloth run --model unsloth/qwen3.8-27B-GGUF:UD-Q4_K_XL` chọn repo và mức quant bằng phần sau dấu `:`. Khi tải bằng `hf download … --include "*UD-Q4_K_XL*"`, sai một ký tự là tải nhầm quant hoặc không tải được gì. Với model MoE `A3B`, bộ nhớ cần tính theo **tổng** tham số chứ không theo số tham số kích hoạt: bảng Qwen3.5 ghi 35B-A3B ở 4-bit cần 22 GB, lớn hơn 27B dense (17 GB), nhưng docs nói 35B-A3B cho inference nhanh hơn nhiều.
+**Ảnh hưởng khi dùng Unsloth.**
+- **Chọn quant khi chạy:** lệnh `unsloth run --model unsloth/qwen3.8-27B-GGUF:UD-Q4_K_XL` chọn repo và mức quant bằng phần sau dấu `:`.
+- **Chọn quant khi tải:** khi tải bằng `hf download … --include "*UD-Q4_K_XL*"`, sai một ký tự là tải nhầm quant hoặc không tải được gì.
+- **Model MoE:** với model `A3B`, bộ nhớ cần tính theo **tổng** tham số, không theo số tham số kích hoạt. Bảng Qwen3.5 ghi 35B-A3B ở 4-bit cần 22 GB, lớn hơn 27B dense (17 GB). Dù vậy docs nói 35B-A3B cho inference nhanh hơn nhiều.
 
 **Gặp ở đâu trong Unsloth.** [Model catalog](/model-catalog), [Inference](/inference), [Fine-tuning](/fine-tuning).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/basics/dynamic-3.0-ggufs, https://unsloth.ai/docs/basics/nvfp4, https://unsloth.ai/docs/get-started/unsloth-model-catalog ; **[Nguồn ngoài]** https://github.com/ggml-org/ggml/blob/master/docs/gguf.md
 
 ## RAM, VRAM, unified memory và offload
+
+Model không nhất thiết phải nằm gọn trong VRAM mới chạy được. Khi thiếu VRAM, phần dư được đẩy sang RAM hoặc ổ đĩa; model vẫn chạy nhưng chậm hơn.
 
 **Khái niệm.**
 - **VRAM**: bộ nhớ riêng trên card đồ họa (GPU). Tính toán trên GPU nhanh nhất khi toàn bộ dữ liệu nằm trong VRAM.
@@ -232,15 +274,15 @@ Vì sao số trong docs lớn hơn ước tính:
 - **Offload**: đặt một phần model (hoặc KV cache, activation) ở RAM, thậm chí ổ đĩa, khi VRAM không đủ. Chạy được nhưng chậm hơn.
 
 **Ví dụ.**
-- Quy tắc của Unsloth trong trang Qwen3.8: "RAM+VRAM ≈ the quant size"; nếu không đủ thì vẫn chạy, "just much slower due to disk offloading". Trang Qwen3.5 viết tương tự: tổng VRAM + RAM nên lớn hơn file quant, nếu không llama.cpp dùng SSD/HDD offloading và chậm hơn.
+- Trang Qwen3.8 của Unsloth nêu quy tắc: "RAM+VRAM ≈ the quant size". Nếu không đủ thì vẫn chạy, "just much slower due to disk offloading". Trang Qwen3.5 viết tương tự: tổng VRAM + RAM nên lớn hơn file quant; nếu không, llama.cpp dùng SSD/HDD offloading và chậm hơn.
 - Qwen3.5-397B-A17B chạy được trên "single 24GB GPU + 256GB system RAM" nhờ MoE offloading, đạt 25+ tokens/s.
 - Qwen3.8-27B 4-bit chạy trên GPU 16-19GB VRAM như RTX 5080, 4090, hoặc "a Mac with 24GB RAM".
 
 **Ảnh hưởng khi dùng Unsloth.**
-- llama.cpp: `--n-gpu-layers` chọn số layer đặt lên GPU; giảm nếu GPU hết bộ nhớ. Với MoE, `-ot ".ffn_.*_exps.=CPU"` đẩy các lớp expert sang CPU để phần còn lại vừa một GPU.
-- Unsloth Desktop "automatically offloads to RAM and detects multiGPU setups".
-- Khi fine-tune, `use_gradient_checkpointing = "unsloth"` offload activation sang RAM hệ thống. Hugging Face có cơ chế tương tự cho KV cache khi inference **[Nguồn ngoài]** https://huggingface.co/docs/transformers/kv_cache .
-- **[Nhận định]** "Unified memory" trong paper QLoRA (paged optimizer) là tính năng phần mềm của NVIDIA tự chuyển trang giữa CPU và GPU, khác với unified memory phần cứng của Mac trong các bảng Unsloth.
+- **llama.cpp:** `--n-gpu-layers` chọn số layer đặt lên GPU; giảm nếu GPU hết bộ nhớ. Với MoE, `-ot ".ffn_.*_exps.=CPU"` đẩy các lớp expert sang CPU để phần còn lại vừa một GPU.
+- **Unsloth Desktop** "automatically offloads to RAM and detects multiGPU setups".
+- **Khi fine-tune:** `use_gradient_checkpointing = "unsloth"` offload activation sang RAM hệ thống. Hugging Face có cơ chế tương tự cho KV cache khi inference **[Nguồn ngoài]** https://huggingface.co/docs/transformers/kv_cache .
+- **[Nhận định]** "Unified memory" trong paper QLoRA (paged optimizer) là tính năng phần mềm của NVIDIA, tự chuyển trang giữa CPU và GPU. Nó khác với unified memory phần cứng của Mac trong các bảng Unsloth.
 
 **Gặp ở đâu trong Unsloth.** [Inference](/inference), [Cài đặt & phần cứng](/cai-dat), [Model catalog](/model-catalog).
 
@@ -248,13 +290,18 @@ Vì sao số trong docs lớn hơn ước tính:
 
 ## Công cụ ước tính bộ nhớ
 
-Chọn chế độ, kiến trúc mẫu và độ dài context. Mở mục "Thông số kiến trúc" để nhập cấu hình model khác (lấy từ `config.json` của model).
+Công cụ này ráp các công thức ở trên lại để ước lượng bộ nhớ cho một cấu hình cụ thể. Bạn chọn chế độ, kiến trúc mẫu và độ dài context. Muốn thử model khác, mở mục "Thông số kiến trúc" và nhập cấu hình lấy từ `config.json` của model đó.
 
 <VramEstimator />
 
 ### Công thức component dùng
 
-**[Ước tính]** Mọi con số component đưa ra đều là ước tính, không phải số đo. Bộ nhớ thực tế phụ thuộc vào model (có tie embedding không, lớp nào được giữ 16-bit khi lượng tử hóa), công cụ (Unsloth, llama.cpp, vLLM có kernel và cách cấp phát bộ nhớ khác nhau), độ dài chuỗi thực tế trong batch và phiên bản thư viện.
+**[Ước tính]** Mọi con số component đưa ra đều là ước tính, không phải số đo. Bộ nhớ thực tế phụ thuộc vào:
+
+- Model: có tie embedding không, lớp nào được giữ 16-bit khi lượng tử hóa.
+- Công cụ: Unsloth, llama.cpp, vLLM có kernel và cách cấp phát bộ nhớ khác nhau.
+- Độ dài chuỗi thực tế trong batch.
+- Phiên bản thư viện.
 
 | Thành phần | Công thức | Nguồn |
 | --- | --- | --- |
@@ -266,11 +313,17 @@ Chọn chế độ, kiến trúc mẫu và độ dài context. Mở mục "Thôn
 | Activation (fine-tune) | `số layer × s × b × h × 2 byte` (đầu vào mỗi layer được giữ lại khi bật gradient checkpointing) `+ 34 × s × b × h` (activation đầy đủ của 1 layer khi tính lại). s = context, b = batch, h = hidden size | Công thức activation mỗi layer `sbh(34 + 5as/h)`; khi chỉ tính lại phần attention thì còn `34sbh` ([arXiv 2205.05198](https://arxiv.org/abs/2205.05198)). Ý tưởng giữ checkpoint rồi tính lại: [arXiv 1604.06174](https://arxiv.org/abs/1604.06174) |
 | Phần phụ | `% × tổng các phần trên`, mặc định 10% | **[Nhận định]** Không có nguồn nào cho con số này. HF chỉ nói có tensor tạm và bộ nhớ riêng của từng tính năng, không nêu tỷ lệ. Hãy chỉnh theo máy của bạn |
 
-Component **không tính**: kiến trúc lai như Qwen3.5/Qwen3.8-27B (64 layer nhưng chỉ 16 layer full attention, còn lại là Gated DeltaNet — theo `config.json` của [Qwen/Qwen3.8-27B](https://huggingface.co/Qwen/Qwen3.8-27B)); với loại này hãy nhập số layer full attention vào ô "Số layer" khi ước tính KV cache. Ngoài ra không tính: logits của lớp đầu ra, bộ nhớ CUDA context, phân mảnh bộ nhớ, và việc một số lớp (embedding, `lm_head`) có thể được giữ ở 16-bit khi lượng tử hóa. Thông số kiến trúc mẫu lấy từ `config.json` chính thức trên Hugging Face của từng model.
+Những thứ component **không tính**:
+
+- Kiến trúc lai như Qwen3.5/Qwen3.8-27B: 64 layer nhưng chỉ 16 layer full attention, còn lại là Gated DeltaNet (theo `config.json` của [Qwen/Qwen3.8-27B](https://huggingface.co/Qwen/Qwen3.8-27B)). Với loại này, hãy nhập số layer full attention vào ô "Số layer" khi ước tính KV cache.
+- Logits của lớp đầu ra, bộ nhớ CUDA context, phân mảnh bộ nhớ.
+- Việc một số lớp (embedding, `lm_head`) có thể được giữ ở 16-bit khi lượng tử hóa.
+
+Thông số kiến trúc mẫu lấy từ `config.json` chính thức trên Hugging Face của từng model.
 
 ### So sánh với bảng VRAM của Unsloth
 
-Component được chạy thử với cấu hình mặc định: context 2048, batch 2, r = 16, phần phụ 10%, dùng kiến trúc mẫu gần nhất với từng dòng trong bảng VRAM của Unsloth.
+Phần này kiểm tra xem công thức của component lệch bao nhiêu so với số Unsloth công bố. Component được chạy thử với cấu hình mặc định: context 2048, batch 2, r = 16, phần phụ 10%. Mỗi dòng dùng kiến trúc mẫu gần nhất với dòng tương ứng trong bảng VRAM của Unsloth.
 
 | Dòng bảng Unsloth | Kiến trúc dùng để thử | QLoRA: docs | QLoRA: ước tính | Lệch | LoRA: docs | LoRA: ước tính | Lệch |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -280,10 +333,15 @@ Component được chạy thử với cấu hình mặc định: context 2048, b
 | 32B | Qwen3 32B (32,76 tỷ) | 26 GB | 23,5 GB | −10% | 76 GB | 77,6 GB | +2% |
 | 70B | Llama 3.3 70B (70,55 tỷ) | 41 GB | 48,7 GB | **+19%** | 164 GB | 165 GB | +1% |
 
-Số docs lấy từ [bảng VRAM fine-tuning của Unsloth](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements). Docs ghi đây là mức "absolute minimum" nhưng không nêu model cụ thể, context hay batch size dùng để đo.
+Số docs lấy từ [bảng VRAM fine-tuning của Unsloth](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements). Docs ghi đây là mức "absolute minimum", nhưng không nêu model cụ thể, context hay batch size dùng để đo.
 
 ::: warning Chênh lệch lớn ở QLoRA 14B và 70B
-Ở dòng QLoRA 14B, ước tính cao hơn số docs 36%. Riêng phần trọng số 4-bit của Qwen3 14B đã là 7,4 GB [Ước tính], gần bằng toàn bộ con số 8,5 GB trong docs. Ở dòng QLoRA 70B, ước tính cao hơn 19%. Công thức **không được chỉnh cho khớp**.
+Hai dòng QLoRA lệch nhiều nhất so với docs:
+
+- Dòng QLoRA 14B: ước tính cao hơn số docs 36%. Riêng phần trọng số 4-bit của Qwen3 14B đã là 7,4 GB [Ước tính], gần bằng toàn bộ con số 8,5 GB trong docs.
+- Dòng QLoRA 70B: ước tính cao hơn 19%.
+
+Công thức **không được chỉnh cho khớp**.
 
 **[Nhận định]** Các lý do có thể:
 - Bảng docs không ghi model, context hay batch dùng để đo, nên có thể đo trên model khác hoặc context ngắn hơn.
