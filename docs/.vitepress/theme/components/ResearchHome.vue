@@ -59,8 +59,8 @@ const unsloth = [
     group: 'Huấn luyện',
     items: [
       { t: 'Fine-tuning', d: 'LoRA, QLoRA, full; hyperparameter', l: '/fine-tuning/' },
-      { t: 'Reinforcement Learning', d: 'GRPO, DPO, ORPO, KTO', l: '/reinforcement-learning' },
-      { t: 'Dữ liệu', d: 'Định dạng dataset, chat template, Data Recipes', l: '/du-lieu' }
+      { t: 'Reinforcement Learning', d: 'GRPO, DPO, ORPO, KTO', l: '/reinforcement-learning/' },
+      { t: 'Dữ liệu', d: 'Định dạng dataset, chat template, Data Recipes', l: '/du-lieu/' }
     ]
   },
   {

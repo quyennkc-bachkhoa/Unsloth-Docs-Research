@@ -19,25 +19,30 @@ Trang này đi theo một đoạn văn bản từ lúc vào tokenizer đến lú
 
 Sơ đồ dưới đây vẽ theo kiểu Llama. Kiểu này đặt RMSNorm trước mỗi khối con (pre-normalization), dùng SwiGLU trong FFN và dùng RoPE để mã hóa vị trí. **[Nguồn ngoài]** https://huggingface.co/docs/transformers/en/model_doc/llama , https://huggingface.co/docs/transformers/en/modular_transformers
 
-```mermaid
-flowchart TD
-    A["Văn bản đầu vào"] --> B["Tokenizer"]
-    B --> C["Token IDs (dãy số nguyên)"]
-    C --> D["Embedding (embed_tokens): ID → vector"]
-    D --> L0
-    subgraph LAYER["Lặp lại N lần (N = num_hidden_layers)"]
-        L0["RMSNorm"] --> L1["Self-attention (q_proj, k_proj, v_proj, o_proj) + RoPE"]
-        L1 --> L2["Cộng residual"]
-        L2 --> L3["RMSNorm"]
-        L3 --> L4["FFN SwiGLU (gate_proj, up_proj, down_proj)"]
-        L4 --> L5["Cộng residual"]
-    end
-    L5 --> E["RMSNorm cuối (norm)"]
-    E --> F["LM head (lm_head): vector → điểm cho mỗi token trong từ vựng"]
-    F --> G["Softmax: điểm → xác suất"]
-    G --> H["Chọn token tiếp theo (sampling)"]
-    H -. "nối vào chuỗi, chạy tiếp" .-> C
-```
+<div class="dg">
+<div class="dg-col" style="--dg-w: 420px; --dg-vgap: 24px">
+<div class="dg-node">Văn bản đầu vào</div>
+<div class="dg-node">Tokenizer</div>
+<div class="dg-node">Token IDs<small>dãy số nguyên</small></div>
+<div class="dg-node">Embedding <code>embed_tokens</code><small>ID → vector</small></div>
+<div class="dg-group">
+<span class="dg-glabel">Lặp lại N lần (N = <code>num_hidden_layers</code>)</span>
+<div class="dg-flow">
+<div class="dg-node">RMSNorm</div>
+<div class="dg-node is-main">Self-attention + RoPE<small><code>q_proj</code> <code>k_proj</code> <code>v_proj</code> <code>o_proj</code></small></div>
+<div class="dg-node">Cộng residual</div>
+<div class="dg-node">RMSNorm</div>
+<div class="dg-node is-main">FFN SwiGLU<small><code>gate_proj</code> <code>up_proj</code> <code>down_proj</code></small></div>
+<div class="dg-node">Cộng residual</div>
+</div>
+</div>
+<div class="dg-node">RMSNorm cuối <code>norm</code></div>
+<div class="dg-node">LM head <code>lm_head</code><small>vector → điểm cho mỗi token trong từ vựng</small></div>
+<div class="dg-node">Softmax<small>điểm → xác suất</small></div>
+<div class="dg-node is-end">Chọn token tiếp theo<small>sampling</small></div>
+<div class="dg-note">Nối token vào chuỗi, chạy tiếp từ Token IDs</div>
+</div>
+</div>
 
 **Ví dụ.** Cấu hình mặc định của `LlamaConfig` trong Transformers gần giống Llama-2-7B: `vocab_size = 32000`, `hidden_size = 4096`, `num_hidden_layers = 32`, `num_attention_heads = 32`, `intermediate_size = 11008`, `hidden_act = "silu"`, `rms_norm_eps = 1e-6`. **[Nguồn ngoài]** https://huggingface.co/docs/transformers/en/model_doc/llama
 

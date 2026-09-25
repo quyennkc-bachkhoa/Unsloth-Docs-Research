@@ -32,11 +32,25 @@ Có hai cách lấy key.
 3. Nhập một tên dễ nhớ, ví dụ `claude-code-macbook`. Đặt hạn dùng nếu muốn.
 4. Bấm **Create** rồi **chép key ngay**. Unsloth chỉ lưu hash của key nên sẽ không hiển thị lại.
 
+<figure>
+
+![Trang Settings → API trong Unsloth Studio](/images/inference/tao-api-key.webp)
+
+<figcaption>Trang <b>Settings → API</b>: ô đặt tên key, hạn dùng, danh sách key đã tạo và nút bật API monitor. Ảnh: <a href="https://unsloth.ai/docs/basics/api">docs Unsloth</a>.</figcaption>
+</figure>
+
 **Cách 2: dùng lệnh `unsloth run`.** Lệnh này nạp model, tự tạo API key, rồi in địa chỉ endpoint và key ra console:
 
 ```bash
 unsloth run --model unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL
 ```
+
+<figure>
+
+![Console sau khi chạy unsloth run](/images/inference/unsloth-run-output.webp)
+
+<figcaption>Cuối output của <code>unsloth run</code>: địa chỉ Studio, model đã nạp, API key và base URL cho SDK. Ảnh: <a href="https://unsloth.ai/docs/basics/api">docs Unsloth</a>.</figcaption>
+</figure>
 
 Tên model trong lệnh viết được theo ba cách, kết quả như nhau:
 
@@ -363,5 +377,12 @@ Mọi request dùng API key đều hiện trong Studio: ở panel góc màn hìn
 - prompt và response;
 - số token, time-to-first-token, throughput;
 - lỗi, và **Context used**.
+
+<figure>
+
+![Panel API monitor](/images/inference/api-monitor.webp)
+
+<figcaption>Panel API monitor: số request đang chạy, tổng request, số lỗi, độ trễ trung bình và từng request theo endpoint. Ảnh: <a href="https://unsloth.ai/docs/basics/api">docs Unsloth</a>.</figcaption>
+</figure>
 
 **Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth

@@ -7,16 +7,17 @@ description: Token, tokenizer, vocabulary, special token (BOS/EOS), context wind
 
 Trang này giải thích hai thứ: token là đơn vị mà LLM thực sự "đọc" và "viết", còn context là giới hạn độ dài model xử lý được. Bạn nên đọc trang này trước khi chỉnh `max_seq_length`, chọn chat template, hoặc gỡ lỗi khi model sinh chữ vô nghĩa sau khi export.
 
-```mermaid
-flowchart LR
-  A["Văn bản đầu vào"] --> B["Tokenizer tách thành token"]
-  B --> C["Token ID (số nguyên)"]
-  C --> D["Model dự đoán token tiếp theo"]
-  D --> E{"Là EOS hoặc đủ max_new_tokens?"}
-  E -- "Chưa" --> F["Nối token mới vào chuỗi"]
-  F --> D
-  E -- "Rồi" --> G["Tokenizer giải mã ID thành văn bản"]
-```
+<div class="dg">
+<div class="dg-flow">
+<div class="dg-node">Văn bản đầu vào</div>
+<div class="dg-node">Tokenizer<small>tách thành token</small></div>
+<div class="dg-node">Token ID<small>số nguyên</small></div>
+<div class="dg-node is-main">Model dự đoán token tiếp theo</div>
+<div class="dg-node is-q">Là EOS hoặc đủ <code>max_new_tokens</code>?</div>
+<div class="dg-node is-end" data-e="Rồi">Tokenizer giải mã ID thành văn bản</div>
+<div class="dg-back" style="grid-column: 4 / 6"><span>Chưa: nối token mới vào chuỗi</span></div>
+</div>
+</div>
 
 ## Token
 
@@ -30,7 +31,7 @@ flowchart LR
 
 **Tiếng Việt tốn bao nhiêu token?** Các nguồn đã duyệt không đưa con số cho tiếng Việt. Nguồn HF chỉ nói: tokenizer huấn luyện trên tiếng Anh sẽ làm việc kém với ngôn ngữ có cách dùng khoảng trắng và dấu câu khác, ví dụ tiếng Nhật **[Nguồn ngoài]** https://huggingface.co/learn/llm-course/chapter6/1. **[Nhận định]** Tiếng Việt có dấu thanh và nhiều âm tiết, nên có thể tốn nhiều token hơn tiếng Anh cho cùng nội dung, tùy tokenizer. Đừng giả định; hãy tự đo bằng tokenizer của chính model bạn dùng. Cách đo: đối tượng `tokenizer` trả về từ `FastLanguageModel.from_pretrained(...)` có phương thức `tokenize()`, trả về danh sách token của một chuỗi, như mô tả trong Transformers glossary và LLM Course chương 2 **[Nguồn ngoài]** https://huggingface.co/docs/transformers/glossary , https://huggingface.co/learn/llm-course/chapter2/4 . Đưa vào cùng một đoạn văn bằng tiếng Việt và tiếng Anh, rồi so độ dài hai danh sách.
 
-**Gặp ở đâu trong Unsloth.** [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/), [Inference](/inference/).
+**Gặp ở đâu trong Unsloth.** [Dữ liệu](/du-lieu/), [Fine-tuning](/fine-tuning/), [Inference](/inference/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://huggingface.co/docs/transformers/glossary, https://huggingface.co/learn/llm-course/chapter6/1
 
@@ -96,7 +97,7 @@ model = FastLanguageModel.get_peft_model(
 )
 ```
 
-**Gặp ở đâu trong Unsloth.** [Dữ liệu — Thêm token mới](/du-lieu), [Fine-tuning — Continued pretraining](/fine-tuning/mo-rong), [Reinforcement learning](/reinforcement-learning). Chi tiết về embedding: [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer).
+**Gặp ở đâu trong Unsloth.** [Dữ liệu — Thêm token mới](/du-lieu/chat-template#them-token-moi), [Fine-tuning — Continued pretraining](/fine-tuning/mo-rong), [Reinforcement learning](/reinforcement-learning/). Chi tiết về embedding: [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer).
 
 **Nguồn:** https://huggingface.co/docs/transformers/tokenizer_summary, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/continued-pretraining
 
@@ -122,7 +123,7 @@ Model chat còn có token đánh dấu vai trò người nói, ví dụ `<|im_st
   Cách tránh: dùng cùng một template lúc train và lúc chạy.
 - **[Nguồn ngoài]** Nếu đã format bằng `apply_chat_template(tokenize=False)` rồi mới tokenize, cần `add_special_tokens=False` để không chèn BOS/EOS hai lần. https://huggingface.co/docs/transformers/chat_templating
 
-**Gặp ở đâu trong Unsloth.** [Dữ liệu — Chat template](/du-lieu), [Export & deploy — Troubleshooting](/export-deploy), [Inference](/inference/).
+**Gặp ở đâu trong Unsloth.** [Dữ liệu — Chat template](/du-lieu/chat-template), [Export & deploy — Troubleshooting](/export-deploy), [Inference](/inference/).
 
 **Nguồn:** https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference, https://huggingface.co/docs/transformers/chat_templating, https://huggingface.co/docs/transformers/glossary
 
@@ -160,7 +161,7 @@ Với model đa phương thức, ảnh cũng chiếm chỗ trong context. Model 
 **[Ước tính]** Cài `max_seq_length = 2048` và prompt RAG đã chiếm 1.800 token thì model chỉ còn tối đa `2048 − 1800 = 248` token để trả lời. Phép tính này dựa trên quy tắc prompt + phần sinh không vượt quá context (https://unsloth.ai/docs/get-started/install/intel dùng đúng phép trừ này cho GRPO).
 :::
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Inference](/inference/), [Model catalog](/model-catalog), [Reinforcement learning](/reinforcement-learning).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Inference](/inference/), [Model catalog](/model-catalog), [Reinforcement learning](/reinforcement-learning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/install/google-colab, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/new/studio/chat, https://unsloth.ai/docs/basics/unsloth-benchmarks, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune, https://unsloth.ai/docs/models/ibm-granite-4.1, https://unsloth.ai/docs/models/deepseek-v4, https://unsloth.ai/docs/models/glm-5.3, https://unsloth.ai/docs/models/kimi-k3, https://unsloth.ai/docs/get-started/install/intel, https://huggingface.co/Qwen/Qwen3-8B, https://huggingface.co/google/gemma-3-4b-it
 
@@ -190,7 +191,7 @@ trainer = train_on_responses_only(
 
 - Cách chọn token ở mỗi bước (temperature, top-p, top-k) xem ở [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling). Quá trình train xem ở [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen).
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Dữ liệu — Chỉ train trên câu trả lời](/du-lieu), [Inference](/inference/).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Dữ liệu — Chỉ train trên câu trả lời](/du-lieu/chat-template#chi-train-tren-cau-tra-loi), [Inference](/inference/).
 
 **Nguồn:** https://huggingface.co/docs/transformers/glossary, https://huggingface.co/learn/llm-course/chapter1/4, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference, https://unsloth.ai/docs/new/studio/start
 
@@ -200,9 +201,9 @@ Bảng này gom lại các khái niệm trên trang, kèm trang Unsloth trên we
 
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 |---|---|---|
-| Token | [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide |
+| Token | [Dữ liệu](/du-lieu/), [Fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide |
 | Tokenizer | [Model catalog](/model-catalog), [Export & deploy](/export-deploy) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
-| Vocabulary, `add_new_tokens`, `embed_tokens`/`lm_head` | [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/continued-pretraining |
-| Special token BOS/EOS, chat template | [Dữ liệu](/du-lieu), [Export & deploy](/export-deploy) | https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference |
+| Vocabulary, `add_new_tokens`, `embed_tokens`/`lm_head` | [Dữ liệu](/du-lieu/), [Fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/continued-pretraining |
+| Special token BOS/EOS, chat template | [Dữ liệu](/du-lieu/), [Export & deploy](/export-deploy) | https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference |
 | Context window, `max_seq_length`, `max_new_tokens` | [Fine-tuning](/fine-tuning/), [Inference](/inference/), [Model catalog](/model-catalog) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/basics/unsloth-benchmarks |
-| Next-token prediction, `train_on_responses_only` | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide |
+| Next-token prediction, `train_on_responses_only` | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide |

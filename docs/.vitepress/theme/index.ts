@@ -4,6 +4,7 @@ import { h } from 'vue'
 import VramEstimator from './components/VramEstimator.vue'
 import ResearchHome from './components/ResearchHome.vue'
 import './custom.css'
+import './diagrams.css'
 
 export default {
   extends: DefaultTheme,

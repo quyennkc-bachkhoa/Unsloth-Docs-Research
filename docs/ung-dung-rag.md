@@ -89,19 +89,27 @@ Các ví dụ ứng dụng fine-tune trong FAQ có **phân tích cảm xúc tin 
 
 [Nhận định] Bối cảnh giả định: một ngân hàng muốn có chatbot trả lời nhân viên về quy trình, sản phẩm và văn bản nội bộ. Dữ liệu nhạy cảm nên **không gửi ra API đám mây**. Mọi model chạy trên máy chủ trong mạng nội bộ. Backend viết bằng FastAPI.
 
-```mermaid
-flowchart LR
-  U["Nhân viên<br/>(trình duyệt nội bộ)"] --> BE["FastAPI backend<br/>xác thực + phân quyền"]
-  BE --> EMB["Embedding model<br/>đã fine-tune bằng Unsloth"]
-  EMB --> VDB["Vector DB<br/>(pgvector / FAISS)"]
-  DOC["Tài liệu nội bộ<br/>quy trình, sản phẩm"] --> ING["Pipeline nạp tài liệu<br/>chia đoạn + embed"]
-  ING --> VDB
-  VDB --> BE
-  BE --> LLM["Unsloth API<br/>/v1/chat/completions<br/>(máy GPU trong LAN)"]
-  LLM --> BE
-  BE --> LOG["Audit log"]
-  BE --> U
-```
+<div class="dg">
+<div class="dg-title">Luồng hỏi–đáp</div>
+<div class="dg-stages">
+<div class="dg-stage"><div class="dg-node">Nhân viên<small>trình duyệt nội bộ</small></div></div>
+<div class="dg-stage is-both"><div class="dg-node is-main">FastAPI backend<small>xác thực + phân quyền</small></div></div>
+<div class="dg-stage is-both">
+<div class="dg-rows">
+<div class="dg-map" style="--dg-mapw: 190px"><div class="dg-node">Embedding model<small>đã fine-tune bằng Unsloth</small></div><div class="dg-node">Vector DB<small>pgvector / FAISS</small></div></div>
+<div class="dg-map is-single" style="--dg-mapw: 190px"><div class="dg-node">Unsloth API<small><code>/v1/chat/completions</code><br>máy GPU trong LAN</small></div></div>
+<div class="dg-map is-single" style="--dg-mapw: 190px"><div class="dg-node is-ghost">Audit log</div></div>
+</div>
+</div>
+</div>
+<div class="dg-title">Luồng nạp tài liệu</div>
+<div class="dg-flow">
+<div class="dg-node">Tài liệu nội bộ<small>quy trình, sản phẩm</small></div>
+<div class="dg-node">Pipeline nạp tài liệu<small>chia đoạn + embed</small></div>
+<div class="dg-node is-end">Vector DB<small>pgvector / FAISS</small></div>
+</div>
+<div class="dg-cap">Mũi tên hai chiều: backend gửi yêu cầu đi và nhận kết quả về (từ Vector DB và Unsloth API). Audit log chỉ nhận ghi.</div>
+</div>
 
 [Nhận định] Một câu hỏi đi qua hệ thống theo thứ tự sau:
 

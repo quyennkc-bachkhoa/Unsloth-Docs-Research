@@ -73,7 +73,7 @@ Docs kết luận block-wise hoặc per-channel (`-FP8-Dynamic`) là tốt nhấ
 
 Khi chạy, Unsloth lưu trọng số LoRA bị đóng băng ở FP8, còn adapter train được ở BF16, và tính gradient ở BF16.
 
-**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning).
+**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning ; **[Nguồn ngoài]** https://arxiv.org/abs/2209.05433 , https://docs.nvidia.com/deeplearning/transformer-engine-releases/release-2.8/user-guide/examples/fp8_primer.html , https://docs.pytorch.org/docs/stable/tensor_attributes.html
 
@@ -315,7 +315,7 @@ Tài liệu NVIDIA đã đọc không nêu Ada Lovelace hỗ trợ FP8 (cần ki
 - Kịch bản DGX Spark trong docs NVFP4 kiểm tra `cap[0] == 12` trước khi chạy. Nếu không đạt, vLLM sẽ rơi về Marlin W4A16 chậm hơn.
 - Chỉ chọn NVFP4 khi có GPU Blackwell. Theo docs Unsloth, FP8 RL cần GPU từ thế hệ RTX 40/L4/H100 trở lên.
 
-**Gặp ở đâu trong Unsloth.** [Cài đặt & phần cứng](/cai-dat), [Reinforcement Learning](/reinforcement-learning), [Inference](/inference/).
+**Gặp ở đâu trong Unsloth.** [Cài đặt & phần cứng](/cai-dat), [Reinforcement Learning](/reinforcement-learning/), [Inference](/inference/).
 
 **Nguồn:** https://unsloth.ai/docs/basics/nvfp4, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements ; **[Nguồn ngoài]** các URL NVIDIA ghi trong mục.
 
@@ -370,7 +370,7 @@ QLoRA 4-bit mất bao nhiêu độ chính xác so với LoRA 16-bit? Mỗi trang
 - Chạy local cho một người trên GPU thường, CPU hoặc Mac: dùng GGUF `UD-Q4_K_XL`, rồi hạ dần mức quant nếu không vừa bộ nhớ.
 - Fine-tune: bắt đầu bằng QLoRA theo khuyến nghị Unsloth; nếu đủ VRAM thì dùng LoRA 16-bit.
 
-**Gặp ở đâu trong Unsloth.** [Inference](/inference/), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy), [Reinforcement Learning](/reinforcement-learning).
+**Gặp ở đâu trong Unsloth.** [Inference](/inference/), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy), [Reinforcement Learning](/reinforcement-learning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning, https://unsloth.ai/docs/basics/nvfp4, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/basics/dynamic-3.0-ggufs, https://unsloth.ai/docs/models/qwen3.5/gguf-benchmarks, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide ; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/perf_train_gpu_one , https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md
 
@@ -379,7 +379,7 @@ QLoRA 4-bit mất bao nhiêu độ chính xác so với LoRA 16-bit? Mỗi trang
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 |---|---|---|
 | BF16/FP16, `dtype` | [/fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
-| FP8, `load_in_fp8` | [/reinforcement-learning](/reinforcement-learning) | https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning |
+| FP8, `load_in_fp8` | [/reinforcement-learning/memory-efficient](/reinforcement-learning/memory-efficient) | https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning |
 | NVFP4, MXFP4, W4A4/W4A16 | [/inference](/inference/), [/export-deploy](/export-deploy) | https://unsloth.ai/docs/basics/nvfp4 |
 | PTQ, QAT, `qat_scheme` | [/fine-tuning](/fine-tuning/), [/export-deploy](/export-deploy) | https://unsloth.ai/docs/blog/quantization-aware-training-qat |
 | Mức quant GGUF, `quantization_method`, imatrix | [/export-deploy](/export-deploy), [/inference](/inference/) | https://unsloth.ai/docs/basics/inference-and-deployment/saving-to-gguf |

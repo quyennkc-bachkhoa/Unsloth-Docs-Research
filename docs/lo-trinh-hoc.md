@@ -18,19 +18,21 @@ Mỗi bước có ghi trang [Kiến thức nền LLM](/kien-thuc-nen/) nên đ�
 | Chạy inference (bước 3) | **Nhóm D** Suy luận | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
 | Fine-tune (bước 4) | **Nhóm C** Huấn luyện | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen), [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora), [RL & preference](/kien-thuc-nen/rl-va-preference) |
 
-```mermaid
-flowchart TD
-  A["Nhóm A: Cấu tạo mô hình"] --> S1
-  B["Nhóm B: Số học & bộ nhớ"] --> S1
-  S1["Bước 1: Đọc nền"] --> S2["Bước 2: Cài đặt Unsloth"]
-  D["Nhóm D: Suy luận & sampling"] --> S3
-  S2 --> S3["Bước 3: Chạy model & API"]
-  C["Nhóm C: Huấn luyện"] --> S4
-  S3 --> S4["Bước 4: Dữ liệu + fine-tune"]
-  S4 --> S5["Bước 5: Export & deploy"]
-  S4 -. "mở rộng" .-> RL["RL: GRPO, DPO"]
-  S5 -. "nạp lại model để chat" .-> S3
-```
+<div class="dg">
+<div class="dg-spine">
+<div class="dg-in"><span class="dg-chip">Nhóm A: Cấu tạo mô hình</span><span class="dg-chip">Nhóm B: Số học &amp; bộ nhớ</span></div>
+<div class="dg-node dg-step"><span class="dg-n">1</span>Đọc nền</div>
+<div class="dg-node dg-step"><span class="dg-n">2</span>Cài đặt Unsloth</div>
+<div class="dg-in"><span class="dg-chip">Nhóm D: Suy luận &amp; sampling</span></div>
+<div class="dg-node dg-step is-main"><span class="dg-n">3</span>Chạy model &amp; API</div>
+<div class="dg-in"><span class="dg-chip">Nhóm C: Huấn luyện</span></div>
+<div class="dg-node dg-step is-main"><span class="dg-n">4</span>Dữ liệu + fine-tune</div>
+<div class="dg-node dg-out is-ghost">Mở rộng: RL<small>GRPO, DPO</small></div>
+<div class="dg-node dg-step is-end"><span class="dg-n">5</span>Export &amp; deploy</div>
+<div class="dg-node dg-out is-ghost">↺ Nạp lại model để chat<small>quay lại bước 3</small></div>
+</div>
+<div class="dg-cap">Chip bên trái: nhóm kiến thức nền nên đọc trước bước đó.</div>
+</div>
 
 Workflow của Studio trong docs cũng đi đúng thứ tự này:
 
@@ -202,7 +204,7 @@ Các trang docs liệt kê khác nhau về định dạng file và phần cứng
 
 **[Nhận định]** Chạy một lượt nhỏ bằng Dataset slice trước khi train cả dataset giúp bạn phát hiện lỗi định dạng dữ liệu sớm.
 
-**Trang nội bộ:** [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/).
+**Trang nội bộ:** [Dữ liệu](/du-lieu/), [Fine-tuning](/fine-tuning/).
 
 **Docs Unsloth gốc:** [Get started with Unsloth Studio](https://unsloth.ai/docs/new/studio/start), [Fine-tuning Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide), [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Data Recipes](https://unsloth.ai/docs/new/studio/data-recipe), [What Model Should I Use?](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use).
 
@@ -261,7 +263,7 @@ Khi export sang GGUF cần chọn mức quantization: xem lại [Độ chính x�
 1. Đọc lại [RL & preference](/kien-thuc-nen/rl-va-preference).
 2. Chạy một notebook RL từ bảng notebook miễn phí trên GitHub, ví dụ "Qwen3: Advanced GRPO" hoặc "gpt-oss (20B): GRPO".
 
-**Trang nội bộ:** [Reinforcement Learning](/reinforcement-learning).
+**Trang nội bộ:** [Reinforcement Learning](/reinforcement-learning/).
 
 **Docs Unsloth gốc:** [Reinforcement Learning (RL) Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide).
 

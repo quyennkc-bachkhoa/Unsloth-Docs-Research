@@ -5,16 +5,15 @@ description: Chạy model local trong Unsloth Studio, gọi qua API tương thí
 
 # Inference & API
 
-Phần Inference & API gồm trang này và bảy trang con. Nếu mới bắt đầu, bạn đọc theo thứ tự từ trên xuống:
+Phần Inference & API gồm trang này và sáu trang con. Nếu mới bắt đầu, bạn đọc theo thứ tự từ trên xuống:
 
 - **Inference & API** (trang này): inference trong Unsloth là gì, ba cách dùng model.
-  1. [Chạy model local trong Studio Chat](/inference/studio-chat): tải model, tính năng Chat, tham số sampling.
-  1. [API tương thích OpenAI và Anthropic](/inference/api): endpoint, API key, curl, Python SDK, mở cho máy khác.
-  1. [Kết nối coding agent](/inference/coding-agent): `unsloth start` cho Claude Code, Codex, OpenCode; cấu hình thủ công.
-  1. [Connections](/inference/connections): nối model server local (llama.cpp, vLLM, Ollama) vào Unsloth; cloud chỉ nói qua.
-  1. [MCP](/inference/mcp): cho model gọi công cụ và dịch vụ bên ngoài.
-  1. [Tool calling](/inference/tool-calling): Studio, API và vòng lặp tự viết.
-  1. [Cạm bẫy thường gặp](/inference/cam-bay): dò lỗi theo triệu chứng.
+  1. [Chạy model local trong Studio Chat](/inference/studio-chat): tải model GGUF về máy rồi chat ngay trong giao diện, không cần viết code. Trang này nói cách chọn mức quantization vừa với máy, các tính năng của Chat (chạy code, đọc web, so sánh 2 model) và khi nào cần chỉnh tham số sampling.
+  1. [API tương thích OpenAI và Anthropic](/inference/api): biến model local thành API trên `localhost` để code của bạn gọi vào. Request viết theo đúng định dạng của OpenAI/Anthropic, nên chỉ cần đổi `base_url` và key. Trang này có cách lấy key, chọn endpoint, ví dụ curl và Python, và cách mở API cho máy khác trong mạng.
+  1. [Kết nối coding agent](/inference/coding-agent): cho Claude Code, Codex, OpenCode dùng model local thay vì model cloud. Cách nhanh nhất là một lệnh `unsloth start <agent>`. Trang này cũng có cách cấu hình thủ công và các lỗi dễ gặp, như agent trả lời nhưng không sửa file.
+  1. [Connections](/inference/connections): dùng model đang chạy ở llama.cpp, vLLM hoặc Ollama ngay trong giao diện chat của Unsloth, mà vẫn có web search và code execution. Model cloud cũng nối được, nhưng trang chỉ nói qua.
+  1. [MCP](/inference/mcp): gắn thêm công cụ bên ngoài cho model, như tra docs, tìm model trên Hugging Face hoặc thao tác với dịch vụ như Vercel. Trang này có các bước thêm MCP server trong Studio và lưu ý bảo mật.
+  1. [Tool calling](/inference/tool-calling): cơ chế để model "gọi hàm", tức model đề xuất hàm cần chạy và chương trình của bạn chạy hàm đó. Trang này nói ba cách dùng: trong Studio, qua API và tự viết vòng lặp bằng Python.
 
 ## Inference trong Unsloth là gì
 
@@ -30,14 +29,17 @@ Về bên trong, Studio được xây trên llama.cpp và Hugging Face. Model n�
 Chưa rõ sampling (temperature/top-p/top-k/min-p), chat template, KV cache hay tool calling là gì? Xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling).
 :::
 
-```mermaid
-flowchart LR
-  A["App Python / curl"] --> C["API Unsloth trên localhost (vd :8888)"]
-  B["Coding agent: Claude Code, Codex, OpenCode"] --> C
-  C -->|"/v1/chat/completions, /v1/responses"| D["llama-server trong Unsloth"]
-  C -->|"/v1/messages"| D
-  D --> E["Model local (GGUF) trên CPU/GPU"]
-  C -.->|"server-side tools"| F["Python, bash, web search"]
-```
+<div class="dg">
+<div class="dg-stages">
+<div class="dg-stage">
+<div class="dg-node">App Python / curl</div>
+<div class="dg-node">Coding agent<small>Claude Code, Codex, OpenCode</small></div>
+</div>
+<div class="dg-stage"><div class="dg-node is-main">API Unsloth trên localhost<small>vd <code>:8888</code></small><small><code>/v1/chat/completions</code><br><code>/v1/responses</code><br><code>/v1/messages</code></small></div></div>
+<div class="dg-stage"><div class="dg-node">llama-server<small>trong Unsloth</small></div></div>
+<div class="dg-stage"><div class="dg-node is-end">Model local (GGUF)<small>trên CPU/GPU</small></div></div>
+<div class="dg-sub" style="grid-column: 2" data-e="server-side tools"><div class="dg-node is-ghost">Python, bash, web search</div></div>
+</div>
+</div>
 
 **Nguồn:** https://unsloth.ai/docs/new/studio/chat, https://unsloth.ai/docs/basics/api

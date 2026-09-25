@@ -14,17 +14,32 @@ Trang này giúp bạn nhìn tên một model trên Hugging Face và biết nó 
 
 Nên đọc trang này trước khi chọn model trong [Model catalog](/model-catalog) hoặc bắt đầu [Fine-tuning](/fine-tuning/).
 
-```mermaid
-flowchart TD
-  A["Model trên Hugging Face"] --> B{"Đầu ra là gì?"}
-  B -- "Token (văn bản)" --> C{"Đã post-train để làm theo chỉ dẫn?"}
-  B -- "Vector số" --> D["Embedding model (dùng cho RAG, tìm kiếm)"]
-  C -- "Chưa" --> E["Base (-Base, -pt)"]
-  C -- "Rồi" --> F["Instruct / chat (-Instruct, -it)"]
-  F --> G{"Đầu vào?"}
-  G -- "Chỉ văn bản" --> H["Text LLM"]
-  G -- "Văn bản + ảnh / âm thanh" --> I["Multimodal (VLM, -VL, audio)"]
-```
+<div class="dg">
+<div class="dg-tree">
+<div class="dg-node is-main">Model trên Hugging Face</div>
+<div class="dg-kids"><div class="dg-kid"><div class="dg-node is-q">Đầu ra là gì?</div>
+<div class="dg-kids">
+<div class="dg-kid" style="flex: 3"><span class="dg-lab">Token (văn bản)</span>
+<div class="dg-node is-q">Đã post-train để làm theo chỉ dẫn?</div>
+<div class="dg-kids">
+<div class="dg-kid"><span class="dg-lab">Chưa</span><div class="dg-node is-end">Base<small><code>-Base</code>, <code>-pt</code></small></div></div>
+<div class="dg-kid" style="flex: 2"><span class="dg-lab">Rồi</span><div class="dg-node">Instruct / chat<small><code>-Instruct</code>, <code>-it</code></small></div>
+<div class="dg-kids">
+<div class="dg-kid"><div class="dg-node is-q">Đầu vào?</div>
+<div class="dg-kids">
+<div class="dg-kid"><span class="dg-lab">Chỉ văn bản</span><div class="dg-node is-end">Text LLM</div></div>
+<div class="dg-kid"><span class="dg-lab">Văn bản + ảnh / âm thanh</span><div class="dg-node is-end">Multimodal<small>VLM, <code>-VL</code>, audio</small></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="dg-kid"><span class="dg-lab">Vector số</span><div class="dg-node is-end">Embedding model<small>dùng cho RAG, tìm kiếm</small></div></div>
+</div>
+</div></div>
+</div>
+</div>
 
 ## LLM và SLM
 
@@ -85,7 +100,7 @@ Hai chỗ trong docs Unsloth nghiêng về hai hướng khác nhau:
 Hai câu không hẳn mâu thuẫn: một câu nói về điểm bắt đầu, câu kia dựa vào lượng dữ liệu. Nhưng docs không nói nên ưu tiên câu nào khi bạn là người mới **và** có trên 1.000 dòng.
 :::
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning — Chọn model để fine-tune](/fine-tuning/chon-model), [Dữ liệu — Chat template](/du-lieu), [Model catalog](/model-catalog). Chi tiết về pre-train và post-train: [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning — Chọn model để fine-tune](/fine-tuning/chon-model), [Dữ liệu — Chat template](/du-lieu/chat-template), [Model catalog](/model-catalog). Chi tiết về pre-train và post-train: [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/basics/continued-pretraining, https://huggingface.co/docs/transformers/chat_templating, https://huggingface.co/Qwen/Qwen3-8B-Base, https://huggingface.co/Qwen/Qwen3-8B
 
@@ -110,7 +125,7 @@ Hai câu không hẳn mâu thuẫn: một câu nói về điểm bắt đầu, c
 - **Dataset vision:** mỗi tin nhắn chứa cả `{"type": "text", ...}` và `{"type": "image", ...}`. Docs khuyên dùng ảnh cùng kích thước, trong khoảng 300–1000px, để train không quá lâu và không quá tốn tài nguyên.
 - **Chọn model theo dữ liệu:** docs "What model should I use" ghi: train trên ảnh thì chọn vision model (ví dụ Llama 3.2 Vision); dataset code thì chọn model chuyên code (ví dụ Qwen Coder 2.5).
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning — Vision fine-tuning](/fine-tuning/mo-rong), [Dữ liệu — Vision](/du-lieu), [Model catalog — Qwen3-VL, Gemma 4](/model-catalog).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning — Vision fine-tuning](/fine-tuning/mo-rong), [Dữ liệu — Vision](/du-lieu/dinh-dang#vision-anh-chu), [Model catalog — Qwen3-VL, Gemma 4](/model-catalog).
 
 **Nguồn:** https://huggingface.co/docs/transformers/glossary, https://unsloth.ai/docs/basics/vision-fine-tuning, https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-vl-how-to-run-and-fine-tune, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/basics/text-to-speech-tts-fine-tuning, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use, https://huggingface.co/google/gemma-3-4b-it
 
@@ -191,8 +206,8 @@ Bảng này gom lại các khái niệm trên trang, kèm trang Unsloth trên we
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 |---|---|---|
 | LLM / SLM, kích thước model | [Model catalog](/model-catalog), [Cài đặt](/cai-dat) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use |
-| Base và instruct | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use |
-| Multimodal: vision / VLM | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu) | https://unsloth.ai/docs/basics/vision-fine-tuning |
+| Base và instruct | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use |
+| Multimodal: vision / VLM | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu/) | https://unsloth.ai/docs/basics/vision-fine-tuning |
 | Multimodal: audio, TTS/STT | [Model catalog](/model-catalog) | https://unsloth.ai/docs/basics/text-to-speech-tts-fine-tuning, https://unsloth.ai/docs/models/gemma-4 |
 | Embedding model | [Ứng dụng RAG](/ung-dung-rag) | https://unsloth.ai/docs/basics/embedding-finetuning |
 | Hậu tố tên model | [Model catalog](/model-catalog), [Export & deploy](/export-deploy) | https://unsloth.ai/docs/get-started/unsloth-model-catalog, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |

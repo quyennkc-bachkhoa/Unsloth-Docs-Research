@@ -1,13 +1,13 @@
 ---
-title: Cạm bẫy thường gặp
+title: Lỗi thường gặp
 description: "Các lỗi hay gặp khi fine-tune và cách tránh."
 ---
 
-# Cạm bẫy thường gặp
+# Lỗi thường gặp khi fine-tune
 
 Đây là các lỗi hay gặp khi fine-tune, gom từ nhiều trang docs. Mỗi dòng nêu lỗi và cách tránh.
 
-::: warning Cạm bẫy
+::: warning Lưu ý
 Về chọn phương pháp và model:
 - **Nhảy thẳng vào full fine-tuning.** Hãy thử LoRA hoặc QLoRA trước. LoRA thất bại thì FFT cũng không cứu được.
 - **Lệch độ chính xác giữa train và serve.** Muốn chạy 4-bit thì train 4-bit.

@@ -18,9 +18,9 @@ Chưa rõ LoRA rank/alpha, QLoRA, gradient checkpointing là gì? Xem [LoRA và 
 | Tiêu chí | QLoRA (4-bit) | LoRA (16-bit) | Full fine-tuning |
 | --- | --- | --- | --- |
 | Model gốc | Lượng tử hóa 4-bit + LoRA adapter | Độ chính xác đầy đủ (16-bit) + LoRA adapter | Train toàn bộ trọng số |
-| VRAM (bộ nhớ card đồ họa) | Thấp nhất. Docs ghi mức giảm so với LoRA theo nhiều cách (xem hộp cảnh báo bên dưới) | Trung bình. Docs ghi gấp 4× QLoRA | Cao nhất |
+| VRAM (bộ nhớ card đồ họa) | Thấp nhất. Docs ghi mức giảm so với LoRA theo nhiều cách (xem hộp "Docs chưa thống nhất" bên dưới) | Trung bình. Docs ghi gấp 4× QLoRA | Cao nhất |
 | Tốc độ | Chậm hơn LoRA một chút | Nhanh hơn QLoRA một chút | Docs chỉ ghi "compute-heavy", cần nhiều tài nguyên hơn hẳn |
-| Chất lượng | Kém LoRA một chút. Docs ghi mức chênh khác nhau (xem hộp cảnh báo bên dưới) | Chính xác hơn QLoRA một chút | Docs: LoRA làm đúng có thể ngang FFT |
+| Chất lượng | Kém LoRA một chút. Docs ghi mức chênh khác nhau (xem hộp "Docs chưa thống nhất" bên dưới) | Chính xác hơn QLoRA một chút | Docs: LoRA làm đúng có thể ngang FFT |
 | Ví dụ theo docs | Llama 70B vừa dưới 48GB VRAM với QLoRA trong Unsloth | — | — |
 | Cờ trong code | `load_in_4bit = True` | `load_in_4bit = False` hoặc `load_in_16bit = True` | `full_finetuning = True` |
 | Docs khuyên | **Bắt đầu từ đây** | Khi có môi trường 16-bit và cần độ chính xác tối đa | Thường không cần; thử LoRA hoặc QLoRA trước |

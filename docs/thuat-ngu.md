@@ -120,10 +120,10 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Merge, `save_method` | Merge: cộng LoRA vào trọng số gốc. `save_method`: chọn cách lưu (`merged_16bit`, `merged_4bit`, `lora`) | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora), [Export & deploy](/export-deploy) |
 | LoRA hot swapping | Nạp hoặc gỡ adapter trên vLLM ngay khi đang chạy | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) |
 | Multi-GPU, DDP | Multi-GPU: train trên nhiều GPU. DDP: song song hóa dữ liệu giữa các GPU | [Fine-tuning](/fine-tuning/) |
-| Dataset format (Alpaca, ShareGPT, ChatML) | Các định dạng dữ liệu dạng instruction hoặc dạng hội thoại | [Dữ liệu](/du-lieu) |
-| Synthetic data | Dữ liệu train do LLM sinh ra | [Dữ liệu](/du-lieu) |
-| Data Recipes | Công cụ trong Unsloth Studio để tạo dataset từ tài liệu | [Dữ liệu](/du-lieu) |
-| `train_on_responses_only` | Chỉ tính loss trên phần câu trả lời, bỏ qua phần câu hỏi | [Dữ liệu](/du-lieu), [Token & context](/kien-thuc-nen/token-va-context) |
+| Dataset format (Alpaca, ShareGPT, ChatML) | Các định dạng dữ liệu dạng instruction hoặc dạng hội thoại | [Các định dạng dữ liệu](/du-lieu/dinh-dang) |
+| Synthetic data | Dữ liệu train do LLM sinh ra | [Dữ liệu tổng hợp](/du-lieu/synthetic) |
+| Data Recipes | Công cụ trong Unsloth Studio để tạo dataset từ tài liệu | [Data Recipes](/du-lieu/data-recipes) |
+| `train_on_responses_only` | Chỉ tính loss trên phần câu trả lời, bỏ qua phần câu hỏi | [Chat template](/du-lieu/chat-template#chi-train-tren-cau-tra-loi), [Token & context](/kien-thuc-nen/token-va-context) |
 
 ## Reinforcement learning và preference
 
@@ -131,18 +131,18 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | --- | --- | --- |
 | Reinforcement Learning (RL) | Model tự sinh câu trả lời, câu trả lời được chấm điểm, rồi model được chỉnh về phía câu điểm cao | [RL & preference](/kien-thuc-nen/rl-va-preference) |
 | Policy, action, environment | Policy: model đang train. Action: văn bản model sinh ra. Environment: bối cảnh của tác vụ | [RL & preference](/kien-thuc-nen/rl-va-preference) |
-| Reward, reward function, verifier | Reward: điểm thưởng. Reward function: hàm đổi kết quả thành điểm. Verifier: bộ kiểm tra đúng hay sai | [RL & preference](/kien-thuc-nen/rl-va-preference), [Reinforcement Learning](/reinforcement-learning) |
+| Reward, reward function, verifier | Reward: điểm thưởng. Reward function: hàm đổi kết quả thành điểm. Verifier: bộ kiểm tra đúng hay sai | [RL & preference](/kien-thuc-nen/rl-va-preference), [Reward function và verifier](/reinforcement-learning/reward-function) |
 | Reward model | Một mạng riêng được train chỉ để chấm điểm | [RL & preference](/kien-thuc-nen/rl-va-preference) |
 | Reference model, KL penalty (`beta`) | Reference model: bản đóng băng làm mốc so sánh. KL penalty: phạt khi model lệch khỏi mốc | [RL & preference](/kien-thuc-nen/rl-va-preference) |
 | RLHF, PPO | RLHF: RL dựa trên phản hồi của con người. PPO: thuật toán RL có cơ chế clip để cập nhật ổn định | [RL & preference](/kien-thuc-nen/rl-va-preference) |
 | Rollout | Một lần cho model sinh thử một câu trả lời | [RL & preference](/kien-thuc-nen/rl-va-preference) |
-| GRPO | Thuật toán RL lấy điểm trung bình của một nhóm câu trả lời làm mốc, thay cho value model | [RL & preference](/kien-thuc-nen/rl-va-preference), [Reinforcement Learning](/reinforcement-learning) |
+| GRPO | Thuật toán RL lấy điểm trung bình của một nhóm câu trả lời làm mốc, thay cho value model | [RL & preference](/kien-thuc-nen/rl-va-preference), [GRPO trong Unsloth](/reinforcement-learning/grpo) |
 | Advantage | Một câu trả lời hơn hay kém trung bình nhóm bao nhiêu, chia cho độ lệch chuẩn | [RL & preference](/kien-thuc-nen/rl-va-preference) |
 | RLVR | RL với reward kiểm chứng tự động được, ví dụ toán hoặc code | [RL & preference](/kien-thuc-nen/rl-va-preference) |
 | DPO, ORPO, KTO | Các phương pháp căn chỉnh model theo sở thích (preference) | [RL & preference](/kien-thuc-nen/rl-va-preference) |
 | Preference data (chosen / rejected) | Với cùng một prompt, có một câu được ưa thích (chosen) và một câu bị chê (rejected) | [RL & preference](/kien-thuc-nen/rl-va-preference) |
 | Reward hacking | Model tìm cách lách luật để tăng reward mà không thực sự làm đúng việc | [RL & preference](/kien-thuc-nen/rl-va-preference) |
-| Unsloth Standby | Cơ chế cho inference (vLLM) và train dùng chung vùng nhớ khi chạy RL | [Reinforcement Learning](/reinforcement-learning) |
+| Unsloth Standby | Cơ chế cho inference (vLLM) và train dùng chung vùng nhớ khi chạy RL | [Memory-efficient RL](/reinforcement-learning/memory-efficient) |
 
 ## Suy luận và sử dụng
 
@@ -155,7 +155,7 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Temperature | Làm phân phối xác suất nhọn hơn hoặc phẳng hơn | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
 | Top-k, top-p, min-p | Các cách loại bớt token ứng viên trước khi bốc ngẫu nhiên | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
 | Repetition / presence / frequency penalty | Phạt các token đã xuất hiện để model bớt lặp lại | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
-| Chat template | Quy tắc đổi danh sách tin nhắn thành một chuỗi token, có chèn các token điều khiển | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Dữ liệu](/du-lieu) |
+| Chat template | Quy tắc đổi danh sách tin nhắn thành một chuỗi token, có chèn các token điều khiển | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Chat template](/du-lieu/chat-template) |
 | `add_generation_prompt` | Thêm phần mở đầu lượt của assistant vào cuối prompt, để model biết tới lượt nó trả lời | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
 | Thinking / reasoning mode, `reasoning_effort` | Model viết ra một đoạn suy nghĩ trước khi trả lời. `reasoning_effort` chỉnh mức độ suy nghĩ | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Inference & API](/inference/api) |
 | Tool calling (function calling) | Model sinh ra yêu cầu gọi hàm (dạng JSON). App chạy hàm đó rồi trả kết quả lại | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Inference & API](/inference/tool-calling) |

@@ -111,7 +111,17 @@
   font-size: 19px;
   line-height: 1.4;
   font-weight: 600;
-  margin-top: 36px;
+  margin-top: 40px;
+  padding-top: 22px;
+  border-top: 1px dashed var(--rule);
+}
+
+/* h3 đứng ngay sau h2 (hoặc đầu trang) thì không cần vạch ngăn */
+.vp-doc h2 + h3,
+.vp-doc h1 + h3 {
+  margin-top: 24px;
+  padding-top: 0;
+  border-top: none;
 }
 
 .vp-doc strong {
@@ -363,4 +373,57 @@
   .VPHome > .vp-doc.container {
     padding: 0 20px;
   }
+}
+
+/* Screenshot figures */
+.vp-doc figure {
+  margin: 24px 0;
+}
+
+.vp-doc figure img {
+  display: block;
+  margin: 0 auto;
+  max-height: 520px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+}
+
+.vp-doc figure p {
+  margin: 0;
+}
+
+.vp-doc figcaption {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--vp-c-text-2);
+  text-align: center;
+}
+
+/* ---------- Layout rộng: bỏ giới hạn 1440px, nới cột nội dung ---------- */
+
+:root {
+  --vp-layout-max-width: 100%;
+}
+
+/* VPDoc dùng scoped style (specificity cao hơn) nên cần !important */
+@media (min-width: 960px) {
+  .VPDoc.has-aside .content-container,
+  .VPDoc .content-container {
+    max-width: 1200px !important;
+  }
+
+  .VPDoc:not(.has-sidebar) .container {
+    max-width: 1400px !important;
+  }
+
+  .VPDoc:not(.has-sidebar) .content {
+    max-width: 1200px !important;
+  }
+}
+
+/* Bảng giãn hết chiều ngang cột nội dung */
+.vp-doc table {
+  display: table;
+  width: 100%;
 }

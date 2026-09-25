@@ -75,7 +75,7 @@ Lưu ý từ docs:
 - Ảnh trong dataset nên cùng kích thước, khoảng 300–1000px, để train không quá lâu.
 - Với multi-image, dùng list comprehension thay cho `ds.map(...)`.
 - Muốn train-on-responses-only cho VLM, bật qua các tham số `train_on_responses_only`, `instruction_part`, `response_part` của `UnslothVisionDataCollator`.
-- Định dạng dữ liệu vision: xem trang [Dữ liệu](/du-lieu).
+- Định dạng dữ liệu vision: xem trang [Các định dạng dữ liệu](/du-lieu/dinh-dang#vision-anh-chu).
 
 **Nguồn:** https://unsloth.ai/docs/basics/vision-fine-tuning
 

@@ -17,6 +17,13 @@ description: "Tải và chọn model, tính năng của trang Chat, tham số sa
   - Model vision-language và model text-to-speech.
 - Tài liệu lấy ví dụ model `unsloth/gemma-4-26B-A4B-it-GGUF` với quant khuyến nghị `UD-Q4_K_XL`.
 
+<figure>
+
+![Tìm model trên Hugging Face và chọn mức quantization](/images/inference/chon-model-quant.webp)
+
+<figcaption>Tìm model (ví dụ <code>qwen3.5</code>) rồi chọn mức quantization. Mỗi mức ghi dung lượng, Studio đánh dấu mức khuyến nghị. Ảnh: <a href="https://unsloth.ai/docs/new/studio/chat">docs Unsloth</a>.</figcaption>
+</figure>
+
 ::: tip Kiến thức nền
 Đọc tên model/GGUF như `26B-A4B`, `UD-Q4_K_XL`: xem [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho) và [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
 :::
@@ -26,6 +33,13 @@ description: "Tải và chọn model, tính năng của trang Chat, tham số sa
 - Studio tự phát hiện model cũ đã tải qua Hugging Face, LM Studio… (cập nhật 27/3).
 - Bạn cũng chọn được một thư mục có sẵn để Studio quét (cập nhật 1/4).
 - Studio đọc model từ Hugging Face Hub cache. File GGUF của LM Studio nằm ở thư mục riêng, mặc định llama.cpp không nhìn thấy. Vì vậy bạn cần chép hoặc chuyển các file `.gguf` sang HF cache, hoặc sang một đường dẫn llama.cpp đọc được.
+
+<figure>
+
+![Thêm thư mục model có sẵn](/images/inference/thu-muc-model-co-san.webp)
+
+<figcaption>Mục <b>Custom folders</b>: trỏ Studio tới thư mục chứa file GGUF có sẵn trên máy. Ảnh: <a href="https://unsloth.ai/docs/new/studio/chat">docs Unsloth</a>.</figcaption>
+</figure>
 
 ::: warning Docs chưa thống nhất
 Docs Unsloth viết đường dẫn cache trên Windows theo nhiều cách, ngay trong cùng một trang [new/studio/chat](https://unsloth.ai/docs/new/studio/chat):
@@ -59,6 +73,20 @@ Trang Chat không chỉ để hỏi đáp. Model còn được chạy code, đ�
 | Model Arena | So sánh 2 model cạnh nhau với cùng prompt, ví dụ base model và LoRA adapter sau fine-tune. Hiện Studio nạp lần lượt từng model. Chạy song song "đang được phát triển" |
 | Multi-GPU | Máy có nhiều GPU thì Chat tự dùng hết khi inference |
 | Connect Providers | Dùng model server local (llama.cpp, vLLM, Ollama), hoặc model cloud, trong cùng giao diện (xem trang [Connections](/inference/connections)) |
+
+<figure>
+
+![Model tự chạy lệnh để trả lời](/images/inference/chat-code-execution.webp)
+
+<figcaption>Code execution: model tự chạy lệnh <code>ls</code> để trả lời câu "what are my files on my machine?". Ảnh: <a href="https://unsloth.ai/docs/new/studio/chat">docs Unsloth</a>.</figcaption>
+</figure>
+
+<figure>
+
+![Model Arena so sánh base model và bản fine-tune](/images/inference/model-arena.webp)
+
+<figcaption>Model Arena: cùng một prompt, bên trái là base model, bên phải là bản fine-tune (LoRA). Ảnh: <a href="https://unsloth.ai/docs/new/studio/chat">docs Unsloth</a>.</figcaption>
+</figure>
 
 Unsloth có công bố kết quả thử nghiệm với `unsloth/Qwen3.5-4B-GGUF (UD-Q4_K_XL)`, khi bật web search, code execution và thinking:
 

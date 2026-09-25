@@ -20,15 +20,25 @@ Cách chọn:
 - Muốn chỉnh tùy chọn nâng cao: cài Studio thủ công.
 - Muốn tự viết code để train: dùng Core.
 
-```mermaid
-flowchart TD
-  A["Bạn muốn gì?"] --> B["Chat/train bằng giao diện, không cấu hình"]
-  A --> C["Web UI, truy cập từ máy khác, tùy chọn nâng cao"]
-  A --> D["Viết code Python train/inference"]
-  B --> E["Unsloth Desktop"]
-  C --> F["Unsloth Studio (install.sh / install.ps1 / Docker)"]
-  D --> G["Unsloth Core (uv / pip / Conda / Docker / Colab)"]
-```
+<div class="dg">
+<div class="dg-tree">
+<div class="dg-node is-q">Bạn muốn gì?</div>
+<div class="dg-kids">
+<div class="dg-kid"><div class="dg-col">
+<div class="dg-node">Chat/train bằng giao diện, không cấu hình</div>
+<div class="dg-node is-end">Unsloth Desktop</div>
+</div></div>
+<div class="dg-kid"><div class="dg-col">
+<div class="dg-node">Web UI, truy cập từ máy khác, tùy chọn nâng cao</div>
+<div class="dg-node is-end">Unsloth Studio<small><code>install.sh</code> / <code>install.ps1</code> / Docker</small></div>
+</div></div>
+<div class="dg-kid"><div class="dg-col">
+<div class="dg-node">Viết code Python train/inference</div>
+<div class="dg-node is-end">Unsloth Core<small>uv / pip / Conda / Docker / Colab</small></div>
+</div></div>
+</div>
+</div>
+</div>
 
 **Nguồn:** https://unsloth.ai/docs/get-started/install, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements, https://unsloth.ai/docs/new/studio/install
 

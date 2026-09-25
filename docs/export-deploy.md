@@ -17,22 +17,21 @@ Trang này không giải thích FP16/BF16, FP8, FP4/NVFP4, GGUF quant (Q4_K_M, Q
 
 Sơ đồ dưới cho thấy từ một model đã fine-tune, bạn có thể xuất theo những nhánh nào, và mỗi nhánh dẫn tới engine nào.
 
-```mermaid
-flowchart LR
-  A["Model sau fine-tune<br/>(base + LoRA)"] --> B["LoRA adapter<br/>save_pretrained / save_method='lora'"]
-  A --> C["Merged 16-bit<br/>save_method='merged_16bit'"]
-  A --> D["Merged 4-bit<br/>save_method='merged_4bit'"]
-  A --> E["GGUF<br/>save_pretrained_gguf"]
-  C --> F["vLLM / SGLang"]
-  B --> F
-  C --> G["llama.cpp convert_hf_to_gguf.py"]
-  G --> E
-  E --> H["llama.cpp / llama-server"]
-  E --> I["Ollama"]
-  E --> J["LM Studio"]
-  E --> K["Unsloth Studio / API"]
-  L["Quant NVFP4 do Unsloth upload<br/>(không phải export từ fine-tune)"] --> F
-```
+<div class="dg">
+<div class="dg-stages">
+<div class="dg-stage"><div class="dg-node is-main">Model sau fine-tune<small>base + LoRA</small></div></div>
+<div class="dg-stage">
+<div class="dg-rows">
+<div class="dg-map"><div class="dg-node">LoRA adapter<small><code>save_pretrained</code> / <code>save_method='lora'</code></small></div><div class="dg-chips"><span class="dg-chip">vLLM / SGLang</span></div></div>
+<div class="dg-map"><div class="dg-node">Merged 16-bit<small><code>save_method='merged_16bit'</code></small></div><div class="dg-chips"><span class="dg-chip">vLLM / SGLang</span><span class="dg-chip is-ghost">llama.cpp <code>convert_hf_to_gguf.py</code> → GGUF</span></div></div>
+<div class="dg-map is-single"><div class="dg-node">Merged 4-bit<small><code>save_method='merged_4bit'</code></small></div></div>
+<div class="dg-map"><div class="dg-node is-main">GGUF<small><code>save_pretrained_gguf</code></small></div><div class="dg-chips"><span class="dg-chip">llama.cpp / llama-server</span><span class="dg-chip">Ollama</span><span class="dg-chip">LM Studio</span><span class="dg-chip">Unsloth Studio / API</span></div></div>
+</div>
+</div>
+</div>
+<div class="dg-title">Ngoài luồng export</div>
+<div class="dg-map" style="--dg-mapw: 260px"><div class="dg-node is-ghost">Quant NVFP4 do Unsloth upload<small>không phải export từ fine-tune</small></div><div class="dg-chips"><span class="dg-chip">vLLM / SGLang</span></div></div>
+</div>
 
 [Nhận định] Sơ đồ được gom từ nhiều trang docs. Nhánh NVFP4 được vẽ tách riêng vì một lý do: nguồn chỉ hướng dẫn **chạy** các quant NVFP4 mà Unsloth đã upload sẵn. Nguồn không có hướng dẫn tự xuất NVFP4 từ model bạn fine-tune.
 
@@ -367,7 +366,7 @@ fp8_model = FastLanguageModel.from_pretrained(
 )
 ```
 
-Chi tiết về FP8 RL, xem [Reinforcement Learning](/reinforcement-learning).
+Chi tiết về FP8 RL, xem [Memory-efficient RL](/reinforcement-learning/memory-efficient).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning
 

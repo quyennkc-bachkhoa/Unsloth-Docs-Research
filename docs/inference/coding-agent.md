@@ -7,11 +7,37 @@ description: "Dùng unsloth start để nối Claude Code, Codex, OpenCode với
 
 `unsloth start <agent>` cho coding agent (Claude Code, Codex, OpenCode…) dùng model đang chạy trong Unsloth, chỉ bằng một lệnh. Lệnh này tự cấu hình endpoint, API key, provider, model và context length cho từng lần chạy agent. Cấu hình chỉ tồn tại trong phiên đó. Nó **không** ghi provider Unsloth vào file cấu hình thường ngày của agent. Toàn bộ có thể chạy offline.
 
+<div class="dg">
+<div class="dg-title">Khởi động</div>
+<div class="dg-flow">
+<div class="dg-node">Bạn gõ<small><code>unsloth start claude</code></small></div>
+<div class="dg-node"><code>unsloth start</code><small>đặt endpoint, API key, model cho phiên này</small></div>
+<div class="dg-node is-main">Coding agent<small>Claude Code, Codex, OpenCode…</small></div>
+</div>
+<div class="dg-title">Trong phiên làm việc</div>
+<div class="dg-stages">
+<div class="dg-stage is-both"><div class="dg-node is-main">Coding agent</div></div>
+<div class="dg-stage is-both">
+<div class="dg-rows">
+<div class="dg-map" style="--dg-mapw: 220px"><div class="dg-node">API Unsloth trên localhost<small>nhận request + tool của agent, trả tool call về</small></div><div class="dg-node">llama-server + model GGUF</div></div>
+<div class="dg-map is-single" style="--dg-mapw: 220px"><div class="dg-node is-end">Thư mục project<small>agent sửa file, chạy lệnh</small></div></div>
+</div>
+</div>
+</div>
+</div>
+
 Cách dùng nhanh: mở Unsloth, nạp model, `cd` vào thư mục project, rồi chạy:
 
 ```bash
 unsloth start claude
 ```
+
+<figure>
+
+![Claude Code chạy với model local qua Unsloth](/images/inference/claude-code-local.webp)
+
+<figcaption>Claude Code sau khi chạy <code>unsloth start claude</code>: khung chào hiện model local <code>unsloth/Qwen3.5-9B-GGUF</code>, agent đang tạo file README. Ảnh: <a href="https://unsloth.ai/docs/integrations/unsloth-start">docs Unsloth</a>.</figcaption>
+</figure>
 
 | Agent | Lệnh | Ghi chú |
 | --- | --- | --- |
@@ -22,6 +48,13 @@ unsloth start claude
 | Hermes Agent | `unsloth start hermes` | Cần `--persist` để giữ phiên |
 | OpenClaw | `unsloth start openclaw` | Cần `--persist` (config, workspace, session mặc định là tạm) |
 | Pi Agent | `unsloth start pi` | Cần `--persist` để giữ phiên |
+
+<figure>
+
+![unsloth start codex trong terminal](/images/inference/unsloth-start-codex.webp)
+
+<figcaption><code>unsloth start codex</code>: chưa có Studio server thì Unsloth tự khởi động, nạp model GGUF, ghi file cấu hình cho Codex rồi mở Codex với model local. Ảnh: <a href="https://unsloth.ai/docs/integrations/unsloth-start">docs Unsloth</a>.</figcaption>
+</figure>
 
 Bạn cũng nạp được model ngay khi khởi động agent. Hậu tố `:UD-Q4_K_XL` chọn bản quant GGUF. Cờ `--model` hoạt động như sau:
 

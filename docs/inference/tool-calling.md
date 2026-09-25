@@ -9,6 +9,21 @@ Tool calling (gọi công cụ) cho phép LLM kích hoạt một hàm cụ thể
 
 Điểm quan trọng: model chỉ **đề xuất** lời gọi, gồm tên hàm và tham số JSON. Chương trình của bạn mới là bên chạy hàm. Sau đó chương trình gửi kết quả lại cho model ở lượt sau.
 
+<div class="dg">
+<div class="dg-seq">
+<div class="dg-node">Người dùng</div>
+<div class="dg-node is-main">Chương trình của bạn</div>
+<div class="dg-node">Model<small>llama-server</small></div>
+<div class="dg-msg" style="grid-column: 1 / 3"><span>“Hôm nay cộng 3 ngày là ngày nào?”</span></div>
+<div class="dg-msg" style="grid-column: 2 / 4"><span>messages + danh sách tools</span></div>
+<div class="dg-msg is-left is-ret" style="grid-column: 2 / 4"><span><code>tool_calls</code>: <code>add_days(days=3)</code></span></div>
+<div class="dg-seq-note" style="grid-column: 2">Chương trình tự chạy hàm</div>
+<div class="dg-msg" style="grid-column: 2 / 4"><span>kết quả, role <code>"tool"</code></span></div>
+<div class="dg-msg is-left is-ret" style="grid-column: 2 / 4"><span>Câu trả lời cuối bằng chữ</span></div>
+<div class="dg-msg is-left is-ret" style="grid-column: 1 / 3"><span>Hiển thị câu trả lời</span></div>
+</div>
+</div>
+
 ::: tip Kiến thức nền
 Cơ chế tool calling và vai trò của chat template: xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling).
 :::

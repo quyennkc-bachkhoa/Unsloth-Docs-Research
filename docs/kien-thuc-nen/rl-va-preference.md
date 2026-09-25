@@ -5,7 +5,7 @@ description: SFT khác RL thế nào; reward, reward model, verifier, policy, re
 
 # RL & preference optimization
 
-Trang này giải thích các khái niệm docs Unsloth dùng khi nói về Reinforcement Learning (học tăng cường) và preference optimization (tối ưu theo sở thích). Đó là các khái niệm như reward, policy, reference model, DPO, GRPO... Nên đọc trang này trước khi mở trang [Reinforcement Learning](/reinforcement-learning), hoặc trước khi chạy notebook GRPO và DPO.
+Trang này giải thích các khái niệm docs Unsloth dùng khi nói về Reinforcement Learning (học tăng cường) và preference optimization (tối ưu theo sở thích). Đó là các khái niệm như reward, policy, reference model, DPO, GRPO... Nên đọc trang này trước khi mở trang [Reinforcement Learning](/reinforcement-learning/), hoặc trước khi chạy notebook GRPO và DPO.
 
 ::: tip Đọc kèm
 Trang [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) giải thích pre-training và SFT; trang [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) giải thích adapter mà mọi ví dụ RL của Unsloth đều dùng.
@@ -30,7 +30,7 @@ Docs Unsloth cũng nêu điều kiện để RL chạy được: xác suất mod
 
 **Ảnh hưởng khi dùng Unsloth.** Docs Unsloth so sánh: SFT thường chỉ tối đa hóa xác suất dự đoán từ tiếp theo, còn GRPO tối ưu theo reward function. RL dùng khi bạn cần model giỏi một hành vi cụ thể (ví dụ tool calling), dựa trên môi trường và reward function thay vì dữ liệu có nhãn. Docs cũng nói "với đa số trường hợp, SFT là đủ".
 
-**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning), [Fine-tuning](/fine-tuning/).
+**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning/), [Fine-tuning](/fine-tuning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide. **[Nguồn ngoài]** Loss của SFT là cross-entropy trên từng token của chuỗi đích: https://huggingface.co/docs/trl/sft_trainer
 
@@ -60,7 +60,7 @@ Người chơi không biết trước nước đi tốt nhất. Họ chỉ quan 
 
 **Ảnh hưởng khi dùng Unsloth.** Trong code Unsloth, "policy" là `model` bạn truyền vào trainer, thường đã gắn LoRA. Docs gọi quá trình "chờ" câu đúng xuất hiện qua nhiều rollout là "Patience is All You Need". RL không chỉ chờ: trong lúc chờ, nó còn chủ động đẩy model khỏi các câu trả lời xấu nhận được.
 
-**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning).
+**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide; **[Nguồn ngoài]** https://huggingface.co/learn/llm-course/chapter12/2
 
@@ -89,7 +89,7 @@ Docs còn có ví dụ tự động trả lời email: +1 nếu có từ khóa b
 - Mẹo trong docs: dùng một rubric (danh sách nhiều reward nhỏ kiểm chứng được) thay vì một reward tổng duy nhất.
 - Nếu GRPO không cho ra suy luận, docs khuyên kiểm tra reward function, verifier và số bước train.
 
-**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning) (mục reward function và ví dụ GSM8K).
+**Gặp ở đâu trong Unsloth.** [Reward function và verifier](/reinforcement-learning/reward-function) (có ví dụ GSM8K).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide; **[Nguồn ngoài]** https://huggingface.co/docs/trl/reward_trainer
 
@@ -112,7 +112,7 @@ Mục đích: model vẫn tối ưu reward, nhưng không đi quá xa model gố
 - GRPO: theo tài liệu GRPO nâng cao của Unsloth, `beta` mặc định `0.0`. Khi `beta` bằng 0, trainer không nạp reference model, nên tốn ít bộ nhớ hơn và nhanh hơn. Tăng `beta` để giữ policy gần reference hơn. TRL `GRPOConfig` ghi cùng mặc định.
 - **[Nhận định]** Với LoRA, reference model thường là chính model gốc khi tắt adapter, nên không tốn thêm một bản trọng số đầy đủ. Docs Unsloth không nói rõ điểm này: cần kiểm tra lại.
 
-**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning) (DPO code, GRPOConfig).
+**Gặp ở đâu trong Unsloth.** [DPO, ORPO, KTO](/reinforcement-learning/dpo-orpo-kto) (code DPO), [GRPO trong Unsloth](/reinforcement-learning/grpo) (GRPOConfig).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation; **[Nguồn ngoài]** https://huggingface.co/docs/trl/dpo_trainer, https://huggingface.co/docs/trl/grpo_trainer
 
@@ -133,7 +133,7 @@ Reward lấy từ Reward Model. Số hạng `clip(..., 1-e, 1+e)` ngăn mỗi b�
 
 **Ảnh hưởng khi dùng Unsloth.** Docs Unsloth liệt kê PPO trong nhóm phương pháp "chạy được với Unsloth", nhưng không có notebook PPO riêng. Theo docs, PPO phải train nhiều model cùng lúc nên tốn bộ nhớ. Đó là lý do GRPO bỏ value model và reward model.
 
-**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning) (mục Từ RLHF, PPO tới GRPO).
+**Gặp ở đâu trong Unsloth.** [Từ RLHF, PPO tới GRPO](/reinforcement-learning/rlhf-ppo-grpo).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto; **[Nguồn ngoài]** https://arxiv.org/abs/2203.02155, https://arxiv.org/abs/1707.06347
 
@@ -235,7 +235,7 @@ Trang [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-g
 Paper DeepSeekMath và docs TRL mô tả theo cách thứ hai (baseline là trung bình các câu trả lời cho cùng một câu hỏi).
 :::
 
-**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning) (Vòng lặp GRPO, Yêu cầu VRAM).
+**Gặp ở đâu trong Unsloth.** [GRPO trong Unsloth](/reinforcement-learning/grpo) (Vòng lặp GRPO, Yêu cầu VRAM).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto; **[Nguồn ngoài]** https://arxiv.org/abs/2305.18290, https://arxiv.org/abs/2403.07691, https://arxiv.org/abs/2402.01306, https://arxiv.org/abs/2402.03300, https://huggingface.co/docs/trl/dpo_trainer, https://huggingface.co/docs/trl/orpo_trainer, https://huggingface.co/docs/trl/kto_trainer, https://huggingface.co/docs/trl/grpo_trainer
 
@@ -247,7 +247,7 @@ RLVR là RL mà điểm reward được kiểm tra tự động. Cách này hợ
 
 **Ví dụ.** Docs Unsloth đưa hai ví dụ: phương trình toán kiểm tra được (2+2 = 4); code kiểm tra được bằng cách chạy xem có đúng không. Với tác vụ khác thì khó viết verifier, nên đa số ví dụ là toán hoặc code. Docs vẫn cho rằng GRPO dùng được cho email tự động, truy vấn database, luật, y khoa, nếu có rubric gồm nhiều reward nhỏ kiểm chứng được.
 
-**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning).
+**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide
 
@@ -265,7 +265,7 @@ Reward hacking là rủi ro bạn cần để ý khi tự viết reward function
 
 **Ảnh hưởng khi dùng Unsloth.** **[Nhận định]** Reward function chỉ đo được những gì nó kiểm tra. Đường reward tăng đẹp chưa chứng minh model tốt lên. Bạn cần đọc mẫu câu trả lời (Unsloth in mẫu trong lúc train), và chạy code của model trong môi trường cô lập. **[Nguồn ngoài]** InstructGPT dùng KL penalty chính để giảm việc tối ưu quá mức theo reward model: https://arxiv.org/abs/2203.02155
 
-**Gặp ở đâu trong Unsloth.** [Reinforcement Learning](/reinforcement-learning) (mục Reward hacking).
+**Gặp ở đâu trong Unsloth.** [Reward hacking](/reinforcement-learning/reward-hacking).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation/rl-reward-hacking
 
@@ -294,12 +294,12 @@ Mục này giúp bạn chọn phương pháp dựa trên loại dữ liệu đan
 
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 | --- | --- | --- |
-| SFT vs RL | [Reinforcement Learning](/reinforcement-learning), [Fine-tuning](/fine-tuning/) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), [Fine-tuning Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide) |
-| Policy, reward, environment | [Reinforcement Learning](/reinforcement-learning) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
-| Reward function, verifier | [Reinforcement Learning](/reinforcement-learning) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
-| Reference model, KL, `beta` | [Reinforcement Learning](/reinforcement-learning) | [Advanced RL Documentation](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation) |
-| RLHF, PPO | [Reinforcement Learning](/reinforcement-learning) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
-| DPO, ORPO, KTO | [Reinforcement Learning](/reinforcement-learning) | [Preference Optimization](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto) |
-| GRPO, advantage, `num_generations` | [Reinforcement Learning](/reinforcement-learning) | [GRPO Tutorial](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo) |
-| RLVR | [Reinforcement Learning](/reinforcement-learning) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
-| Reward hacking | [Reinforcement Learning](/reinforcement-learning) | [RL Reward Hacking](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation/rl-reward-hacking) |
+| SFT vs RL | [Reinforcement Learning](/reinforcement-learning/), [Fine-tuning](/fine-tuning/) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), [Fine-tuning Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide) |
+| Policy, reward, environment | [Reinforcement Learning](/reinforcement-learning/) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
+| Reward function, verifier | [Reward function và verifier](/reinforcement-learning/reward-function) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
+| Reference model, KL, `beta` | [Reinforcement Learning](/reinforcement-learning/) | [Advanced RL Documentation](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation) |
+| RLHF, PPO | [Từ RLHF, PPO tới GRPO](/reinforcement-learning/rlhf-ppo-grpo) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
+| DPO, ORPO, KTO | [DPO, ORPO, KTO](/reinforcement-learning/dpo-orpo-kto) | [Preference Optimization](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto) |
+| GRPO, advantage, `num_generations` | [GRPO trong Unsloth](/reinforcement-learning/grpo) | [GRPO Tutorial](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo) |
+| RLVR | [Từ RLHF, PPO tới GRPO](/reinforcement-learning/rlhf-ppo-grpo) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
+| Reward hacking | [Reward hacking](/reinforcement-learning/reward-hacking) | [RL Reward Hacking](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation/rl-reward-hacking) |

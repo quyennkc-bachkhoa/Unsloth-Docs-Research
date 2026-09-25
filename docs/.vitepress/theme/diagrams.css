@@ -1,0 +1,1026 @@
+/* ------------------------------------------------------------------
+   Sơ đồ vẽ bằng HTML/CSS (thay cho mermaid).
+   Khung .dg chứa một trong các bố cục:
+     .dg-flow    chuỗi bước nằm ngang; .dg-back là vòng quay lại
+     .dg-col     chuỗi bước dọc; .dg-group gom nhóm; .dg-note ghi chú quay lại
+     .dg-tree    cây rẽ nhánh (.dg-kids > .dg-kid, nhãn nhánh .dg-lab)
+     .dg-ladder  chuỗi câu hỏi, mỗi câu có một lối ra bên phải (.dg-out)
+     .dg-spine   trục bước dọc (.dg-step), đầu vào trái (.dg-in), nhánh phụ phải (.dg-out)
+     .dg-stages  các chặng ngang (.dg-stage); .dg-rows > .dg-map là nhánh tỏa ra
+     .dg-seq     sơ đồ tuần tự (lane + .dg-msg)
+     .dg-bar     thanh chia phần
+     .dg-layer   tầng kiến trúc, bên trong là .dg-grid
+   Nhãn trên mũi tên: thuộc tính data-e trên phần tử mà mũi tên chỉ vào.
+   ------------------------------------------------------------------ */
+
+.vp-doc .dg {
+  --dg-line: var(--ink-3);
+  --dg-gap: 34px;
+  --dg-vgap: 26px;
+  --dg-node-bd: color-mix(in srgb, var(--ink) 22%, var(--rule));
+  --dg-hr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M0 0L8 4L0 8z'/%3E%3C/svg%3E");
+  --dg-hl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M8 0L0 4L8 8z'/%3E%3C/svg%3E");
+  --dg-hd: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M0 0L8 0L4 8z'/%3E%3C/svg%3E");
+  --dg-hu: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M0 8L8 8L4 0z'/%3E%3C/svg%3E");
+  --dg-solid: linear-gradient(#000 0 0);
+  --dg-dash-h: repeating-linear-gradient(90deg, #000 0 4px, transparent 4px 7px);
+  --dg-dash-v: repeating-linear-gradient(180deg, #000 0 4px, transparent 4px 7px);
+
+  container: dg / inline-size;
+  position: relative;
+  margin: 24px 0 28px;
+  padding: 24px 22px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--paper-2);
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink);
+  overflow-x: auto;
+}
+
+.vp-doc .dg code {
+  font-size: 11.5px;
+  padding: 1px 4px;
+}
+
+.vp-doc .dg-cap {
+  margin-top: 16px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+.vp-doc .dg-title {
+  margin: 0 0 14px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.vp-doc .dg-title:not(:first-child) {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--rule);
+}
+
+/* ---------- Ô ---------- */
+
+.vp-doc .dg-node {
+  position: relative;
+  padding: 9px 12px;
+  background: var(--paper);
+  border: 1px solid var(--dg-node-bd);
+  border-radius: 6px;
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(28, 34, 48, 0.05);
+}
+
+.vp-doc .dg-node small {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+/* Ô chính: viền đậm */
+.vp-doc .dg-node.is-main {
+  border: 1.5px solid var(--ink);
+}
+
+/* Ô kết quả: nền mực */
+.vp-doc .dg-node.is-end {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.vp-doc .dg-node.is-end small {
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink));
+}
+
+.vp-doc .dg-node.is-end code {
+  background: color-mix(in srgb, var(--paper) 16%, var(--ink));
+  color: var(--paper);
+}
+
+/* Ô phụ / ngoài luồng chính: viền đứt */
+.vp-doc .dg-node.is-ghost {
+  background: transparent;
+  border: 1px dashed var(--dg-node-bd);
+  box-shadow: none;
+  color: var(--ink-2);
+  font-weight: 400;
+}
+
+/* Câu hỏi rẽ nhánh: dạng viên thuốc */
+.vp-doc .dg-node.is-q {
+  border: 1.5px solid var(--ink-2);
+  border-radius: 999px;
+  padding: 8px 18px;
+  text-align: center;
+  background: color-mix(in srgb, var(--ink) 4%, var(--paper));
+}
+
+/* Số thứ tự bước */
+.vp-doc .dg-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
+  margin-right: 6px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  vertical-align: 1px;
+}
+
+.vp-doc .dg-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.vp-doc .dg-chip {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--paper);
+  border: 1px solid var(--dg-node-bd);
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.vp-doc .dg-chip.is-ghost {
+  background: transparent;
+  border-style: dashed;
+  color: var(--ink-2);
+  font-weight: 400;
+}
+
+.vp-doc .dg-tag {
+  display: inline-block;
+  padding: 1px 7px;
+  margin: 0 4px 0 0;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+  color: var(--mark-ext);
+}
+
+/* Ghi chú quay lại */
+.vp-doc .dg-note {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 1.5px dashed var(--dg-line);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.vp-doc .dg-note::before {
+  content: '↺ ';
+  font-weight: 600;
+}
+
+/* ---------- Mũi tên dùng chung ----------
+   ::before là thân + đầu mũi tên (vẽ bằng mask để đổi màu theo theme),
+   ::after là nhãn lấy từ data-e. */
+
+.vp-doc .dg-flow > .dg-node + .dg-node::before,
+.vp-doc .dg-stages > .dg-stage + .dg-stage::before,
+.vp-doc .dg-map > * + *::before,
+.vp-doc .dg-ladder > .dg-out::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  width: var(--dg-gap);
+  height: 8px;
+  margin-top: -4px;
+  background: var(--dg-line);
+  -webkit-mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-solid) left center / calc(100% - 6px) 1.5px no-repeat;
+  mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-solid) left center / calc(100% - 6px) 1.5px no-repeat;
+}
+
+/* Mũi tên hai chiều */
+.vp-doc .dg-stages > .dg-stage.is-both::before {
+  -webkit-mask: var(--dg-hl) left center / 7px 8px no-repeat, var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-solid) center / calc(100% - 12px) 1.5px no-repeat;
+  mask: var(--dg-hl) left center / 7px 8px no-repeat, var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-solid) center / calc(100% - 12px) 1.5px no-repeat;
+}
+
+/* Mũi tên dọc */
+.vp-doc .dg-col > * + *::before,
+.vp-doc .dg-ladder > .dg-node:not(.dg-out) ~ .dg-node:not(.dg-out)::before,
+.vp-doc .dg-spine > .dg-step ~ .dg-step::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  width: 8px;
+  height: var(--dg-vgap);
+  margin-left: -4px;
+  background: var(--dg-line);
+  -webkit-mask: var(--dg-hd) center bottom / 8px 7px no-repeat, var(--dg-solid) center top / 1.5px calc(100% - 6px) no-repeat;
+  mask: var(--dg-hd) center bottom / 8px 7px no-repeat, var(--dg-solid) center top / 1.5px calc(100% - 6px) no-repeat;
+}
+
+/* Nhãn mũi tên ngang */
+.vp-doc .dg-flow > .dg-node[data-e]::after,
+.vp-doc .dg-stages > .dg-stage[data-e]::after,
+.vp-doc .dg-map > [data-e]::after,
+.vp-doc .dg-ladder > .dg-out[data-e]::after {
+  content: attr(data-e);
+  position: absolute;
+  bottom: calc(50% + 6px);
+  right: calc(100% + var(--dg-gap) / 2);
+  transform: translateX(50%);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* Nhãn mũi tên dọc */
+.vp-doc .dg-col > [data-e]::after,
+.vp-doc .dg-ladder > .dg-node:not(.dg-out)[data-e]::after,
+.vp-doc .dg-spine > .dg-step[data-e]::after {
+  content: attr(data-e);
+  position: absolute;
+  bottom: calc(100% + var(--dg-vgap) / 2);
+  left: calc(50% + 9px);
+  transform: translateY(50%);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* ---------- Chuỗi ngang ---------- */
+
+.vp-doc .dg-flow {
+  --dg-gap: 28px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min-content, 1fr);
+  column-gap: var(--dg-gap);
+  min-width: min-content;
+}
+
+.vp-doc .dg-flow > .dg-node {
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 9px 11px;
+}
+
+.vp-doc .dg-flow > .dg-node small {
+  font-size: 11.5px;
+}
+
+.vp-doc .dg-flow > .dg-node .dg-n {
+  display: flex;
+  margin: 0 0 5px;
+}
+
+.vp-doc .dg-flow > .dg-node.is-q {
+  border-radius: 16px;
+}
+
+/* Mũi tên có nhãn: nới khoảng cách để nhãn không đè lên ô */
+.vp-doc .dg-flow > .dg-node[data-e] {
+  margin-left: 16px;
+}
+
+.vp-doc .dg-flow > .dg-node[data-e]::before {
+  width: calc(var(--dg-gap) + 16px);
+}
+
+.vp-doc .dg-flow > .dg-node[data-e]::after {
+  right: calc(100% + (var(--dg-gap) + 16px) / 2);
+}
+
+/* Vòng quay lại: đặt grid-column (cột đầu / cột cuối + 1) bằng style */
+.vp-doc .dg-back {
+  grid-row: 2;
+  position: relative;
+  height: 42px;
+}
+
+.vp-doc .dg-back + .dg-back {
+  grid-row: 3;
+}
+
+.vp-doc .dg-back::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 26px;
+  right: 26px;
+  height: 21px;
+  border: 1.5px dashed var(--dg-line);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+}
+
+.vp-doc .dg-back::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 26px;
+  width: 8px;
+  height: 7px;
+  margin-left: -3.25px;
+  background: var(--dg-line);
+  -webkit-mask: var(--dg-hu) center / 8px 7px no-repeat;
+  mask: var(--dg-hu) center / 8px 7px no-repeat;
+}
+
+.vp-doc .dg-back > span {
+  position: absolute;
+  top: 21px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0 8px;
+  background: var(--paper-2);
+  font-size: 12px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* ---------- Chuỗi dọc ---------- */
+
+.vp-doc .dg-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--dg-vgap);
+}
+
+.vp-doc .dg-col > * {
+  position: relative;
+  width: 100%;
+  max-width: var(--dg-w, 400px);
+}
+
+.vp-doc .dg-col > .dg-node {
+  text-align: center;
+}
+
+.vp-doc .dg-col > .dg-group {
+  max-width: none;
+}
+
+.vp-doc .dg-col > .dg-note {
+  width: auto;
+}
+
+/* Ghi chú quay lại trong chuỗi dọc: không vẽ mũi tên liền vào */
+.vp-doc .dg-col > .dg-note::before {
+  content: '↺ ';
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+}
+
+.vp-doc .dg-col > .dg-note::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  height: var(--dg-vgap);
+  border-left: 1.5px dashed var(--dg-line);
+  margin-left: -0.75px;
+}
+
+/* Nhóm lặp lại / nhánh phụ */
+.vp-doc .dg-group {
+  position: relative;
+  padding: 28px 16px 16px;
+  border: 1.5px dashed color-mix(in srgb, var(--ink) 30%, var(--rule));
+  border-radius: 10px;
+}
+
+.vp-doc .dg-glabel {
+  position: absolute;
+  top: 0;
+  left: 14px;
+  transform: translateY(-50%);
+  padding: 0 8px;
+  background: var(--paper-2);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* ---------- Cây rẽ nhánh ---------- */
+
+.vp-doc .dg-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: min-content;
+}
+
+.vp-doc .dg-tree > .dg-node {
+  max-width: 300px;
+  text-align: center;
+}
+
+.vp-doc .dg-kids {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  padding-top: 14px;
+}
+
+.vp-doc .dg-kids::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 14px;
+  border-left: 1.5px solid var(--dg-line);
+  margin-left: -0.75px;
+}
+
+.vp-doc .dg-kid {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 170px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 34px 8px 0;
+}
+
+.vp-doc .dg-kid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: 1.5px solid var(--dg-line);
+}
+
+.vp-doc .dg-kid:first-child::before {
+  left: 50%;
+}
+
+.vp-doc .dg-kid:last-child::before {
+  right: 50%;
+}
+
+.vp-doc .dg-kid:only-child::before {
+  display: none;
+}
+
+.vp-doc .dg-kid::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 8px;
+  height: 34px;
+  margin-left: -4px;
+  background: var(--dg-line);
+  -webkit-mask: var(--dg-hd) center bottom / 8px 7px no-repeat, var(--dg-solid) center top / 1.5px calc(100% - 6px) no-repeat;
+  mask: var(--dg-hd) center bottom / 8px 7px no-repeat, var(--dg-solid) center top / 1.5px calc(100% - 6px) no-repeat;
+}
+
+.vp-doc .dg-kid > .dg-node {
+  width: 100%;
+  max-width: 250px;
+  text-align: center;
+}
+
+.vp-doc .dg-kid > .dg-col {
+  width: 100%;
+  --dg-w: 250px;
+}
+
+.vp-doc .dg-kid > .dg-col > .dg-node:first-child {
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.vp-doc .dg-lab {
+  position: absolute;
+  top: 10px;
+  left: calc(50% + 8px);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* ---------- Chuỗi câu hỏi có/không ---------- */
+
+.vp-doc .dg-ladder {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) minmax(220px, 1fr);
+  column-gap: 48px;
+  row-gap: var(--dg-vgap);
+  align-items: stretch;
+  min-width: 560px;
+}
+
+.vp-doc .dg-ladder > .dg-node {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.vp-doc .dg-ladder > .dg-node:not(.dg-out) {
+  grid-column: 1;
+}
+
+.vp-doc .dg-ladder > .dg-out {
+  grid-column: 2;
+}
+
+.vp-doc .dg-ladder > .dg-out::before {
+  width: 48px;
+}
+
+.vp-doc .dg-ladder > .dg-out[data-e]::after {
+  right: calc(100% + 24px);
+}
+
+/* ---------- Trục bước ---------- */
+
+.vp-doc .dg-spine {
+  --dg-gap: 40px;
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) minmax(210px, 1.1fr) minmax(160px, 1fr);
+  column-gap: var(--dg-gap);
+  row-gap: var(--dg-vgap);
+  align-items: center;
+  min-width: 640px;
+}
+
+.vp-doc .dg-spine > .dg-step {
+  grid-column: 2;
+  text-align: center;
+}
+
+.vp-doc .dg-spine > .dg-in {
+  grid-column: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vp-doc .dg-spine > .dg-in::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: var(--dg-gap);
+  height: 8px;
+  margin-top: -4px;
+  background: var(--dg-line);
+  -webkit-mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-solid) left center / calc(100% - 6px) 1.5px no-repeat;
+  mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-solid) left center / calc(100% - 6px) 1.5px no-repeat;
+}
+
+.vp-doc .dg-spine > .dg-out {
+  grid-column: 3;
+}
+
+.vp-doc .dg-spine > .dg-out::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  width: var(--dg-gap);
+  height: 8px;
+  margin-top: -4px;
+  background: var(--dg-line);
+  -webkit-mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-dash-h) left center / calc(100% - 6px) 1.5px no-repeat;
+  mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-dash-h) left center / calc(100% - 6px) 1.5px no-repeat;
+}
+
+/* ---------- Các chặng ngang ---------- */
+
+.vp-doc .dg-stages {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(120px, auto);
+  column-gap: var(--dg-gap);
+  align-items: center;
+  min-width: min-content;
+}
+
+.vp-doc .dg-stage {
+  grid-row: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Ô phụ treo dưới một chặng: đặt grid-column bằng style */
+.vp-doc .dg-sub {
+  grid-row: 2;
+  position: relative;
+  margin-top: 30px;
+}
+
+.vp-doc .dg-sub::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  width: 8px;
+  height: 30px;
+  margin-left: -4px;
+  background: var(--dg-line);
+  -webkit-mask: var(--dg-hd) center bottom / 8px 7px no-repeat, var(--dg-dash-v) center top / 1.5px calc(100% - 6px) no-repeat;
+  mask: var(--dg-hd) center bottom / 8px 7px no-repeat, var(--dg-dash-v) center top / 1.5px calc(100% - 6px) no-repeat;
+}
+
+.vp-doc .dg-sub[data-e]::after {
+  content: attr(data-e);
+  position: absolute;
+  bottom: calc(100% + 9px);
+  left: calc(50% + 9px);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* Nhánh tỏa ra: gạch đứng nối các hàng */
+.vp-doc .dg-rows {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-left: 22px;
+}
+
+.vp-doc .dg-map {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--dg-mapw, 210px) minmax(160px, 1fr);
+  column-gap: var(--dg-gap);
+  align-items: center;
+  padding: 5px 0;
+}
+
+.vp-doc .dg-map.is-single {
+  grid-template-columns: var(--dg-mapw, 210px);
+}
+
+.vp-doc .dg-map > * {
+  position: relative;
+}
+
+.vp-doc .dg-rows > .dg-map::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -22px;
+  border-left: 1.5px solid var(--dg-line);
+  margin-left: -0.75px;
+}
+
+.vp-doc .dg-rows > .dg-map:first-child::before {
+  top: 50%;
+}
+
+.vp-doc .dg-rows > .dg-map:last-child::before {
+  bottom: 50%;
+}
+
+.vp-doc .dg-rows > .dg-map:only-child::before {
+  display: none;
+}
+
+.vp-doc .dg-rows > .dg-map::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -22px;
+  width: 22px;
+  height: 8px;
+  margin-top: -4px;
+  background: var(--dg-line);
+  -webkit-mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-solid) left center / calc(100% - 6px) 1.5px no-repeat;
+  mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-solid) left center / calc(100% - 6px) 1.5px no-repeat;
+}
+
+/* ---------- Sơ đồ tuần tự ---------- */
+
+.vp-doc .dg-seq {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  row-gap: 4px;
+  min-width: 520px;
+}
+
+.vp-doc .dg-seq::before {
+  content: '';
+  position: absolute;
+  inset: 20px 0 0;
+  background:
+    linear-gradient(var(--dg-node-bd), var(--dg-node-bd)) calc(100% / 6) 0 / 1px 100% no-repeat,
+    linear-gradient(var(--dg-node-bd), var(--dg-node-bd)) 50% 0 / 1px 100% no-repeat,
+    linear-gradient(var(--dg-node-bd), var(--dg-node-bd)) calc(500% / 6) 0 / 1px 100% no-repeat;
+}
+
+.vp-doc .dg-seq > .dg-node {
+  grid-row: 1;
+  justify-self: center;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.vp-doc .dg-msg {
+  position: relative;
+  padding: 2px 25% 16px;
+  text-align: center;
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+.vp-doc .dg-msg > span {
+  position: relative;
+  padding: 0 4px;
+  background: var(--paper-2);
+}
+
+.vp-doc .dg-msg::before {
+  content: '';
+  position: absolute;
+  left: 25%;
+  right: 25%;
+  bottom: 4px;
+  height: 8px;
+  background: var(--ink-2);
+  -webkit-mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-solid) left center / calc(100% - 6px) 1.5px no-repeat;
+  mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-solid) left center / calc(100% - 6px) 1.5px no-repeat;
+}
+
+.vp-doc .dg-msg.is-left::before {
+  -webkit-mask: var(--dg-hl) left center / 7px 8px no-repeat, var(--dg-solid) right center / calc(100% - 6px) 1.5px no-repeat;
+  mask: var(--dg-hl) left center / 7px 8px no-repeat, var(--dg-solid) right center / calc(100% - 6px) 1.5px no-repeat;
+}
+
+.vp-doc .dg-msg.is-left.is-ret::before {
+  -webkit-mask: var(--dg-hl) left center / 7px 8px no-repeat, var(--dg-dash-h) right center / calc(100% - 6px) 1.5px no-repeat;
+  mask: var(--dg-hl) left center / 7px 8px no-repeat, var(--dg-dash-h) right center / calc(100% - 6px) 1.5px no-repeat;
+}
+
+.vp-doc .dg-seq-note {
+  position: relative;
+  justify-self: center;
+  margin: 2px 0 12px;
+  padding: 4px 12px;
+  background: var(--paper);
+  border: 1px solid var(--dg-node-bd);
+  border-left: 3px solid var(--ink-2);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+/* ---------- Thanh chia phần ---------- */
+
+.vp-doc .dg-bar {
+  display: flex;
+  gap: 4px;
+  min-width: 520px;
+}
+
+.vp-doc .dg-seg {
+  padding: 12px 14px;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.vp-doc .dg-seg small {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.vp-doc .dg-seg.s1 {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.vp-doc .dg-seg.s1 small {
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink));
+}
+
+.vp-doc .dg-seg.s2 {
+  background: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--ink) 14%, var(--paper)) 0 6px,
+    color-mix(in srgb, var(--ink) 6%, var(--paper)) 6px 12px
+  );
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, var(--rule));
+}
+
+.vp-doc .dg-seg.s3 {
+  background: var(--paper);
+  border: 1px solid var(--dg-node-bd);
+}
+
+.vp-doc .dg-seg.is-grow {
+  background: transparent;
+  border: 1.5px dashed var(--dg-line);
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+.vp-doc .dg-seg.is-grow small {
+  color: var(--ink-3);
+}
+
+/* ---------- Tầng kiến trúc ---------- */
+
+.vp-doc .dg-layer {
+  position: relative;
+}
+
+.vp-doc .dg-layer + .dg-layer {
+  margin-top: 46px;
+}
+
+.vp-doc .dg-layer + .dg-layer::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  width: 8px;
+  height: 32px;
+  margin-left: -4px;
+  background: var(--dg-line);
+  -webkit-mask: var(--dg-hd) center bottom / 8px 7px no-repeat, var(--dg-solid) center top / 1.5px calc(100% - 6px) no-repeat;
+  mask: var(--dg-hd) center bottom / 8px 7px no-repeat, var(--dg-solid) center top / 1.5px calc(100% - 6px) no-repeat;
+}
+
+.vp-doc .dg-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(150px, 1fr));
+  gap: var(--dg-grid-gap, 16px);
+  align-items: start;
+}
+
+.vp-doc .dg-grid .dg-col {
+  --dg-vgap: 22px;
+  align-items: stretch;
+}
+
+.vp-doc .dg-grid .dg-col > .dg-node {
+  text-align: left;
+}
+
+.vp-doc .dg-grid .dg-col > .dg-note {
+  align-self: center;
+}
+
+.vp-doc .dg-tags {
+  margin-bottom: 8px;
+}
+
+/* Quan hệ phụ giữa hai ô cạnh nhau trong .dg-grid: mũi tên nét đứt */
+.vp-doc .dg-grid > .dg-dash::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  width: var(--dg-grid-gap, 16px);
+  height: 8px;
+  margin-top: -4px;
+  background: var(--dg-line);
+  -webkit-mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-dash-h) left center / calc(100% - 6px) 1.5px no-repeat;
+  mask: var(--dg-hr) right center / 7px 8px no-repeat, var(--dg-dash-h) left center / calc(100% - 6px) 1.5px no-repeat;
+}
+
+.vp-doc .dg-grid > .dg-dash[data-e]::after {
+  content: attr(data-e);
+  position: absolute;
+  bottom: calc(100% + 4px);
+  right: calc(100% - 20px);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* ---------- Khung hẹp: chuỗi ngang chuyển thành dọc ---------- */
+
+@media (max-width: 640px) {
+  .vp-doc .dg {
+    padding: 18px 14px;
+  }
+
+  .vp-doc .dg-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vp-doc .dg-grid > .dg-dash::before,
+  .vp-doc .dg-grid > .dg-dash::after {
+    display: none;
+  }
+}
+
+@container dg (max-width: 600px) {
+  .vp-doc .dg-flow {
+    grid-auto-flow: row;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-columns: auto;
+    row-gap: var(--dg-vgap);
+    min-width: 0;
+  }
+
+  .vp-doc .dg-flow > .dg-node {
+    grid-row: auto;
+    align-items: center;
+    text-align: center;
+  }
+
+  .vp-doc .dg-flow > .dg-node[data-e] {
+    margin-left: 0;
+  }
+
+  .vp-doc .dg-flow > .dg-node + .dg-node::before,
+  .vp-doc .dg-flow > .dg-node[data-e]::before {
+    top: auto;
+    right: auto;
+    bottom: 100%;
+    left: 50%;
+    width: 8px;
+    height: var(--dg-vgap);
+    margin: 0 0 0 -4px;
+    -webkit-mask: var(--dg-hd) center bottom / 8px 7px no-repeat, var(--dg-solid) center top / 1.5px calc(100% - 6px) no-repeat;
+    mask: var(--dg-hd) center bottom / 8px 7px no-repeat, var(--dg-solid) center top / 1.5px calc(100% - 6px) no-repeat;
+  }
+
+  .vp-doc .dg-flow > .dg-node[data-e]::after {
+    right: auto;
+    bottom: calc(100% + var(--dg-vgap) / 2);
+    left: calc(50% + 9px);
+    transform: translateY(50%);
+  }
+
+  .vp-doc .dg-back,
+  .vp-doc .dg-back + .dg-back {
+    grid-row: auto;
+    grid-column: 1 !important;
+    height: auto;
+    text-align: center;
+  }
+
+  .vp-doc .dg-back::before,
+  .vp-doc .dg-back::after {
+    display: none;
+  }
+
+  .vp-doc .dg-back > span {
+    position: static;
+    display: inline-block;
+    transform: none;
+    padding: 4px 12px;
+    border: 1.5px dashed var(--dg-line);
+    border-radius: 999px;
+    white-space: normal;
+  }
+
+  .vp-doc .dg-back > span::before {
+    content: '↺ ';
+    font-weight: 600;
+  }
+}

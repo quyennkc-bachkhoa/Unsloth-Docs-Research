@@ -11,6 +11,13 @@ MCP chạy được với cả GGUF local lẫn model của nhà cung cấp clou
 
 ## Bật MCP trong Unsloth Studio
 
+<figure>
+
+![Menu MCP trên thanh công cụ chat](/images/inference/mcp-menu.webp)
+
+<figcaption>Nút <b>MCP</b> trên thanh chat mở danh sách server có sẵn: Context7, Exa, Hugging Face và <b>Add custom MCP</b>. Ảnh: <a href="https://unsloth.ai/docs/basics/mcp">docs Unsloth</a>.</figcaption>
+</figure>
+
 1. Bấm **MCP** trên thanh công cụ chat. Studio có sẵn MCP server của **Context7, Exa và Hugging Face**. Lưu ý: bật Exa sẽ tắt công cụ web search mặc định của Unsloth.
 2. Muốn thêm server riêng, bấm **Add custom MCP**. Điền **Display name**, ví dụ `Vercel`. Điền **URL** là endpoint gốc của server, ví dụ `https://mcp.vercel.com`.
 3. Chọn cách xác thực:
@@ -24,11 +31,32 @@ Authorization: Bearer <your-token>
 4. Bấm **Test connection**. Thành công thì bấm **Add server**. Unsloth tự lấy danh sách tool, ví dụ *Refreshed "Vercel" (18 tools)*.
 5. Bật công tắc của từng server, và cả công tắc tổng **Use MCP Servers**. Sau đó chọn model và chat. Model tự gọi tool khi cần.
 
+<figure>
+
+![Hộp thoại thêm MCP server](/images/inference/mcp-add-server.webp)
+
+<figcaption>Thêm server Vercel: điền tên, URL, bật OAuth hoặc thêm header, rồi <b>Test connection</b>. Ảnh: <a href="https://unsloth.ai/docs/basics/mcp">docs Unsloth</a>.</figcaption>
+</figure>
+
+<figure>
+
+![Server đã được thêm](/images/inference/mcp-server-added.webp)
+
+<figcaption>Server đã thêm xong, có công tắc bật tắt, nút làm mới danh sách tool, sửa và xóa. Ảnh: <a href="https://unsloth.ai/docs/basics/mcp">docs Unsloth</a>.</figcaption>
+</figure>
+
 Tài liệu có một ví dụ dùng cùng lúc 3 server mặc định:
 
 - Hỏi về fine-tune Qwen: Exa trả lời.
 - Tìm trong docs Unsloth: Context7.
 - Tìm model `unsloth/Qwen` trên Hugging Face: MCP của Hugging Face.
+
+<figure>
+
+![Model gemma-4 dùng MCP của Vercel trong chat](/images/inference/mcp-dung-trong-chat.webp)
+
+<figcaption>Model local <code>gemma-4-E2B-it-GGUF</code> gọi MCP của Vercel để liệt kê các tool nó có thể dùng. Ảnh: <a href="https://unsloth.ai/docs/basics/mcp">docs Unsloth</a>.</figcaption>
+</figure>
 
 **Nguồn:** https://unsloth.ai/docs/basics/mcp
 

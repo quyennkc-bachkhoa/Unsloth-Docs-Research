@@ -54,7 +54,7 @@ Nguồn: https://developer.nvidia.com/blog/mastering-llm-techniques-inference-op
 - **Lượng tử hóa KV cache.** llama.cpp cho chọn kiểu lưu cache qua `--cache-type-k` và `--cache-type-v`. Các giá trị hỗ trợ: `f32`, `f16`, `bf16`, `q8_0`, `q4_0`, `q4_1`, `iq4_nl`, `q5_0`, `q5_1`. Mặc định là `f16`. Theo docs Unsloth, `q4_1` (khoảng 5 bit) cho context dài hơn khoảng 3.2 lần. Với Qwen3.5, docs gợi ý thử `--cache-type-k bf16 --cache-type-v bf16` nếu gặp output vô nghĩa.
 - **Giữ phần đầu prompt ổn định.** Cache chỉ dùng lại được khi phần đầu prompt giống hệt lần trước. Docs Unsloth ghi Claude Code chèn vào đầu system prompt một header thay đổi theo mỗi request. Header này làm KV cache mất hiệu lực, và inference với model local chậm đi khoảng 90%.
 
-**Gặp ở đâu trong Unsloth.** [Inference & API](/inference/), [Reinforcement Learning](/reinforcement-learning) (bảng bộ nhớ GRPO), [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho), [Token & context](/kien-thuc-nen/token-va-context).
+**Gặp ở đâu trong Unsloth.** [Inference & API](/inference/), [Memory-efficient RL](/reinforcement-learning/memory-efficient) (bảng bộ nhớ GRPO), [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho), [Token & context](/kien-thuc-nen/token-va-context).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/models/glm-5.3, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/deepseek-v4, https://unsloth.ai/docs/basics/claude-code; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/cache_explanation, https://huggingface.co/docs/transformers/kv_cache, https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/
 
@@ -252,7 +252,7 @@ Docs Unsloth còn ghi hai trường hợp khác:
 - **Khi chạy `llama-server`:** `--jinja` bật engine Jinja cho chat template (mặc định bật theo README hiện tại). Tham số riêng của template truyền qua `--chat-template-kwargs '{"enable_thinking":false}'`.
 - **[Nguồn ngoài]** TRL nhắc: với base model đã có template sẵn (ví dụ Qwen), phải căn chỉnh EOS token với chat template để câu trả lời kết thúc đúng: https://huggingface.co/docs/trl/sft_trainer
 
-**Gặp ở đâu trong Unsloth.** [Dữ liệu](/du-lieu), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy), [Inference & API](/inference/).
+**Gặp ở đâu trong Unsloth.** [Dữ liệu](/du-lieu/), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy), [Inference & API](/inference/).
 
 **Nguồn:** https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference, https://unsloth.ai/docs/new/studio/chat, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/chat_templating, https://huggingface.co/docs/transformers/llm_tutorial, https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
 
@@ -287,17 +287,24 @@ Tool calling cho model yêu cầu app của bạn chạy một hàm, thay vì t�
 
 Danh sách tool được mô tả bằng JSON schema và được chat template chèn vào prompt.
 
-```mermaid
-flowchart TD
-  A["App gửi messages + danh sách tools (JSON schema)"] --> B["Chat template chèn mô tả tools vào prompt"]
-  B --> C["Model sinh token"]
-  C --> D{"Model trả về tool_calls?"}
-  D -->|"Có"| E["App đọc tên hàm + tham số JSON"]
-  E --> F["App tự chạy hàm (vd add_number, terminal, python)"]
-  F --> G["App thêm message role 'assistant' (tool_calls) và role 'tool' (kết quả)"]
-  G --> B
-  D -->|"Không"| H["Câu trả lời cuối cho người dùng"]
-```
+<div class="dg">
+<div class="dg-flow">
+<div class="dg-node"><div><span class="dg-n">1</span>App gửi messages + tools</div><small>danh sách tools dạng JSON schema</small></div>
+<div class="dg-node"><div><span class="dg-n">2</span>Chat template</div><small>chèn mô tả tools vào prompt</small></div>
+<div class="dg-node is-main"><div><span class="dg-n">3</span>Model sinh token</div></div>
+<div class="dg-node is-q"><div><span class="dg-n">4</span>Model trả về <code>tool_calls</code>?</div></div>
+<div class="dg-node is-end" data-e="Không">Câu trả lời cuối cho người dùng</div>
+</div>
+<div class="dg-group" style="margin-top: 30px">
+<span class="dg-glabel">Nếu bước 4 là “Có”</span>
+<div class="dg-flow">
+<div class="dg-node">App đọc tên hàm + tham số JSON</div>
+<div class="dg-node">App tự chạy hàm<small>vd <code>add_number</code>, terminal, python</small></div>
+<div class="dg-node">App thêm 2 message<small>role <code>assistant</code> (tool_calls) và role <code>tool</code> (kết quả)</small></div>
+<div class="dg-node is-ghost">↺ Quay lại bước 2</div>
+</div>
+</div>
+</div>
 
 **[Nguồn ngoài]** Transformers nhấn mạnh model "không thể tự gọi tool", nó chỉ yêu cầu gọi. Việc của bạn là xử lý lời gọi, rồi thêm lời gọi và kết quả vào lịch sử chat. Kết quả nằm trong message role `tool` và luôn là chuỗi: https://huggingface.co/docs/transformers/chat_extras
 
@@ -326,10 +333,10 @@ Hàm `terminal` trong ví dụ tự chặn các lệnh chứa `rm`, `sudo`, `dd`
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 | --- | --- | --- |
 | Autoregressive, prefill, decode | [Inference & API](/inference/) | [Qwen3.8](https://unsloth.ai/docs/models/qwen3.8) |
-| KV cache, `--cache-type-k/v` | [Inference & API](/inference/), [Reinforcement Learning](/reinforcement-learning) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), [GLM-5.3](https://unsloth.ai/docs/models/glm-5.3), [Claude Code](https://unsloth.ai/docs/basics/claude-code) |
+| KV cache, `--cache-type-k/v` | [Inference & API](/inference/), [Reinforcement Learning](/reinforcement-learning/) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide), [GLM-5.3](https://unsloth.ai/docs/models/glm-5.3), [Claude Code](https://unsloth.ai/docs/basics/claude-code) |
 | Greedy vs sampling, logits, softmax | [Inference & API](/inference/) | [API](https://unsloth.ai/docs/basics/api) |
 | temperature, top_p, top_k, min_p | [Inference & API](/inference/), [Model catalog](/model-catalog) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5), [Qwen3.8](https://unsloth.ai/docs/models/qwen3.8), [Gemma 4](https://unsloth.ai/docs/models/gemma-4), [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
 | repetition / presence penalty | [Inference & API](/inference/) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5), [API](https://unsloth.ai/docs/basics/api) |
-| Chat template, EOS, BOS | [Dữ liệu](/du-lieu), [Export & deploy](/export-deploy) | [Chat Templates](https://unsloth.ai/docs/basics/chat-templates), [Troubleshooting Inference](https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference) |
+| Chat template, EOS, BOS | [Dữ liệu — Chat template](/du-lieu/chat-template), [Export & deploy](/export-deploy) | [Chat Templates](https://unsloth.ai/docs/basics/chat-templates), [Troubleshooting Inference](https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference) |
 | Thinking / reasoning mode | [Inference & API](/inference/), [Model catalog](/model-catalog) | [Qwen3.5](https://unsloth.ai/docs/models/qwen3.5), [Gemma 4](https://unsloth.ai/docs/models/gemma-4), [gpt-oss](https://unsloth.ai/docs/models/gpt-oss-how-to-run-and-fine-tune) |
 | Tool calling | [Inference & API](/inference/) | [Tool Calling Guide](https://unsloth.ai/docs/basics/tool-calling-guide-for-local-llms), [Studio Chat](https://unsloth.ai/docs/new/studio/chat) |

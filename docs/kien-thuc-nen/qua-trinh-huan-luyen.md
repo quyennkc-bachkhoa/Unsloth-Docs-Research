@@ -18,17 +18,19 @@ Trang này giải thích chuyện gì xảy ra khi bạn bấm **Start Training*
 
 Các mục bên dưới giải thích từng khâu. **[Nguồn ngoài]** https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html
 
-```mermaid
-flowchart LR
-  A["Lấy một batch dữ liệu"] --> B["Forward: model đoán token tiếp theo"]
-  B --> C["Tính loss (cross-entropy)"]
-  C --> D["Backward: tính gradient"]
-  D --> E{"Đã gom đủ gradient_accumulation_steps batch?"}
-  E -- "Chưa" --> A
-  E -- "Đủ" --> F["Optimizer cập nhật trọng số (1 step)"]
-  F --> G["Scheduler chỉnh learning rate"]
-  G --> A
-```
+<div class="dg">
+<div class="dg-flow">
+<div class="dg-node">Lấy một batch dữ liệu</div>
+<div class="dg-node">Forward<small>model đoán token tiếp theo</small></div>
+<div class="dg-node">Tính loss<small>cross-entropy</small></div>
+<div class="dg-node">Backward<small>tính gradient</small></div>
+<div class="dg-node is-q">Đã gom đủ batch?<small><code>gradient_<wbr>accumulation_<wbr>steps</code></small></div>
+<div class="dg-node is-main" data-e="Đủ">Optimizer cập nhật trọng số<small>1 step</small></div>
+<div class="dg-node">Scheduler chỉnh learning rate</div>
+<div class="dg-back" style="grid-column: 1 / 6"><span>Chưa đủ: lấy batch tiếp</span></div>
+<div class="dg-back" style="grid-column: 1 / 8"><span>Sau mỗi step: lấy batch tiếp</span></div>
+</div>
+</div>
 
 Nhánh "đã gom đủ" trong sơ đồ chính là cách gradient accumulation hoạt động (xem mục "Epoch, step, batch size, gradient accumulation" bên dưới). Thứ tự "cập nhật trọng số trước, gọi scheduler sau" lấy theo docs PyTorch. **[Nguồn ngoài]** https://docs.pytorch.org/docs/stable/optim.html
 
@@ -77,7 +79,7 @@ Model càng tự tin vào token đúng thì loss càng gần 0. Model đoán sai
 - `train_on_responses_only` (trong Studio là "Train on Completions") che phần câu hỏi của người dùng. Khi đó loss chỉ tính trên câu trả lời của assistant. Docs Unsloth dẫn QLoRA paper: cách này tăng độ chính xác, nhất là với hội thoại nhiều lượt. Vì mẫu số khác nhau, loss khi bật và khi tắt tùy chọn này không so trực tiếp được với nhau **[Nhận định]**.
 - Docs ghi ngưỡng loss "tốt" không thống nhất. Xem mục "Overfitting và underfitting" bên dưới.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/danh-gia) (mục Đánh giá và tránh overfitting), [Dữ liệu](/du-lieu); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide). Khái niệm token: [Token & context](/kien-thuc-nen/token-va-context).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/danh-gia) (mục Đánh giá và tránh overfitting), [Dữ liệu](/du-lieu/); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide). Khái niệm token: [Token & context](/kien-thuc-nen/token-va-context).
 
 **Nguồn:** https://huggingface.co/docs/trl/sft_trainer, https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html, https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/new/studio/start
 
@@ -143,7 +145,7 @@ Learning rate quyết định model học nhanh hay chậm. Đây là một tron
 - LR thấp: ổn định hơn nhưng cần nhiều epoch hơn. Docs lưu ý LR thấp cũng có thể dẫn tới overfitting, hoặc khiến model không học được.
 - TRL ghi chú: train adapter thường dùng LR cao hơn (khoảng `1e-4`), vì chỉ học các tham số mới. **[Nguồn ngoài]** https://huggingface.co/docs/trl/sft_trainer
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/hyperparameter) (bảng Hyperparameter khuyến nghị), [Reinforcement learning](/reinforcement-learning); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/hyperparameter) (bảng Hyperparameter khuyến nghị), [Reinforcement learning](/reinforcement-learning/); docs gốc [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/new/studio/start, https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html, https://huggingface.co/docs/trl/sft_trainer
 
@@ -318,18 +320,20 @@ Mặc định làm mượt EMA là `0.6`. Bạn có thể chuyển sang thang lo
 | Loss tụt "bậc thang" đúng lúc sang epoch mới | Model bắt đầu nhớ các mẫu đã thấy ở epoch trước | Theo dõi eval loss; cân nhắc giảm số epoch | [Nhận định] |
 | Loss tăng nhẹ trong vài step đầu rồi mới giảm | Đang trong giai đoạn warmup, LR còn thay đổi | Thường không cần làm gì; đối chiếu với biểu đồ Learning Rate | [Nhận định] |
 
-```mermaid
-flowchart TD
-  A["Nhìn đường Training Loss (bản làm mượt)"] --> B{"Loss có giảm không?"}
-  B -- "Không" --> C["Chỉnh LR / epoch / dữ liệu"]
-  B -- "Có" --> D{"Có Eval Loss không?"}
-  D -- "Không" --> E["Tách eval split để kiểm tra overfitting"]
-  D -- "Có" --> F{"Eval Loss tăng trong khi Train Loss giảm?"}
-  F -- "Có" --> G["Overfitting: early stopping, giảm epoch, tăng regularization"]
-  F -- "Không" --> H{"Cả hai đều cao, đi ngang?"}
-  H -- "Có" --> I["Underfitting: tăng epoch, tăng r/alpha, chỉnh LR"]
-  H -- "Không" --> J["Train ổn, kiểm tra thêm bằng chat thử"]
-```
+<div class="dg">
+<div class="dg-ladder">
+<div class="dg-node is-main">Nhìn đường Training Loss<small>bản làm mượt</small></div>
+<div class="dg-node is-q">Loss có giảm không?</div>
+<div class="dg-node dg-out" data-e="Không">Chỉnh LR / epoch / dữ liệu</div>
+<div class="dg-node is-q" data-e="Có">Có Eval Loss không?</div>
+<div class="dg-node dg-out" data-e="Không">Tách eval split để kiểm tra overfitting</div>
+<div class="dg-node is-q" data-e="Có">Eval Loss tăng trong khi Train Loss giảm?</div>
+<div class="dg-node dg-out" data-e="Có"><b>Overfitting</b><small>early stopping, giảm epoch, tăng regularization</small></div>
+<div class="dg-node is-q" data-e="Không">Cả hai đều cao, đi ngang?</div>
+<div class="dg-node dg-out" data-e="Có"><b>Underfitting</b><small>tăng epoch, tăng r/alpha, chỉnh LR</small></div>
+<div class="dg-node is-end" data-e="Không">Train ổn<small>kiểm tra thêm bằng chat thử</small></div>
+</div>
+</div>
 
 **Ảnh hưởng khi dùng Unsloth.**
 - Loss thô từng step luôn nhấp nhô, vì mỗi batch khác nhau. Bạn nên đọc đường EMA làm mượt để thấy xu hướng **[Nhận định]**.
@@ -368,10 +372,10 @@ Checkpoint giúp bạn không mất công train khi quá trình bị ngắt gi�
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 | --- | --- | --- |
 | Pretraining / fine-tuning / CPT | [Fine-tuning](/fine-tuning/), [Tổng quan](/tong-quan) | [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining) |
-| Loss, cross-entropy, train on completions | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
+| Loss, cross-entropy, train on completions | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
 | Gradient, Grad Norm | [Fine-tuning](/fine-tuning/) | [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
 | Optimizer (`adamw_8bit`) | [Cài đặt](/cai-dat), [Fine-tuning](/fine-tuning/) | [Google Colab install](https://unsloth.ai/docs/get-started/install/google-colab), [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
-| Learning rate | [Fine-tuning](/fine-tuning/), [Reinforcement learning](/reinforcement-learning) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
+| Learning rate | [Fine-tuning](/fine-tuning/), [Reinforcement learning](/reinforcement-learning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
 | LR scheduler, warmup | [Fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
 | Epoch, step, batch, gradient accumulation | [Fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide), [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama) |
 | Weight decay | [Fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |

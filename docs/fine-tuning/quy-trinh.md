@@ -7,23 +7,25 @@ description: "Các bước chọn model, chuẩn bị dữ liệu, train, đánh
 
 Một lượt fine-tune đi qua các bước: chọn model, chuẩn bị dữ liệu, đặt tham số, train, đánh giá, rồi lưu và export. Nếu đánh giá chưa đạt, bạn quay lại bước dữ liệu.
 
-```mermaid
-flowchart LR
-    A["1. Chọn model + phương pháp"] --> B["2. Chuẩn bị dataset + chat template"]
-    B --> C["3. Đặt hyperparameter / LoRA"]
-    C --> D["4. Train, theo dõi loss"]
-    D --> E["5. Đánh giá: eval loss + chat thử"]
-    E -->|"Chưa đạt"| B
-    E -->|"Đạt"| F["6. Lưu / Export: LoRA, GGUF, safetensors"]
-    F --> G["7. Chạy: Unsloth, Ollama, llama.cpp, vLLM"]
-```
+<div class="dg">
+<div class="dg-flow">
+<div class="dg-node"><div><span class="dg-n">1</span>Chọn model</div><small>+ phương pháp</small></div>
+<div class="dg-node"><div><span class="dg-n">2</span>Dataset</div><small>+ chat template</small></div>
+<div class="dg-node"><div><span class="dg-n">3</span>Hyperparameter</div><small>và cấu hình LoRA</small></div>
+<div class="dg-node"><div><span class="dg-n">4</span>Train</div><small>theo dõi loss</small></div>
+<div class="dg-node is-main"><div><span class="dg-n">5</span>Đánh giá</div><small>eval loss + chat thử</small></div>
+<div class="dg-node" data-e="Đạt"><div><span class="dg-n">6</span>Lưu / Export</div><small>LoRA, GGUF, safetensors</small></div>
+<div class="dg-node is-end"><div><span class="dg-n">7</span>Chạy</div><small>Unsloth, Ollama, llama.cpp, vLLM</small></div>
+<div class="dg-back" style="grid-column: 2 / 6"><span>Chưa đạt: quay lại bước 2</span></div>
+</div>
+</div>
 
 Unsloth có hai cách làm. **Studio** là giao diện web chạy local, không cần code. **Core** là thư viện Python, dùng qua notebook hoặc script. Bảng sau đặt hai cách cạnh nhau theo từng bước.
 
 | Bước | Studio (UI) | Core (code) |
 | --- | --- | --- |
 | 1. Model + phương pháp | Chọn Model Type (Text, Vision, Audio hoặc Embeddings). Chọn QLoRA, LoRA hoặc Full Fine-tuning. Gõ tên model Hugging Face hoặc chọn model local. Studio tự điền hyperparameter mặc định. Model GGUF không train được, chỉ để inference. Model gated (Llama, Gemma) cần dán Hugging Face token. | `FastLanguageModel.from_pretrained(...)` với `max_seq_length`, `dtype`, `load_in_4bit` |
-| 2. Dataset | Tab HuggingFace Hub hoặc Local (upload `PDF`, `DOCX`, `JSONL`, `JSON`, `CSV`, `Parquet`). Chọn format `auto`, `alpaca`, `chatml` hoặc `sharegpt`. Chọn Train split và Eval split. Dùng Column Mapping nếu Studio không tự nhận cột. | `load_dataset(...)`, `get_chat_template`, `standardize_sharegpt`, `dataset.map(...)` — chi tiết ở trang [Dữ liệu](/du-lieu) |
+| 2. Dataset | Tab HuggingFace Hub hoặc Local (upload `PDF`, `DOCX`, `JSONL`, `JSON`, `CSV`, `Parquet`). Chọn format `auto`, `alpaca`, `chatml` hoặc `sharegpt`. Chọn Train split và Eval split. Dùng Column Mapping nếu Studio không tự nhận cột. | `load_dataset(...)`, `get_chat_template`, `standardize_sharegpt`, `dataset.map(...)` — chi tiết ở trang [Dữ liệu](/du-lieu/) |
 | 3. Hyperparameter | Các nhóm tham số thu gọn được. Lưu và tải cấu hình dạng YAML. | `FastLanguageModel.get_peft_model(...)` + tham số của trainer |
 | 4. Train | Bấm **Start Training**. Theo dõi Loss, LR, Grad Norm và GPU (utilization, nhiệt độ, VRAM, công suất). Có biểu đồ Training Loss, Learning Rate, Gradient Norm, Eval Loss. Nút **Stop & Save** lưu checkpoint trước khi dừng. | `SFTTrainer(...)` rồi `trainer.train()` |
 | 5. Đánh giá | Biểu đồ Eval Loss, chỉ hiện khi đã chọn eval split. Chat thử model trong Studio Chat. | `eval_dataset`, `eval_strategy`, `EarlyStoppingCallback`; `FastLanguageModel.for_inference(model)` rồi chat thử |

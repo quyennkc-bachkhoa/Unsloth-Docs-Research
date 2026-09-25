@@ -27,7 +27,7 @@ Một số notebook tiêu biểu (Colab):
 | QAT | [Qwen3 (4B) QAT](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Qwen3_\(4B\)_Instruct-QAT.ipynb) |
 | Sinh dữ liệu tổng hợp | [Synthetic Data Llama 3.2 (3B)](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Meta_Synthetic_Data_Llama3_2_\(3B\).ipynb) |
 
-**Model lớn.** Trang Notebooks ghi Colab miễn phí có 15 GB VRAM; tutorial Llama-3 lại ghi GPU miễn phí 16GB (xem hộp cảnh báo ở trang [Hiệu năng và benchmark](/fine-tuning/benchmark)). Model vượt mức này cần gói Colab trả phí hoặc credits. Docs nói với GPU 80 GB trên Colab, bạn có thể fine-tune model 120B.
+**Model lớn.** Trang Notebooks ghi Colab miễn phí có 15 GB VRAM; tutorial Llama-3 lại ghi GPU miễn phí 16GB (xem hộp "Docs chưa thống nhất" ở trang [Hiệu năng và benchmark](/fine-tuning/benchmark)). Model vượt mức này cần gói Colab trả phí hoặc credits. Docs nói với GPU 80 GB trên Colab, bạn có thể fine-tune model 120B.
 
 Danh sách đầy đủ, gồm cả Kaggle, GRPO, TTS, embedding, có ở [trang Unsloth Notebooks](https://unsloth.ai/docs/get-started/unsloth-notebooks) và [repo GitHub](https://github.com/unslothai/notebooks/).
 

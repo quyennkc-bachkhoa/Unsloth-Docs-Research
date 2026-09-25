@@ -1,5 +1,4 @@
 import { defineConfig } from 'vitepress'
-import { withMermaid } from 'vitepress-plugin-mermaid'
 import { researchMarks } from './researchMarks'
 
 const unslothSidebar = [
@@ -25,8 +24,7 @@ const unslothSidebar = [
           { text: 'Coding agent', link: '/inference/coding-agent' },
           { text: 'Connections', link: '/inference/connections' },
           { text: 'MCP', link: '/inference/mcp' },
-          { text: 'Tool calling', link: '/inference/tool-calling' },
-          { text: 'Cạm bẫy', link: '/inference/cam-bay' }
+          { text: 'Tool calling', link: '/inference/tool-calling' }
         ]
       },
       { text: 'Model catalog', link: '/model-catalog' }
@@ -48,11 +46,39 @@ const unslothSidebar = [
           { text: 'Notebooks', link: '/fine-tuning/notebooks' },
           { text: 'Hiệu năng & benchmark', link: '/fine-tuning/benchmark' },
           { text: 'Mở rộng', link: '/fine-tuning/mo-rong' },
-          { text: 'Cạm bẫy', link: '/fine-tuning/cam-bay' }
+          { text: 'Lỗi thường gặp', link: '/fine-tuning/loi-thuong-gap' }
         ]
       },
-      { text: 'Reinforcement Learning', link: '/reinforcement-learning' },
-      { text: 'Dữ liệu', link: '/du-lieu' }
+      {
+        text: 'Reinforcement Learning',
+        link: '/reinforcement-learning/',
+        collapsed: false,
+        items: [
+          { text: 'Từ RLHF tới GRPO', link: '/reinforcement-learning/rlhf-ppo-grpo' },
+          { text: 'GRPO trong Unsloth', link: '/reinforcement-learning/grpo' },
+          { text: 'Reward function', link: '/reinforcement-learning/reward-function' },
+          { text: 'DPO, ORPO, KTO', link: '/reinforcement-learning/dpo-orpo-kto' },
+          { text: 'SFT vs DPO vs GRPO', link: '/reinforcement-learning/chon-phuong-phap' },
+          { text: 'Memory-efficient RL', link: '/reinforcement-learning/memory-efficient' },
+          { text: 'Reward hacking', link: '/reinforcement-learning/reward-hacking' },
+          { text: 'Huấn luyện agent', link: '/reinforcement-learning/agent' },
+          { text: 'Lỗi thường gặp', link: '/reinforcement-learning/loi-thuong-gap' }
+        ]
+      },
+      {
+        text: 'Dữ liệu',
+        link: '/du-lieu/',
+        collapsed: false,
+        items: [
+          { text: 'Định dạng dữ liệu', link: '/du-lieu/dinh-dang' },
+          { text: 'Lượng dữ liệu cần có', link: '/du-lieu/so-luong' },
+          { text: 'Chat template', link: '/du-lieu/chat-template' },
+          { text: 'Nạp dữ liệu trong Studio', link: '/du-lieu/studio' },
+          { text: 'Data Recipes', link: '/du-lieu/data-recipes' },
+          { text: 'Dữ liệu tổng hợp', link: '/du-lieu/synthetic' },
+          { text: 'Checklist', link: '/du-lieu/checklist' }
+        ]
+      }
     ]
   },
   {
@@ -106,75 +132,75 @@ const kienThucNenSidebar = [
   }
 ]
 
-export default withMermaid(
-  defineConfig({
-    title: 'Unsloth Research',
-    description: 'Nghiên cứu Unsloth — chạy và fine-tune LLM local, viết bằng tiếng Việt',
-    lang: 'vi-VN',
-    base: '/Unsloth-Docs-Research/',
-    cleanUrls: true,
-    lastUpdated: true,
-    appearance: true,
-    vite: { build: { chunkSizeWarningLimit: 4000 } },
-    head: [
-      ['meta', { name: 'theme-color', content: '#E30613' }],
-      ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
-      ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
-      [
-        'link',
-        {
-          rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap'
-        }
-      ]
-    ],
-    markdown: {
-      config: (md) => {
-        md.use(researchMarks)
-      },
-      container: {
-        tipLabel: 'Mẹo',
-        warningLabel: 'Cảnh báo',
-        dangerLabel: 'Nguy hiểm',
-        infoLabel: 'Thông tin',
-        detailsLabel: 'Chi tiết'
+export default defineConfig({
+  title: 'Unsloth Research',
+  description: 'Nghiên cứu Unsloth — chạy và fine-tune LLM local, viết bằng tiếng Việt',
+  lang: 'vi-VN',
+  base: '/Unsloth-Docs-Research/',
+  cleanUrls: true,
+  lastUpdated: true,
+  appearance: true,
+  vite: {
+    build: { chunkSizeWarningLimit: 4000 }
+  },
+  head: [
+    ['meta', { name: 'theme-color', content: '#E30613' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
+    [
+      'link',
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap'
       }
+    ]
+  ],
+  markdown: {
+    config: (md) => {
+      md.use(researchMarks)
     },
-    themeConfig: {
-      nav: [
-        { text: 'Unsloth', link: '/', activeMatch: '^/(?!kien-thuc-nen/)' },
-        { text: 'Kiến thức nền LLM', link: '/kien-thuc-nen/', activeMatch: '^/kien-thuc-nen/' }
-      ],
-      sidebar: {
-        '/kien-thuc-nen/': kienThucNenSidebar,
-        '/': unslothSidebar
-      },
-      search: {
-        provider: 'local',
-        options: {
-          translations: {
-            button: { buttonText: 'Tìm kiếm', buttonAriaLabel: 'Tìm kiếm' },
-            modal: {
-              noResultsText: 'Không có kết quả cho',
-              resetButtonTitle: 'Xóa',
-              footer: { selectText: 'chọn', navigateText: 'di chuyển', closeText: 'đóng' }
-            }
+    container: {
+      tipLabel: 'Mẹo',
+      warningLabel: 'Cảnh báo',
+      dangerLabel: 'Nguy hiểm',
+      infoLabel: 'Thông tin',
+      detailsLabel: 'Chi tiết'
+    }
+  },
+  themeConfig: {
+    nav: [
+      { text: 'Unsloth', link: '/', activeMatch: '^/(?!kien-thuc-nen/)' },
+      { text: 'Kiến thức nền LLM', link: '/kien-thuc-nen/', activeMatch: '^/kien-thuc-nen/' }
+    ],
+    sidebar: {
+      '/kien-thuc-nen/': kienThucNenSidebar,
+      '/': unslothSidebar
+    },
+    search: {
+      provider: 'local',
+      options: {
+        translations: {
+          button: { buttonText: 'Tìm kiếm', buttonAriaLabel: 'Tìm kiếm' },
+          modal: {
+            noResultsText: 'Không có kết quả cho',
+            resetButtonTitle: 'Xóa',
+            footer: { selectText: 'chọn', navigateText: 'di chuyển', closeText: 'đóng' }
           }
         }
-      },
-      socialLinks: [{ icon: 'github', link: 'https://github.com/unslothai/unsloth' }],
-      outline: { level: [2, 3], label: 'Trên trang này' },
-      docFooter: { prev: 'Trang trước', next: 'Trang sau' },
-      lastUpdated: { text: 'Cập nhật lần cuối' },
-      darkModeSwitchLabel: 'Giao diện',
-      lightModeSwitchTitle: 'Chuyển sang sáng',
-      darkModeSwitchTitle: 'Chuyển sang tối',
-      sidebarMenuLabel: 'Menu',
-      returnToTopLabel: 'Lên đầu trang',
-      footer: {
-        message: 'Nội dung tổng hợp từ docs chính thức của Unsloth; phần [Nhận định] là ý kiến người viết.',
-        copyright: 'Unsloth Research'
       }
+    },
+    socialLinks: [{ icon: 'github', link: 'https://github.com/unslothai/unsloth' }],
+    outline: { level: [2, 3], label: 'Trên trang này' },
+    docFooter: { prev: 'Trang trước', next: 'Trang sau' },
+    lastUpdated: { text: 'Cập nhật lần cuối' },
+    darkModeSwitchLabel: 'Giao diện',
+    lightModeSwitchTitle: 'Chuyển sang sáng',
+    darkModeSwitchTitle: 'Chuyển sang tối',
+    sidebarMenuLabel: 'Menu',
+    returnToTopLabel: 'Lên đầu trang',
+    footer: {
+      message: 'Nội dung tổng hợp từ docs chính thức của Unsloth; phần [Nhận định] là ý kiến người viết.',
+      copyright: 'Unsloth Research'
     }
-  })
-)
+  }
+})

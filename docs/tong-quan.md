@@ -303,7 +303,7 @@ Mỗi chỗ trong docs liệt kê một bộ định dạng file dữ liệu kh�
 - PDF, CSV, DOCX "and more" (Data Recipes): [docs](https://unsloth.ai/docs)
 :::
 
-Chi tiết: [Fine-tuning](/fine-tuning/), [Reinforcement Learning](/reinforcement-learning), [Dữ liệu](/du-lieu), [Export & deploy](/export-deploy).
+Chi tiết: [Fine-tuning](/fine-tuning/), [Reinforcement Learning](/reinforcement-learning/), [Dữ liệu](/du-lieu/), [Export & deploy](/export-deploy).
 
 **Nguồn:** https://unsloth.ai/docs/new/studio, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/basics/inference-and-deployment/unsloth-inference, https://unsloth.ai/docs/desktop, https://unsloth.ai/docs
 
@@ -311,26 +311,51 @@ Chi tiết: [Fine-tuning](/fine-tuning/), [Reinforcement Learning](/reinforcemen
 
 Sơ đồ dưới gom mọi phần ở trên vào một hình: bạn vào từ Desktop, Studio hoặc Core; dữ liệu đi vào train; model đã train được export để chat hoặc chạy ở công cụ khác.
 
-```mermaid
-flowchart LR
-  U["Người dùng"] --> D["Unsloth Desktop (app native)"]
-  U --> S["Unsloth Studio (web UI)"]
-  U --> C["Unsloth Core (thư viện Python)"]
-  D -. "cài kèm / cùng giao diện" .-> S
-  CLI["CLI: unsloth studio / run / start"] --> S
-
-  S --> CHAT["Chat GGUF, safetensors"]
-  S --> API["API /v1/chat/completions /v1/messages"]
-  S --> TRAIN["Train QLoRA, LoRA, Full FT"]
-  C --> TRAIN
-  C --> INF["Inference trong code FastLanguageModel"]
-
-  DATA["Data Recipes PDF, CSV, DOCX"] --> TRAIN
-  TRAIN --> EXP["Export GGUF, safetensors, LoRA"]
-  EXP --> CHAT
-  EXP --> OUT["llama.cpp, Ollama, vLLM, LM Studio"]
-  API --> AG["Agent & SDK Claude Code, Codex, OpenAI SDK"]
-```
+<div class="dg">
+<div class="dg-layer">
+<div class="dg-title">Lối vào</div>
+<div class="dg-grid" style="--cols: 3; --dg-grid-gap: 48px">
+<div class="dg-node">Unsloth Desktop<small>app native</small></div>
+<div class="dg-node is-main dg-dash" data-e="cài kèm / cùng giao diện">Unsloth Studio<small>web UI; mở bằng CLI <code>unsloth studio / run / start</code></small></div>
+<div class="dg-node is-main">Unsloth Core<small>thư viện Python</small></div>
+</div>
+</div>
+<div class="dg-layer">
+<div class="dg-title">Làm được gì</div>
+<div class="dg-grid" style="--cols: 4">
+<div>
+<div class="dg-tags"><span class="dg-tag">Studio</span></div>
+<div class="dg-col">
+<div class="dg-node">Chat<small>GGUF, safetensors</small></div>
+</div>
+</div>
+<div>
+<div class="dg-tags"><span class="dg-tag">Studio</span></div>
+<div class="dg-col">
+<div class="dg-node">API<small><code>/v1/chat/completions</code> <code>/v1/messages</code></small></div>
+<div class="dg-node is-end">Agent &amp; SDK<small>Claude Code, Codex, OpenAI SDK</small></div>
+</div>
+</div>
+<div>
+<div class="dg-tags"><span class="dg-tag">Studio</span><span class="dg-tag">Core</span></div>
+<div class="dg-col">
+<div class="dg-node">Data Recipes<small>PDF, CSV, DOCX</small></div>
+<div class="dg-node is-main">Train<small>QLoRA, LoRA, Full FT</small></div>
+<div class="dg-node">Export<small>GGUF, safetensors, LoRA</small></div>
+<div class="dg-node is-end">llama.cpp, Ollama, vLLM, LM Studio</div>
+<div class="dg-note">Model export cũng nạp lại vào Chat</div>
+</div>
+</div>
+<div>
+<div class="dg-tags"><span class="dg-tag">Core</span></div>
+<div class="dg-col">
+<div class="dg-node">Inference trong code<small><code>FastLanguageModel</code></small></div>
+</div>
+</div>
+</div>
+</div>
+<div class="dg-cap">Nhãn trên mỗi cột cho biết sản phẩm nào có tính năng đó. Nét đứt Desktop → Studio là cách hiểu của người viết (xem Nhận định bên dưới).</div>
+</div>
 
 **[Nhận định]** Đường nét đứt Desktop → Studio là cách hiểu của người viết. Docs ghi "cách dễ nhất để cài Unsloth Studio là dùng app Desktop", nên Desktop có thể chứa sẵn Studio. Quan hệ chính xác giữa hai sản phẩm cần kiểm tra lại.
 

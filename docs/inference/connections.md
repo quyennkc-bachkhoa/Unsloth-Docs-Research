@@ -76,6 +76,20 @@ Khi server đã chạy, thêm kết nối trong Unsloth:
 4. Bấm **Load Models**. Nếu server không có `/models`, nhập model ID bằng tay.
 5. Lưu.
 
+<figure>
+
+![Form thêm kết nối llama.cpp](/images/inference/connection-llamacpp.webp)
+
+<figcaption>Form thêm kết nối: chọn llama.cpp, đặt tên và dán Base URL <code>http://localhost:8080/v1</code>. Ảnh: <a href="https://unsloth.ai/docs/integrations/connections/connect-llama.cpp-to-unsloth-run-ggufs-with-llama-server">docs Unsloth</a>.</figcaption>
+</figure>
+
+<figure>
+
+![Nạp danh sách model hoặc nhập tay](/images/inference/connection-load-models.webp)
+
+<figcaption>Bấm <b>Load available models</b>, hoặc nhập model ID bằng tay nếu server không trả danh sách. Ảnh: <a href="https://unsloth.ai/docs/integrations/connections/connect-llama.cpp-to-unsloth-run-ggufs-with-llama-server">docs Unsloth</a>.</figcaption>
+</figure>
+
 Với vLLM, bật tùy chọn **Reasoning model** nếu model hỗ trợ thinking.
 
 ::: warning Docs chưa thống nhất
@@ -92,6 +106,13 @@ Hai trang ghi Base URL của Ollama khi thêm vào Connections khác nhau:
 ## Tính năng đi kèm
 
 - **Prompt caching:** tái dùng phần đầu giống nhau của những prompt dài để giảm độ trễ. Với llama.cpp, caching bật mặc định. Muốn tắt, thêm `--no-cache-prompt` khi khởi động `llama-server`. Chỉnh ở mục **Prompt caching** trong side panel.
+
+<figure>
+
+![Sơ đồ prompt caching](/images/inference/prompt-caching.webp)
+
+<figcaption>Prompt caching: phần đầu prompt giống lần trước thì dùng lại (cache hit); khác từ token đầu thì phải tính lại (cache miss). Ảnh: <a href="https://unsloth.ai/docs/integrations/connections/connect-llama.cpp-to-unsloth-run-ggufs-with-llama-server">docs Unsloth</a>.</figcaption>
+</figure>
 
 **Nguồn:** https://unsloth.ai/docs/integrations/connections
 
