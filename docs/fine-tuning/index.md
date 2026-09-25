@@ -5,18 +5,26 @@ description: Fine-tuning LLM với Unsloth — khi nào nên dùng, LoRA/QLoRA/f
 
 # Fine-tuning
 
-Phần Fine-tuning gồm trang này và chín trang con. Nếu mới bắt đầu, bạn đọc theo thứ tự từ trên xuống:
+Phần này nói cách dạy thêm cho một model có sẵn bằng dữ liệu của riêng bạn với Unsloth: chọn cách train và model, đi hết quy trình, chọn hyperparameter, đánh giá kết quả và tránh các lỗi hay gặp.
 
-- **Fine-tuning** (trang này): fine-tuning là gì, các cách fine-tune, khi nào nên dùng thay cho RAG.
-  1. [LoRA vs QLoRA vs full fine-tuning](/fine-tuning/lora-qlora-full): ba cách train khác nhau ở phần model được cập nhật, nên tốn VRAM rất khác nhau. Trang này so sánh VRAM, tốc độ và chất lượng, kèm cờ bật tương ứng trong code. Người mới nên bắt đầu từ QLoRA.
-  1. [Chọn model để fine-tune](/fine-tuning/chon-model): chọn base hay instruct tùy lượng dữ liệu bạn có (mốc khoảng 300 và 1.000 dòng), và cách đọc hậu tố trong tên model trên Hugging Face. Người mới nên bắt đầu từ một instruct model nhỏ.
-  1. [Quy trình data → train → đánh giá → export](/fine-tuning/quy-trinh): đi hết một lượt fine-tune qua 6 bước, đặt cách làm trong Studio (không cần code) cạnh cách làm bằng code Python (Core), kèm đoạn code mẫu cho từng bước.
-  1. [Hyperparameter khuyến nghị](/fine-tuning/hyperparameter): bảng giá trị nên dùng cho learning rate, epoch, rank, alpha, batch…, kèm cột "đặt sai thì sao". Docs khuyên giữ mặc định, nhưng mặc định ở Studio, tutorial và hướng dẫn hyperparameter lại khác nhau, nên trang có thêm bảng so sánh.
-  1. [Đánh giá và tránh overfitting](/fine-tuning/danh-gia): kiểm tra xem model học được thật hay chỉ học thuộc dữ liệu. Trang này có cách đọc training loss và eval loss, tách tập test, early stopping, và cách xử lý khi overfitting hoặc underfitting.
-  1. [Notebooks](/fine-tuning/notebooks): notebook Colab dựng sẵn, bấm chạy là fine-tune được ngay. Có cho SFT cơ bản, hội thoại, vision, continued pretraining, QAT và sinh dữ liệu. Đây là cách nhanh nhất để thử lần đầu.
-  1. [Hiệu năng và benchmark](/fine-tuning/benchmark): các con số Unsloth công bố về tốc độ (khoảng 2×), mức giảm VRAM và độ dài context so với Hugging Face + FA2. Trang ghi kèm điều kiện đo để bạn biết con số áp dụng được đến đâu.
-  1. [Mở rộng](/fine-tuning/mo-rong): các bước tiếp theo sau khi đã fine-tune cơ bản: train trên nhiều GPU, fine-tune model nhận ảnh, dạy model ngôn ngữ hoặc lĩnh vực mới (continued pretraining), train tiếp từ checkpoint, và QAT để model giữ chất lượng khi lượng tử hóa.
-  1. [Lỗi thường gặp](/fine-tuning/loi-thuong-gap): danh sách lỗi hay gặp và cách tránh, như nhảy thẳng vào full fine-tuning, train quá nhiều epoch, tăng batch size rồi bị OOM, hay fine-tune chồng nhiều lần lên cùng một model.
+::: tip Tóm tắt
+- **Dùng khi:** bạn muốn model biết thêm kiến thức chuyên ngành, trả lời theo giọng riêng, hoặc làm tốt hơn một tác vụ cụ thể.
+- **Kết quả:** hiểu fine-tuning là gì, có những cách nào, khi nào nên dùng thay cho RAG, và biết nên đọc trang con nào tiếp theo.
+- **Nên biết trước:** loss, learning rate, epoch, batch, overfitting ở [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen).
+:::
+
+## Các trang trong phần này
+
+| Trang | Giúp bạn làm gì | Đọc khi nào |
+| --- | --- | --- |
+| [Chọn cách train và model](/fine-tuning/chon-cach-train) | So sánh LoRA, QLoRA và full fine-tuning về VRAM, tốc độ, chất lượng, kèm cờ bật trong code; chọn base hay instruct theo lượng dữ liệu (mốc khoảng 300 và 1.000 dòng) và đọc hậu tố tên model | Trước khi bắt đầu train; người mới nên bắt đầu từ QLoRA và một instruct model nhỏ |
+| [Quy trình từng bước](/fine-tuning/quy-trinh) | Đi hết một lượt fine-tune qua 6 bước, đặt cách làm trong Studio (không cần code) cạnh code Python (Core), kèm code mẫu | Khi fine-tune lần đầu |
+| [Chọn hyperparameter](/fine-tuning/hyperparameter) | Bảng giá trị nên dùng cho learning rate, epoch, rank, alpha, batch…, kèm cột "đặt sai thì sao" và bảng so sánh mặc định giữa Studio, tutorial và hướng dẫn hyperparameter | Khi cấu hình một lần train |
+| [Đánh giá và overfitting](/fine-tuning/danh-gia) | Đọc training loss và eval loss, tách tập test, early stopping, xử lý overfitting hoặc underfitting | Trong và sau khi train, để biết model học thật hay chỉ học thuộc |
+| [Notebook chạy sẵn](/fine-tuning/notebooks) | Notebook Colab dựng sẵn cho SFT cơ bản, hội thoại, vision, continued pretraining, QAT và sinh dữ liệu | Muốn thử lần đầu nhanh nhất |
+| [Hiệu năng và benchmark](/fine-tuning/benchmark) | Các con số Unsloth công bố về tốc độ (khoảng 2×), mức giảm VRAM và độ dài context so với Hugging Face + FA2, kèm điều kiện đo | Khi cần ước lượng tốc độ, VRAM hoặc so sánh |
+| [Kỹ thuật nâng cao](/fine-tuning/mo-rong) | Train nhiều GPU, fine-tune model nhận ảnh, continued pretraining, train tiếp từ checkpoint, QAT | Sau khi đã fine-tune cơ bản xong |
+| [Lỗi thường gặp](/fine-tuning/loi-thuong-gap) | Các lỗi hay gặp và cách tránh: nhảy thẳng vào full fine-tuning, train quá nhiều epoch, tăng batch size rồi OOM, fine-tune chồng nhiều lần | Trước khi train, và khi kết quả không như ý |
 
 ## Fine-tuning là gì, khi nào nên dùng
 
@@ -47,7 +55,11 @@ Docs đưa ra ba ví dụ ứng dụng:
 - Chatbot chăm sóc khách hàng, học từ các hội thoại cũ.
 - Trợ lý pháp lý: phân tích hợp đồng, án lệ, tuân thủ.
 
-**Fine-tuning hay RAG?** Đây là câu hỏi người mới hay gặp. RAG (Retrieval-Augmented Generation) là cách truy xuất tài liệu rồi đưa vào prompt. RAG mạnh khi dữ liệu thay đổi liên tục. Fine-tuning thì đưa kiến thức và hành vi vào thẳng trọng số model. Quan điểm của docs:
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide
+
+## Fine-tuning hay RAG?
+
+Đây là câu hỏi người mới hay gặp. RAG (Retrieval-Augmented Generation) là cách truy xuất tài liệu rồi đưa vào prompt. RAG mạnh khi dữ liệu thay đổi liên tục. Fine-tuning thì đưa kiến thức và hành vi vào thẳng trọng số model. Quan điểm của docs:
 
 | Câu hỏi | Trả lời theo docs |
 | --- | --- |
@@ -66,8 +78,10 @@ Docs cũng tuyên bố "fine-tuning can replicate all of RAG's capabilities, but
 
 **[Nhận định]** Câu "fine-tuning làm được mọi thứ RAG làm" là quan điểm của Unsloth. Với dữ liệu thay đổi hằng ngày, bạn sẽ phải retrain liên tục, nên RAG vẫn là lựa chọn thực tế hơn. Chính docs cũng khuyên kết hợp. Xem thêm [Ứng dụng RAG](/ung-dung-rag).
 
-::: tip Kiến thức nền
-Chưa rõ loss, learning rate, epoch, batch, overfitting là gì? Xem [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen).
-:::
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide
 
-**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide
+## Đọc tiếp
+
+- [Chọn cách train và model](/fine-tuning/chon-cach-train) — bước đầu tiên: chọn LoRA, QLoRA hay full fine-tuning và chọn model gốc.
+- [Notebook chạy sẵn](/fine-tuning/notebooks) — cách nhanh nhất để thử fine-tune lần đầu mà không phải tự viết code.
+- [Ứng dụng RAG](/ung-dung-rag) — khi dữ liệu thay đổi liên tục và bạn muốn kết hợp RAG với model đã fine-tune.

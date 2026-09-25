@@ -1,13 +1,21 @@
 ---
-title: Đánh giá và tránh overfitting
+title: Đánh giá và overfitting
 description: "Đọc training loss, cách đánh giá, early stopping, xử lý overfitting và underfitting."
 ---
 
-# Đánh giá và tránh overfitting
+# Đánh giá và overfitting
 
 Sau khi train, bạn cần biết model đã học được điều bạn muốn hay chỉ học thuộc dữ liệu train. Học thuộc như vậy gọi là overfitting. Trang này nói cách đọc loss, cách đánh giá, và cách xử lý khi model học quá kỹ hoặc chưa đủ.
 
-**Đọc training loss.** Nếu loss không giảm, bạn cần chỉnh cấu hình. Nếu loss quá thấp, đó có thể là overfitting. Tuy vậy, docs đưa ra các ngưỡng khác nhau:
+::: tip Tóm tắt
+- **Dùng khi:** bạn đang train hoặc vừa train xong và muốn biết model học thật hay chỉ học thuộc.
+- **Kết quả:** đọc được training loss và eval loss, bật được đánh giá và early stopping, biết cần chỉnh gì khi overfitting hoặc underfitting.
+- **Nên biết trước:** các bước train ở [Quy trình từng bước](/fine-tuning/quy-trinh) và các tham số ở [Chọn hyperparameter](/fine-tuning/hyperparameter).
+:::
+
+## Đọc training loss
+
+Nếu loss không giảm, bạn cần chỉnh cấu hình. Nếu loss quá thấp, đó có thể là overfitting. Tuy vậy, docs đưa ra các ngưỡng khác nhau:
 
 ::: warning Docs chưa thống nhất: ngưỡng loss
 - "a loss around 0.5 to 1.0 is a good sign"; "If the loss goes to 0, that could mean overfitting" — [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide), [Tutorial Llama-3 + Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama)
@@ -16,7 +24,11 @@ Sau khi train, bạn cần biết model đã học được điều bạn muốn
 Hai trang đều nói ngưỡng phụ thuộc vào dataset và tác vụ. Cả hai đều khuyên kiểm tra thêm bằng validation loss hoặc eval loss.
 :::
 
-**Các cách đánh giá docs gợi ý:**
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide
+
+## Các cách đánh giá
+
+Docs gợi ý các cách sau:
 
 - Chat trực tiếp với model xem có đạt ý không. Đây là đánh giá thủ công.
 - Tách khoảng 20% dữ liệu train làm tập test. Nếu đã dùng hết dữ liệu để train thì chỉ còn cách đánh giá thủ công.
@@ -34,7 +46,11 @@ Tham số "sau bao nhiêu bước thì eval một lần" mang tên khác nhau t�
 Tên tham số nào đúng với phiên bản TRL/Transformers bạn đang dùng: cần kiểm tra lại.
 :::
 
-**Early stopping theo eval loss.** Early stopping là dừng train sớm khi `eval_loss` không giảm nữa sau vài lần eval. Code gồm hai phần: cấu hình trainer để lưu và eval định kỳ, rồi gắn callback dừng sớm.
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint, https://unsloth.ai/docs/new/studio/start
+
+## Early stopping theo eval loss
+
+Early stopping là dừng train sớm khi `eval_loss` không giảm nữa sau vài lần eval. Code gồm hai phần: cấu hình trainer để lưu và eval định kỳ, rồi gắn callback dừng sớm.
 
 ```python
 from trl import SFTConfig, SFTTrainer
@@ -72,7 +88,15 @@ early_stopping_callback = EarlyStoppingCallback(
 trainer.add_callback(early_stopping_callback)
 ```
 
-**Khi bị overfitting**, docs gợi ý các cách sau.
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint
+
+## Xử lý overfitting và underfitting
+
+Cách xử lý tùy vào việc model học quá kỹ (overfitting) hay chưa đủ (underfitting).
+
+### Khi bị overfitting
+
+Docs gợi ý các cách sau.
 
 Chỉnh cách train:
 
@@ -91,7 +115,9 @@ Làm "nhẹ" model sau khi train:
 - LoRA alpha scaling: giảm alpha, ví dụ nhân 0.5, sau khi train hoặc lúc inference.
 - Weight averaging: cộng trọng số model instruct gốc với bản fine-tune rồi chia 2. Cách này tương đương giảm alpha một nửa.
 
-**Khi bị underfitting** (model trả lời quá chung chung):
+### Khi bị underfitting
+
+Underfitting là khi model trả lời quá chung chung. Docs gợi ý:
 
 - Chỉnh learning rate.
 - Tăng epoch, đồng thời theo dõi validation loss.
@@ -99,6 +125,16 @@ Làm "nhẹ" model sau khi train:
 - Dùng dữ liệu sát tác vụ hơn.
 - Giảm batch size về 1.
 
-**Kiểm tra LoRA đã thực sự cập nhật.** Đừng dùng `np.allclose()`, vì hàm này có thể bỏ sót thay đổi nhỏ, nhất là ở ma trận LoRA A. Thay vào đó, dùng một trong các cách: checksum hoặc hash (MD5), tổng hiệu tuyệt đối giữa các tensor, thống kê tensor, hoặc `np.array_equal()`.
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide
 
-**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint, https://unsloth.ai/docs/new/studio/start
+## Kiểm tra LoRA đã thực sự cập nhật
+
+Đừng dùng `np.allclose()`, vì hàm này có thể bỏ sót thay đổi nhỏ, nhất là ở ma trận LoRA A. Thay vào đó, dùng một trong các cách: checksum hoặc hash (MD5), tổng hiệu tuyệt đối giữa các tensor, thống kê tensor, hoặc `np.array_equal()`.
+
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide
+
+## Đọc tiếp
+
+- [Notebook chạy sẵn](/fine-tuning/notebooks) — thử ngay một lượt train trên Colab để quan sát loss thật.
+- [Chọn hyperparameter](/fine-tuning/hyperparameter) — tra lại giá trị learning rate, epoch, dropout khi cần chỉnh.
+- [Kỹ thuật nâng cao](/fine-tuning/mo-rong) — train tiếp từ checkpoint đã lưu trong lúc eval.

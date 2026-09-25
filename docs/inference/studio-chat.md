@@ -1,11 +1,17 @@
 ---
-title: "Chạy model trong Studio Chat"
+title: Chat trong Studio
 description: "Tải và chọn model, tính năng của trang Chat, tham số sampling và lệnh unsloth run."
 ---
 
-# Chạy model local trong Studio Chat
+# Chat trong Studio
 
 Đây là cách đơn giản nhất: bạn tải một model về máy rồi chat với nó ngay trong Studio. Trang này đi qua việc chọn model, các tính năng của trang Chat và cách chỉnh tham số sampling.
+
+::: tip Tóm tắt
+- **Dùng khi:** bạn muốn thử một model trên máy mình mà không viết code.
+- **Kết quả:** tải được model vừa với máy, biết Chat làm được gì (chạy code, đọc web, so sánh model) và khi nào cần chỉnh sampling.
+- **Nên biết trước:** đọc tên model/GGUF như `26B-A4B`, `UD-Q4_K_XL`: [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho), [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
+:::
 
 ## Tải và chọn model
 
@@ -23,10 +29,6 @@ description: "Tải và chọn model, tính năng của trang Chat, tham số sa
 
 <figcaption>Tìm model (ví dụ <code>qwen3.5</code>) rồi chọn mức quantization. Mỗi mức ghi dung lượng, Studio đánh dấu mức khuyến nghị. Ảnh: <a href="https://unsloth.ai/docs/new/studio/chat">docs Unsloth</a>.</figcaption>
 </figure>
-
-::: tip Kiến thức nền
-Đọc tên model/GGUF như `26B-A4B`, `UD-Q4_K_XL`: xem [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho) và [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
-:::
 
 **Model GGUF đã tải sẵn từ trước:** bạn không cần tải lại.
 
@@ -154,4 +156,10 @@ Kiểm tra lần lượt:
 - Trên Windows, kiểm tra `nvcc --version` khớp với CUDA version trong `nvidia-smi`.
 :::
 
-**Nguồn:** https://unsloth.ai/docs/new/studio/chat, https://unsloth.ai/docs/basics/api
+**Nguồn:** https://unsloth.ai/docs/new/studio/chat, https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/unsloth-start, https://unsloth.ai/docs/basics/codex
+
+## Đọc tiếp
+
+- [Gọi qua API (OpenAI, Anthropic)](/inference/api) — biến model đang chat thành API trên máy để code của bạn gọi vào.
+- [Kết nối server khác](/inference/connections) — dùng giao diện Chat này với model chạy ở llama.cpp, vLLM hoặc Ollama.
+- [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) — hiểu các mức quantization trước khi chọn bản GGUF để tải.

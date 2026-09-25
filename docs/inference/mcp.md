@@ -1,15 +1,21 @@
 ---
-title: "MCP"
+title: Thêm công cụ qua MCP
 description: "Bật MCP server trong Unsloth Studio và ví dụ ghép llama-server với mcp-cli."
 ---
 
-# MCP
+# Thêm công cụ qua MCP
 
 MCP (Model Context Protocol) là giao thức chuẩn để model gọi công cụ và dịch vụ bên ngoài. Nhờ MCP, model local như Qwen hay Gemma dùng được file, app, cơ sở dữ liệu, dịch vụ của bạn, thay vì chỉ trả lời từ trí nhớ.
 
-MCP chạy được với cả GGUF local lẫn model của nhà cung cấp cloud đã kết nối. Trong cùng một thread, MCP dùng song song được với code execution và web search.
+::: tip Tóm tắt
+- **Dùng khi:** bạn muốn model tra docs, tìm model trên Hugging Face hoặc thao tác với dịch vụ như Vercel ngay trong lúc chat.
+- **Kết quả:** bật được MCP server có sẵn hoặc tự thêm server trong Studio, và biết cách ghép `llama-server` với `mcp-cli` khi không dùng Studio.
+- **Nên biết trước:** model gọi công cụ như thế nào: [Cho model gọi hàm (tool calling)](/inference/tool-calling).
+:::
 
 ## Bật MCP trong Unsloth Studio
+
+MCP chạy được với cả GGUF local lẫn model của nhà cung cấp cloud đã kết nối. Trong cùng một thread, MCP dùng song song được với code execution và web search.
 
 <figure>
 
@@ -104,3 +110,8 @@ Chỉ kết nối MCP server bạn tin cậy. Giữ bước xác nhận của ng
 :::
 
 **Nguồn:** https://unsloth.ai/docs/basics/mcp
+
+## Đọc tiếp
+
+- [Cho model gọi hàm (tool calling)](/inference/tool-calling) — cơ chế bên dưới giúp model gọi tool của MCP server.
+- [Kết nối server khác](/inference/connections) — nối model chạy ở llama.cpp, vLLM hoặc Ollama để dùng chung với MCP trong Studio.

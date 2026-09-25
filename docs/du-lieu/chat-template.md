@@ -5,20 +5,28 @@ description: "Áp chat template với Unsloth, ánh xạ khóa ShareGPT, thêm t
 
 # Chat template
 
-Chat template là khuôn quy định cách một hội thoại được ghép thành chuỗi văn bản trước khi đưa vào tokenizer. Hội thoại ở đây gồm các lượt user và assistant, system prompt, và token kết thúc. Mỗi model có template riêng. Dữ liệu phải được định dạng đúng template của model thì fine-tune mới hiệu quả.
+Chat template là khuôn quy định cách một hội thoại (các lượt user và assistant, system prompt, token kết thúc) được ghép thành chuỗi văn bản trước khi đưa vào tokenizer. Mỗi model có template riêng, và dữ liệu phải được định dạng đúng template của model thì fine-tune mới hiệu quả.
 
-::: tip Kiến thức nền
-Chat template, system prompt, tool calling là gì? Xem [Suy luận và sampling](/kien-thuc-nen/suy-luan-va-sampling).
+::: tip Tóm tắt
+- **Dùng khi:** dataset đã ở dạng hội thoại (ShareGPT, ChatML...) và bạn cần ghép nó đúng khuôn của model trước khi train.
+- **Kết quả:** áp được chat template của Unsloth trong 4 bước, ánh xạ khóa ShareGPT, thêm token mới và chỉ tính loss trên câu trả lời.
+- **Nên biết trước:** [Suy luận và sampling](/kien-thuc-nen/suy-luan-va-sampling) (chat template, system prompt, tool calling là gì), [Định dạng dữ liệu](/du-lieu/dinh-dang).
 :::
 
-**Vì sao dùng template của Unsloth thay vì `apply_chat_template` gốc của tokenizer?** Docs đưa ra hai lý do:
+## Vì sao dùng template của Unsloth
+
+Template của Unsloth được khuyên dùng thay vì `apply_chat_template` gốc của tokenizer, và docs đưa ra hai lý do:
 
 - Thuộc tính `chat_template` do nhà phát hành model upload đôi khi có lỗi, và lâu mới được sửa. Unsloth kiểm tra và sửa lỗi template cho mọi model khi upload bản lượng tử hóa lên repo của mình.
 - `get_chat_template` có thêm tính năng xử lý dữ liệu.
 
 Nếu template bạn cần chưa được hỗ trợ, hãy gửi feature request trên GitHub. Trong lúc chờ, tạm dùng `apply_chat_template` của tokenizer. Danh sách mọi template Unsloth dùng nằm trong [chat_templates.py](https://github.com/unslothai/unsloth/blob/main/unsloth/chat_templates.py).
 
+**Nguồn:** https://unsloth.ai/docs/basics/chat-templates
+
 ## Áp chat template với Unsloth (4 bước)
+
+Quy trình gồm bốn bước: xem template có sẵn, gắn template vào tokenizer, viết hàm định dạng, rồi áp hàm đó lên dataset.
 
 1. Xem các template được hỗ trợ:
 
@@ -81,6 +89,8 @@ dataset = dataset.map(formatting_prompts_func, batched = True,)
 
 Lưu ý hai chỗ trong docs nói khác nhau. Mục Q&A của Datasets Guide nói chỉ dùng `standardize_sharegpt` khi dataset là ShareGPT còn model cần ChatML. Tutorial lại dặn "Always call this!". Xem hộp cảnh báo ở mục [Dữ liệu dạng bảng nhiều cột](/du-lieu/dinh-dang#bang-nhieu-cot).
 
+**Nguồn:** https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama
+
 ## Ánh xạ khóa ShareGPT trực tiếp (`mapping`)
 
 Thay vì chuyển đổi dataset, bạn có thể dùng tham số `mapping` của `get_chat_template` để ánh xạ thẳng các khóa `from`/`value`/`human`/`gpt`. Tham số `map_eos_token` ánh xạ `<|im_end|>` thành EOS (token kết thúc chuỗi) mà không cần train:
@@ -116,7 +126,9 @@ Docs không nói `mapping` có dùng được với các template ngoài 8 tên 
 
 Bạn cũng có thể tự viết template riêng bằng cách truyền tuple `(custom_template, eos_token)`. Khi đó `eos_token` phải được dùng bên trong template. Với template tùy biến kiểu notebook Ollama, bắt buộc có trường `{INPUT}` cho chỉ dẫn và `{OUTPUT}` cho đầu ra. Trường `{SYSTEM}` là tùy chọn.
 
-## Thêm token mới
+**Nguồn:** https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama
+
+## Thêm token mới {#them-token-moi}
 
 Hàm `add_new_tokens` thêm token đặc biệt vào tokenizer, ví dụ `<CHARACTER_1>`, `<THINKING>`, `<SCRATCH_PAD>`. Hàm này **phải được gọi trước** `FastLanguageModel.get_peft_model`:
 
@@ -127,8 +139,16 @@ add_new_tokens(model, tokenizer, new_tokens = ["<CHARACTER_1>", "<THINKING>", "<
 model = FastLanguageModel.get_peft_model(...)
 ```
 
-## Chỉ train trên câu trả lời
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://unsloth.ai/docs/basics/chat-templates
+
+## Chỉ train trên câu trả lời {#chi-train-tren-cau-tra-loi}
 
 Sau khi đã áp template, bạn có thể che phần user và chỉ tính loss trên phần assistant bằng `train_on_responses_only`. Hàm này cần chuỗi đánh dấu đầu lượt user và đầu lượt assistant **đúng theo template** của model. Ví dụ Llama 3 dùng `<|start_header_id|>user<|end_header_id|>`, còn Gemma dùng `<start_of_turn>user`. Code đầy đủ ở trang [Quy trình](/fine-tuning/quy-trinh).
 
-**Nguồn:** https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide
+
+## Đọc tiếp
+
+- [Làm dữ liệu trong Studio](/du-lieu/studio) — trang kế tiếp: chọn format và mapping cột trong giao diện Studio.
+- [Quy trình từng bước](/fine-tuning/quy-trinh) — code đầy đủ, gồm cả `train_on_responses_only`.
+- [Định dạng dữ liệu](/du-lieu/dinh-dang) — xem lại khuôn ShareGPT và ChatML trước khi áp template.

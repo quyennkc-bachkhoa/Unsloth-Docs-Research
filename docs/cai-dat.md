@@ -1,9 +1,17 @@
 ---
-title: Cài đặt & phần cứng
+title: Cài đặt và phần cứng
 description: Yêu cầu phần cứng/phần mềm và lệnh cài Unsloth Desktop, Studio, Core trên Windows, macOS, Linux/WSL, AMD, Intel, CPU, Docker, pip/uv và Google Colab.
 ---
 
-# Cài đặt & phần cứng
+# Cài đặt và phần cứng
+
+Trang này giúp bạn kiểm tra máy mình có đủ phần cứng không và cài Unsloth đúng cách trên nền tảng đang dùng. Đọc xong, bạn có Unsloth chạy được và biết cách cập nhật, gỡ cài đặt.
+
+::: tip Tóm tắt
+- **Dùng khi:** Bạn chuẩn bị cài Unsloth Desktop, Studio hoặc Core, hoặc cần biết GPU của mình train được model cỡ nào.
+- **Kết quả:** Biết yêu cầu phần cứng/phần mềm theo nền tảng và VRAM cần cho fine-tuning, có lệnh cài cho Windows, macOS, Linux/WSL, AMD, Intel, CPU, Docker, pip/uv, Colab, và cách kiểm tra sau khi cài.
+- **Nên biết trước:** Nên đọc [Tổng quan kiến trúc](/tong-quan) để chọn sản phẩm. GGUF, MLX, quantization: [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa). "8B" nghĩa là gì và cách ước tính VRAM: [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho). LoRA/QLoRA: [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora). Batch size: [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen).
+:::
 
 ## Ba cách dùng Unsloth, ba bộ yêu cầu
 
@@ -56,10 +64,6 @@ Bảng này giúp bạn tra nhanh: máy của bạn chạy được gì, train �
 | **AMD** | Windows và Linux | Dòng GPU và ROCm: Docs chưa thống nhất (xem bên dưới); Docker cần driver `amdgpu` | Docs chưa thống nhất (xem bên dưới) | Có (Studio trong Docker `unsloth-rocm` có chat) | Có | Desktop (Windows, Linux), Studio (train: Docs chưa thống nhất, xem bên dưới), Core, Docker `unsloth/unsloth-rocm` | Desktop; thủ công: `install.sh` / `install.ps1`; Core: `uv pip install unsloth[amd]` |
 | **Intel** | Linux (khuyến nghị Ubuntu 22.04+) hoặc Windows 11 (khuyến nghị) | Data Center GPU Max, Arc, Intel Ultra AIPC; driver Intel Graphics mới nhất; Windows cần oneAPI Base Toolkit 2025.2.1 | Docs chưa thống nhất (xem bên dưới) | — | Có (Core) | Core (build từ source); Studio: Docs chưa thống nhất (xem bên dưới) | Core: `pip install .[intel-gpu-torch290]` |
 | **CPU-only** | Như Linux (bỏ NVIDIA driver) và macOS | Không cần GPU | Như Linux/macOS | Có — Chat với model GGUF | Không được nêu (chỉ Chat + Data Recipes) | Studio | Studio: `install.sh` |
-
-::: tip Kiến thức nền
-GGUF, MLX, quantization là gì? Xem [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
-:::
 
 ::: warning Docs chưa thống nhất — Mac: train được không, Core có chạy trên Mac không
 | Thông số | [unsloth-requirements](https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements) | [new/studio/install](https://unsloth.ai/docs/new/studio/install) | [install/mac](https://unsloth.ai/docs/get-started/install/mac) |
@@ -140,10 +144,6 @@ Cách đọc bảng: model 8B với QLoRA cần tối thiểu 6 GB. Cùng model 
 
 ::: tip Mẹo tránh OOM
 OOM (out of memory, hết bộ nhớ) thường xảy ra khi batch size quá cao. Để giảm VRAM, docs khuyên đặt batch size là 1, 2 hoặc 3.
-:::
-
-::: tip Kiến thức nền
-Muốn hiểu "8B" nghĩa là gì và cách ước tính VRAM? Xem [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho). LoRA/QLoRA: xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora). Batch size: xem [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen).
 :::
 
 **[Nhận định]** Bảng có một bước nhảy lạ. Với QLoRA, 14B cần 8.5 GB nhưng 27B lên tới 22 GB, tức gần gấp 2,6. Trong khi đó số tham số chỉ gấp 1,9. Vì vậy bạn nên coi số liệu của các model lớn là để tham khảo.
@@ -297,7 +297,7 @@ Cài xong, mở Jupyter:
 jupyter notebook
 ```
 
-::: warning Cạm bẫy trên Windows
+::: warning Lỗi thường gặp: Windows
 - Nếu `nvidia-smi` không chạy, bạn phải cài lại NVIDIA driver.
 - Nếu PyTorch không chạy được với CUDA, docs nói có thể phải cài lại CUDA driver. Đừng cài Unsloth trước khi PyTorch chạy được.
 - **vLLM không hỗ trợ Windows trực tiếp**, chỉ chạy qua WSL hoặc Linux. Bạn cần vLLM khi dùng GRPO (một kiểu reinforcement learning).
@@ -473,7 +473,7 @@ uv pip install unsloth --torch-backend=auto
 
 Chi tiết thêm ở mục "pip & uv" bên dưới.
 
-::: warning Cạm bẫy Linux/WSL
+::: warning Lỗi thường gặp: Linux/WSL
 - Trên WSL, NVIDIA driver được cài **trên Windows**. Về CUDA toolkit, xem hộp "Docs chưa thống nhất" ở trên.
 - Báo `nvidia-smi not found`: cài NVIDIA driver.
 - Báo `nvcc not found`: chạy `sudo apt install nvidia-cuda-toolkit`, hoặc thêm `/usr/local/cuda/bin` vào PATH.
@@ -598,7 +598,7 @@ export HSA_OVERRIDE_GFX_VERSION=9.4.2  # Required for AMD MI300X
 export HF_HUB_DISABLE_XET=1            # Fixes HuggingFace download issues on AMD
 ```
 
-::: warning Cạm bẫy AMD
+::: warning Lỗi thường gặp: AMD
 - bitsandbytes bản ≤ 0.49.2 có **lỗi NaN khi decode 4-bit trên mọi GPU AMD**. Vì vậy phải dùng bản pre-release ở trên.
 - `HSA_OVERRIDE_GFX_VERSION=9.4.2` bảo ROCm coi GPU là gfx942 (MI300X). Thiếu biến này, một số kernel có thể không biên dịch hoặc không chạy được.
 - Flash Attention 2 không có trên AMD. Unsloth tự chuyển sang Xformers, nên bạn có thể bỏ qua cảnh báo về việc này.
@@ -672,7 +672,7 @@ Trên [install/intel](https://unsloth.ai/docs/get-started/install/intel):
 - Dòng `call "...\oneAPI\setvars.bat" -` kết thúc bằng ` -`. Nguồn không giải thích ý nghĩa của nó.
 :::
 
-::: warning Cạm bẫy Intel
+::: warning Lỗi thường gặp: Intel
 - Intel Ultra AIPC trên Windows: iGPU dùng chung bộ nhớ với hệ thống, mặc định khoảng **57%** RAM. Một số trường hợp có thể cần tăng tỷ lệ này: model lớn (ví dụ Qwen3-32B), context dài, batch lớn hoặc LoRA rank lớn. Bạn tăng qua registry, ở khóa `SystemPartitionCommitLimitPercentage` tại `Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\MemoryManager`.
 - Khi gặp OOM, bạn có thể: giảm `per_device_train_batch_size`, dùng model nhỏ hơn, giảm `max_seq_length`, giảm LoRA rank (`r=8` thay vì 16 hoặc 32). Với GRPO, giảm thêm `num_generations`.
 - Phiên bản Python: trang Intel dùng 3.10 (conda), các trang khác ghi khác. Xem hộp phiên bản Python ở mục "Bảng tóm tắt theo nền tảng".
@@ -839,7 +839,7 @@ docker run -d --name unsloth --device /dev/dxg --ipc=host `
 - Quên mật khẩu Studio: chạy `docker exec unsloth unsloth studio reset-password --username unsloth`.
 - Cập nhật: chạy `docker pull unsloth/unsloth` (hoặc `unsloth/unsloth-rocm`), rồi `docker rm -f unsloth`. Sau đó chạy lại lệnh Quickstart với cùng các cờ `-v`. Model, file và dữ liệu Studio vẫn được giữ.
 
-::: warning Cạm bẫy Docker
+::: warning Lỗi thường gặp: Docker
 - Studio và JupyterLab **dùng chung GPU**. Model đã load trong Studio giữ VRAM cho tới khi bạn unload. Hãy unload trước khi train trong notebook.
 - Lưu kết quả dưới `/workspace/host`. Thứ gì ghi ra ngoài volume sẽ mất khi xóa container.
 - Dùng **named volume** cho `/opt/unsloth-studio`, không dùng thư mục host. Lý do: Studio cần tạo symlink, mà host Windows hoặc macOS có thể không cho phép, làm container dừng ngay khi khởi động.
@@ -995,7 +995,7 @@ Colab cho dùng GPU T4 miễn phí. **[Nhận định]** Vì vậy đây là cá
 - Trên T4, notebook này train và chạy được hầu hết model tới **22B tham số**. Model lớn hơn thì cần đổi sang GPU lớn hơn.
 - Cách mở: bấm "Run all", cuộn tới **Start Unsloth Studio** rồi bấm **Open Unsloth Studio**.
 
-::: warning Lưu ý Colab
+::: warning Lỗi thường gặp: Colab
 - Link mở Studio có thể báo lỗi nếu bạn tắt cookie, dùng adblocker hoặc dùng Mozilla. Khi đó bạn vẫn có thể cuộn xuống dưới nút để thấy giao diện.
 - Colab có thể tắt phiên GPU nếu thấy bạn không hoạt động trên trang.
 :::
@@ -1230,3 +1230,9 @@ Các trang hướng dẫn cài đều dùng lệnh mở Studio cho cả mạng. 
 :::
 
 **Nguồn:** https://unsloth.ai/docs/new/studio/install, https://unsloth.ai/docs/get-started/install/windows-installation, https://unsloth.ai/docs/get-started/install/intel, https://unsloth.ai/docs/get-started/install/docker
+
+## Đọc tiếp
+
+- [Chạy model và gọi API](/inference/) — Cài xong thì chạy model đầu tiên trong Studio hoặc qua API.
+- [Danh sách model hỗ trợ](/model-catalog) — Chọn model vừa với VRAM/RAM máy bạn.
+- [Fine-tuning](/fine-tuning/) — Bắt đầu train khi máy đã đủ yêu cầu.

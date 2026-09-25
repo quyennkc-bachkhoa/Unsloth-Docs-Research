@@ -1,11 +1,21 @@
 ---
-title: "Kết nối coding agent"
+title: Dùng với coding agent
 description: "Dùng unsloth start để nối Claude Code, Codex, OpenCode với model local, và cách cấu hình thủ công."
 ---
 
-# Kết nối coding agent với `unsloth start`
+# Dùng với coding agent
 
-`unsloth start <agent>` cho coding agent (Claude Code, Codex, OpenCode…) dùng model đang chạy trong Unsloth, chỉ bằng một lệnh. Lệnh này tự cấu hình endpoint, API key, provider, model và context length cho từng lần chạy agent. Cấu hình chỉ tồn tại trong phiên đó. Nó **không** ghi provider Unsloth vào file cấu hình thường ngày của agent. Toàn bộ có thể chạy offline.
+Trang này giúp coding agent như Claude Code, Codex, OpenCode dùng model đang chạy trong Unsloth thay vì model cloud. Cách nhanh nhất là một lệnh `unsloth start <agent>`; nếu muốn tự cấu hình thì có hướng dẫn cho từng agent.
+
+::: tip Tóm tắt
+- **Dùng khi:** bạn muốn coding agent sửa code trong project bằng model local, có thể chạy offline.
+- **Kết quả:** chạy được agent với model trên máy bằng `unsloth start`, hoặc tự cấu hình Claude Code, Codex, OpenCode, và tránh lỗi agent trả lời mà không sửa file.
+- **Nên biết trước:** API key, endpoint và port của Unsloth ở trang [Gọi qua API (OpenAI, Anthropic)](/inference/api).
+:::
+
+## Nối nhanh bằng `unsloth start`
+
+`unsloth start <agent>` tự cấu hình endpoint, API key, provider, model và context length cho từng lần chạy agent. Cấu hình chỉ tồn tại trong phiên đó. Nó **không** ghi provider Unsloth vào file cấu hình thường ngày của agent. Toàn bộ có thể chạy offline.
 
 <div class="dg">
 <div class="dg-title">Khởi động</div>
@@ -174,6 +184,8 @@ export UNSLOTH_API_KEY=sk-unsloth-...
 unsloth start claude
 ```
 
+**Nguồn:** https://unsloth.ai/docs/integrations/unsloth-start, https://unsloth.ai/docs/basics/claude-code, https://unsloth.ai/docs/basics/codex, https://unsloth.ai/docs/integrations/opencode, https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
+
 ## Kết nối thủ công (khi không dùng `unsloth start`)
 
 Nếu bạn muốn tự cấu hình, mỗi agent có cách riêng.
@@ -278,3 +290,9 @@ unsloth run \
 Lý do: mặc định Unsloth chạy server-side tools của chính nó và "nuốt" tool call của agent. Kết quả là agent vẫn trả lời nhưng không bao giờ sửa file. `--disable-tools` chuyển sang chế độ passthrough (chuyển tiếp), để agent dùng được tool Write/Edit/Bash của nó.
 
 **Nguồn:** https://unsloth.ai/docs/integrations/unsloth-start, https://unsloth.ai/docs/basics/claude-code, https://unsloth.ai/docs/basics/codex, https://unsloth.ai/docs/integrations/opencode
+
+## Đọc tiếp
+
+- [Kết nối server khác](/inference/connections) — dùng giao diện chat của Unsloth với model chạy ở llama.cpp, vLLM hoặc Ollama.
+- [Gọi qua API (OpenAI, Anthropic)](/inference/api) — hiểu endpoint, key và server-side tools mà agent đang dùng bên dưới.
+- [Cho model gọi hàm (tool calling)](/inference/tool-calling) — cơ chế tool call mà agent dựa vào để sửa file, chạy lệnh.

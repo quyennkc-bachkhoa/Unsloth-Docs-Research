@@ -1,11 +1,17 @@
 ---
-title: "API tương thích OpenAI và Anthropic"
+title: Gọi qua API (OpenAI, Anthropic)
 description: "Endpoint, port, API key, ví dụ curl, Python với OpenAI SDK và Anthropic SDK, cấu hình server và truy cập từ máy khác."
 ---
 
-# API tương thích OpenAI và Anthropic
+# Gọi qua API (OpenAI, Anthropic)
 
 Khi bạn nạp một model trong Unsloth, Unsloth có thể mở model đó thành một API. Từ đó, code Python, lệnh `curl` hay coding agent như Claude Code gửi câu hỏi tới model trên máy bạn, giống như gửi tới OpenAI hoặc Anthropic.
+
+::: tip Tóm tắt
+- **Dùng khi:** bạn muốn code Python, `curl` hoặc một công cụ có sẵn gọi vào model đang chạy trên máy mình.
+- **Kết quả:** có API key, biết địa chỉ và endpoint cần gọi, chạy được ví dụ curl và Python, biết cách mở API cho máy khác an toàn.
+- **Nên biết trước:** đã nạp được model trong Studio hoặc bằng `unsloth run` ([Chat trong Studio](/inference/studio-chat)).
+:::
 
 Điểm tiện nhất: API này dùng **đúng định dạng** request và response của OpenAI và Anthropic. Code bạn đã viết cho hai hãng đó chạy được với model local. Bạn chỉ cần đổi địa chỉ và key.
 
@@ -88,7 +94,7 @@ Mỗi trang docs ghi port và base URL mặc định của API Unsloth một ki�
 Cách chắc chắn để biết port: `unsloth run` in endpoint URL ra console ([basics/api](https://unsloth.ai/docs/basics/api)).
 :::
 
-**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
+**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth, https://unsloth.ai/docs/basics/claude-code, https://unsloth.ai/docs/basics/codex, https://unsloth.ai/docs/integrations/opencode
 
 ## Chọn endpoint
 
@@ -112,7 +118,7 @@ Các trang docs liệt kê endpoint không giống nhau:
 Dòng `/v1/responses` trong bảng trên được tổng hợp từ hai trang sau.
 :::
 
-**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
+**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth, https://unsloth.ai/docs/basics/codex
 
 ## Gửi request thử bằng curl
 
@@ -222,7 +228,7 @@ curl http://localhost:8888/v1/chat/completions \
 
 **Tắt chế độ thinking.** Thinking là chế độ model "suy nghĩ" trước khi trả lời, và được bật mặc định. Muốn tắt, gửi `enable_thinking: false` trong request.
 
-**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
+**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth, https://unsloth.ai/docs/basics/claude-code, https://unsloth.ai/docs/basics/codex
 
 ## Gọi từ Python
 
@@ -385,4 +391,10 @@ Mọi request dùng API key đều hiện trong Studio: ở panel góc màn hìn
 <figcaption>Panel API monitor: số request đang chạy, tổng request, số lỗi, độ trễ trung bình và từng request theo endpoint. Ảnh: <a href="https://unsloth.ai/docs/basics/api">docs Unsloth</a>.</figcaption>
 </figure>
 
-**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
+**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth, https://unsloth.ai/docs/basics/claude-code, https://unsloth.ai/docs/basics/codex, https://unsloth.ai/docs/integrations/opencode
+
+## Đọc tiếp
+
+- [Dùng với coding agent](/inference/coding-agent) — dùng chính API này làm "bộ não" cho Claude Code, Codex hoặc OpenCode.
+- [Cho model gọi hàm (tool calling)](/inference/tool-calling) — gửi `tools` qua API để model đề xuất hàm cần chạy.
+- [Mở cho máy khác (LAN, Cloudflare)](/export-deploy/lan-remote) — chi tiết hơn về việc cho máy khác trong mạng hoặc qua Internet gọi vào model.

@@ -65,7 +65,7 @@ Docs Unsloth nêu thêm một chi tiết: tokenizer của Llama coi `"A"` và `"
 
 **Ảnh hưởng khi dùng Unsloth.** Model và tokenizer luôn đi thành cặp. `FastLanguageModel.from_pretrained(...)` trả về cả `model, tokenizer`, và các hàm lưu (`save_pretrained_merged`, `save_pretrained_gguf`) đều nhận `tokenizer`. Docs Unsloth ghi các bản upload của họ đôi khi có sửa lỗi chat template hoặc tokenizer so với bản gốc. Vì vậy docs khuyên dùng bản của Unsloth khi có.
 
-**Gặp ở đâu trong Unsloth.** [Model catalog](/model-catalog), [Export & deploy](/export-deploy).
+**Gặp ở đâu trong Unsloth.** [Model catalog](/model-catalog), [Export & deploy](/export-deploy/).
 
 **Nguồn:** https://huggingface.co/learn/llm-course/chapter2/4, https://huggingface.co/docs/transformers/tokenizer_summary, https://huggingface.co/learn/llm-course/chapter6/2, https://unsloth.ai/docs/basics/dynamic-3.0-ggufs, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide
 
@@ -123,7 +123,7 @@ Model chat còn có token đánh dấu vai trò người nói, ví dụ `<|im_st
   Cách tránh: dùng cùng một template lúc train và lúc chạy.
 - **[Nguồn ngoài]** Nếu đã format bằng `apply_chat_template(tokenize=False)` rồi mới tokenize, cần `add_special_tokens=False` để không chèn BOS/EOS hai lần. https://huggingface.co/docs/transformers/chat_templating
 
-**Gặp ở đâu trong Unsloth.** [Dữ liệu — Chat template](/du-lieu/chat-template), [Export & deploy — Troubleshooting](/export-deploy), [Inference](/inference/).
+**Gặp ở đâu trong Unsloth.** [Dữ liệu — Chat template](/du-lieu/chat-template), [Export & deploy — Troubleshooting](/export-deploy/loi-thuong-gap), [Inference](/inference/).
 
 **Nguồn:** https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference, https://huggingface.co/docs/transformers/chat_templating, https://huggingface.co/docs/transformers/glossary
 
@@ -202,8 +202,8 @@ Bảng này gom lại các khái niệm trên trang, kèm trang Unsloth trên we
 | Khái niệm | Trang Unsloth trên website | Docs gốc |
 |---|---|---|
 | Token | [Dữ liệu](/du-lieu/), [Fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide |
-| Tokenizer | [Model catalog](/model-catalog), [Export & deploy](/export-deploy) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
+| Tokenizer | [Model catalog](/model-catalog), [Export & deploy](/export-deploy/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
 | Vocabulary, `add_new_tokens`, `embed_tokens`/`lm_head` | [Dữ liệu](/du-lieu/), [Fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/continued-pretraining |
-| Special token BOS/EOS, chat template | [Dữ liệu](/du-lieu/), [Export & deploy](/export-deploy) | https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference |
+| Special token BOS/EOS, chat template | [Dữ liệu](/du-lieu/), [Export & deploy](/export-deploy/) | https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/basics/inference-and-deployment/troubleshooting-inference |
 | Context window, `max_seq_length`, `max_new_tokens` | [Fine-tuning](/fine-tuning/), [Inference](/inference/), [Model catalog](/model-catalog) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/basics/unsloth-benchmarks |
 | Next-token prediction, `train_on_responses_only` | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide |

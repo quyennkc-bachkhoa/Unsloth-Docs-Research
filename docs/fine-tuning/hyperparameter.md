@@ -1,20 +1,24 @@
 ---
-title: Hyperparameter khuyến nghị
+title: Chọn hyperparameter
 description: "Giá trị khuyến nghị cho learning rate, epoch, rank, alpha, batch... và bảng so sánh mặc định giữa Studio, tutorial và hướng dẫn hyperparameter."
 ---
 
-# Hyperparameter khuyến nghị
+# Chọn hyperparameter
 
 Hyperparameter là các con số bạn đặt trước khi train, ví dụ learning rate hay số epoch. Docs khuyên **giữ mặc định của Unsloth**, trừ khi bạn cần train lâu hơn hoặc batch lớn hơn.
+
+::: tip Tóm tắt
+- **Dùng khi:** bạn cấu hình một lần train và cần biết nên đặt learning rate, epoch, rank, alpha, batch… bao nhiêu.
+- **Kết quả:** có bảng giá trị khuyến nghị kèm hậu quả khi đặt sai, và thấy rõ mặc định khác nhau giữa Studio, tutorial và hướng dẫn hyperparameter.
+- **Nên biết trước:** [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer) (`q_proj` … `down_proj` là lớp nào), [Token & context](/kien-thuc-nen/token-va-context) (`max_seq_length`), [Dense & MoE](/kien-thuc-nen/dense-va-moe) (model như `30B-A3B`).
+:::
+
+## Giá trị khuyến nghị cho từng tham số
 
 Vấn đề là "mặc định" không giống nhau giữa ba chỗ: Studio, tutorial hoặc notebook, và hướng dẫn hyperparameter. Nhiều tham số **không trùng nhau**; bảng so sánh nằm ngay sau bảng dưới đây. Cách đọc bảng:
 
 - Cột "Đặt sai thì sao" diễn giải từ chính docs.
 - Tham số có dấu ⚠ là tham số docs ghi nhiều giá trị khác nhau. Chi tiết nằm trong hộp "Docs chưa thống nhất" bên dưới.
-
-::: tip Kiến thức nền
-`q_proj` … `down_proj` là các lớp nào trong model: xem [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer). `max_seq_length` và context: xem [Token & context](/kien-thuc-nen/token-va-context). Model MoE (vd `30B-A3B`): xem [Dense & MoE](/kien-thuc-nen/dense-va-moe).
-:::
 
 | Tham số | Giá trị khuyến nghị (docs) | Ý nghĩa ngắn | Đặt sai thì sao |
 | --- | --- | --- | --- |
@@ -84,3 +88,9 @@ Các trang docs không đưa cùng một bộ "mặc định". Trang này liệt
 :::
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/new/studio/start
+
+## Đọc tiếp
+
+- [Đánh giá và overfitting](/fine-tuning/danh-gia) — theo dõi loss để biết bộ tham số vừa chọn có làm model học thuộc hay không.
+- [Quy trình từng bước](/fine-tuning/quy-trinh) — xem các tham số này nằm ở đâu trong code Core và trong Studio.
+- [Lỗi thường gặp](/fine-tuning/loi-thuong-gap) — các lỗi hay gặp liên quan đến epoch và batch size.

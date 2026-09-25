@@ -1,9 +1,19 @@
 ---
-title: Các định dạng dữ liệu
+title: Định dạng dữ liệu
 description: "Các định dạng dataset theo kiểu train: raw text, Alpaca, ShareGPT, ChatML, vision, bảng CSV/Excel và dataset cho model reasoning."
 ---
 
-# Các định dạng dữ liệu
+# Định dạng dữ liệu
+
+Mỗi kiểu train cần dữ liệu được sắp theo một khuôn riêng, ví dụ văn bản thô, cặp chỉ dẫn và đáp án, hay hội thoại nhiều lượt. Trang này giúp bạn chọn đúng định dạng và xem ví dụ chép từ docs, kèm ghi chú những chỗ ví dụ chưa phải JSON hợp lệ.
+
+::: tip Tóm tắt
+- **Dùng khi:** bạn đã biết mình định train kiểu gì (CPT, SFT, RL, vision) và cần sắp dữ liệu cho đúng khuôn.
+- **Kết quả:** biết định dạng nào hợp với kiểu train nào, có ví dụ raw text, Alpaca, ShareGPT, ChatML, vision, bảng CSV/Excel và dataset cho model reasoning.
+- **Nên biết trước:** [Dữ liệu](/du-lieu/), [Chọn cách train và model](/fine-tuning/chon-cach-train).
+:::
+
+## Chọn định dạng theo kiểu train
 
 Định dạng dữ liệu phụ thuộc vào kiểu train bạn định làm. Bảng dưới ghép từng loại dữ liệu với kiểu train tương ứng:
 
@@ -14,7 +24,9 @@ description: "Các định dạng dataset theo kiểu train: raw text, Alpaca, S
 | Conversation | Hội thoại nhiều lượt giữa user và trợ lý AI | SFT |
 | RLHF | Hội thoại mà câu trả lời của trợ lý được chấm hạng bởi script, model khác hoặc người | RL (Reinforcement Learning — học tăng cường) |
 
-Mỗi loại lại có nhiều biến thể định dạng. Các ví dụ dưới đây chép nguyên văn từ docs.
+Mỗi loại lại có nhiều biến thể định dạng. Các ví dụ trong các mục dưới đây chép nguyên văn từ docs.
+
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide
 
 ## Raw text (cho continued pretraining)
 
@@ -24,9 +36,11 @@ Raw text không cần cấu trúc. Bạn giữ mạch văn tự nhiên để mod
   "text": "Pasta carbonara is a traditional Roman pasta dish. The sauce is made by mixing raw eggs with grated Pecorino Romano cheese and black pepper. The hot pasta is then tossed with crispy guanciale (cured pork cheek) and the egg mixture, creating a creamy sauce from the residual heat. Despite popular belief, authentic carbonara never contains cream or garlic. The dish likely originated in Rome in the mid-20th century, though its exact origins are debated..."
 ```
 
-::: warning Ví dụ trên không phải JSON hợp lệ
-Ví dụ raw text trong [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide) chỉ là một cặp khóa–giá trị, thiếu dấu `{}` bao ngoài. Nếu bạn copy làm file dữ liệu, mỗi bản ghi cần là một object JSON đầy đủ có trường `"text"`.
+::: warning Lỗi thường gặp
+Ví dụ trên không phải JSON hợp lệ: ví dụ raw text trong [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide) chỉ là một cặp khóa–giá trị, thiếu dấu `{}` bao ngoài. Nếu bạn copy làm file dữ liệu, mỗi bản ghi cần là một object JSON đầy đủ có trường `"text"`.
 :::
+
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide
 
 ## Instruction (Alpaca)
 
@@ -49,6 +63,8 @@ Các trang viết tên cột Alpaca theo hai kiểu:
 
 Ví dụ Alpaca ở trên cũng chỉ là các cặp khóa–giá trị rời. Nó thiếu `{}` và thiếu dấu phẩy giữa các trường, nên không parse được nếu bạn copy nguyên văn thành file JSON.
 :::
+
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama
 
 ## Conversation — ShareGPT
 
@@ -77,6 +93,8 @@ ShareGPT dùng cho hội thoại nhiều lượt. Mỗi lượt có khóa `"from
 }
 ```
 
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide
+
 ## Conversation — ChatML (OpenAI)
 
 ChatML là định dạng mặc định của Hugging Face. Theo docs, đây có lẽ là định dạng phổ biến nhất. Mỗi lượt có khóa `"role"`/`"content"`, và các lượt luân phiên giữa `user` và `assistant`:
@@ -96,9 +114,11 @@ ChatML là định dạng mặc định của Hugging Face. Theo docs, đây có
 }
 ```
 
-::: warning Ví dụ ChatML trên không phải JSON hợp lệ
-Ví dụ chép nguyên văn từ [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide) có một dấu phẩy thừa sau phần tử cuối của mảng `"messages"` (`},` trước `]`). JSON chuẩn không cho phép dấu phẩy này. Nếu bạn copy làm file dữ liệu, hãy bỏ dấu phẩy đó đi.
+::: warning Lỗi thường gặp
+Ví dụ ChatML trên không phải JSON hợp lệ: ví dụ chép nguyên văn từ [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide) có một dấu phẩy thừa sau phần tử cuối của mảng `"messages"` (`},` trước `]`). JSON chuẩn không cho phép dấu phẩy này. Nếu bạn copy làm file dữ liệu, hãy bỏ dấu phẩy đó đi.
 :::
+
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide
 
 ## Vision (ảnh + chữ)
 
@@ -115,7 +135,7 @@ Dữ liệu vision giống cặp hỏi–đáp, chỉ khác là phần input có
 ]
 ```
 
-Ví dụ trong docs dùng bản rút gọn của ROCO radiography dataset: 1978 dòng, gồm các cột `image`, `image_id`, `caption`, `cui`. Mỗi mẫu được chuyển sang dạng `messages` bằng hàm `convert_to_conversation`. Xem thêm mục Vision ở trang [Mở rộng](/fine-tuning/mo-rong).
+Ví dụ trong docs dùng bản rút gọn của ROCO radiography dataset: 1978 dòng, gồm các cột `image`, `image_id`, `caption`, `cui`. Mỗi mẫu được chuyển sang dạng `messages` bằng hàm `convert_to_conversation`. Xem thêm mục Vision ở trang [Kỹ thuật nâng cao](/fine-tuning/mo-rong).
 
 ::: warning Docs chưa thống nhất: thứ tự text/ảnh trong lượt user
 Thứ tự phần chữ và phần ảnh khác nhau giữa dữ liệu train và ví dụ inference:
@@ -124,6 +144,8 @@ Thứ tự phần chữ và phần ảnh khác nhau giữa dữ liệu train và
 
 Docs không nói thứ tự này có ảnh hưởng hay không: cần kiểm tra lại với chat template của model bạn dùng.
 :::
+
+**Nguồn:** https://unsloth.ai/docs/basics/vision-fine-tuning, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide
 
 ## Dữ liệu dạng bảng nhiều cột (CSV/Excel) {#bang-nhieu-cot}
 
@@ -145,11 +167,19 @@ Hai chỗ trong docs nói khác nhau về việc có luôn phải gọi hàm nà
 - "Only use the standardize_sharegpt method if your target dataset is formatted in the sharegpt format, but your model expect a ChatML format instead." — mục Q&A của [Datasets Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide)
 :::
 
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/basics/chat-templates, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide
+
 ## Dataset cho model reasoning
 
 Cách chuẩn bị dữ liệu phụ thuộc vào việc model đã biết suy luận (reasoning) hay chưa:
 
 - Model **đã** có reasoning (ví dụ DeepSeek-R1-Distill-Llama-8B): bạn vẫn dùng cặp câu hỏi–trả lời. Nhưng câu trả lời phải chứa quá trình suy luận (chain-of-thought) và các bước dẫn tới đáp án.
-- Model **chưa** có reasoning và bạn muốn dạy nó suy luận: dùng dataset thường, câu trả lời không kèm suy luận, rồi train bằng RL/GRPO — xem [GRPO trong Unsloth](/reinforcement-learning/grpo).
+- Model **chưa** có reasoning và bạn muốn dạy nó suy luận: dùng dataset thường, câu trả lời không kèm suy luận, rồi train bằng RL/GRPO — xem [Train bằng GRPO](/reinforcement-learning/grpo).
 
-**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/basics/vision-fine-tuning, https://unsloth.ai/docs/basics/chat-templates
+**Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/datasets-guide
+
+## Đọc tiếp
+
+- [Chat template](/du-lieu/chat-template) — trang kế tiếp: ghép dữ liệu đã định dạng vào đúng khuôn hội thoại của model.
+- [Làm dữ liệu trong Studio](/du-lieu/studio) — chọn format và mapping cột bằng giao diện thay vì code.
+- [Train bằng GRPO](/reinforcement-learning/grpo) — khi bạn muốn dạy model chưa biết suy luận bằng RL.

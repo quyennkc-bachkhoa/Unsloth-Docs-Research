@@ -5,6 +5,14 @@ description: Ba dạng sản phẩm của Unsloth (Desktop, Studio, Core), CLI, 
 
 # Tổng quan kiến trúc
 
+Trang này giúp bạn nắm Unsloth gồm những sản phẩm nào, mỗi sản phẩm làm được gì, và các thao tác trên giao diện tương ứng với lệnh CLI hay API nào. Đọc xong, bạn biết nên chọn Desktop, Studio hay Core cho việc của mình.
+
+::: tip Tóm tắt
+- **Dùng khi:** Bạn mới gặp Unsloth và muốn biết nên cài bản nào, bản đó hỗ trợ inference hay training.
+- **Kết quả:** Phân biệt được Desktop, Studio và Core; biết lệnh CLI, endpoint API tương ứng; hiểu inference khác training ở đâu.
+- **Nên biết trước:** Không bắt buộc. Nếu gặp thuật ngữ lạ: GGUF, MLX, safetensors và quantization xem [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa); "22B tham số" xem [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho); tool calling, chat template, sampling xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling); loss, learning rate, epoch xem [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen); LoRA và QLoRA xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora); SFT và RL xem [RL & preference](/kien-thuc-nen/rl-va-preference).
+:::
+
 ## Ba dạng sản phẩm
 
 Unsloth có ba cách dùng tách biệt. Bạn chọn theo việc mình muốn cài app, dùng giao diện web hay viết code. Docs cài đặt của Unsloth nêu ba dạng:
@@ -57,7 +65,7 @@ source unsloth_env/bin/activate
 uv pip install unsloth --torch-backend=auto
 ```
 
-Chi tiết cài đặt từng nền tảng: [Cài đặt & phần cứng](/cai-dat).
+Chi tiết cài đặt từng nền tảng: [Cài đặt và phần cứng](/cai-dat).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/install, https://unsloth.ai/docs/desktop, https://unsloth.ai/docs/new/studio, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/basics/inference-and-deployment/unsloth-inference, https://github.com/unslothai/unsloth
 
@@ -90,10 +98,6 @@ Không trang nào trong các nguồn trên ghi rõ việc train trên GPU Intel 
 
 ::: warning Model GGUF chỉ dùng để inference
 Trong Studio, model định dạng GGUF không xuất hiện trong danh sách train, vì GGUF chỉ dùng cho inference.
-:::
-
-::: tip Kiến thức nền
-GGUF, MLX, safetensors và các mức quantization: xem [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa). Ý nghĩa "22B tham số": xem [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho).
 :::
 
 **Nguồn:** https://unsloth.ai/docs/get-started/install, https://unsloth.ai/docs/desktop, https://unsloth.ai/docs/new/studio, https://unsloth.ai/docs/new/studio/start, https://github.com/unslothai/unsloth
@@ -225,11 +229,7 @@ curl http://localhost:8888/v1/models \
 Trang Studio liệt kê các route backend FastAPI dạng `/api/...`, ví dụ `POST /api/train/start`, `GET /api/train/metrics`, `POST /api/inference/chat`. Các route này xác thực bằng JWT. Đây là API mà giao diện Studio dùng nội bộ, tách biệt với endpoint `/v1/...` dành cho client bên ngoài.
 :::
 
-::: tip Kiến thức nền
-Tool calling, chat template và tham số sampling (temperature, top-p...): xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling).
-:::
-
-Chi tiết: [Inference & API](/inference/).
+Chi tiết: [Chạy model và gọi API](/inference/).
 
 **Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/new/studio/start, https://github.com/unslothai/unsloth
 
@@ -242,10 +242,6 @@ Unsloth làm hai việc chính: inference (dùng model để trả lời) và tr
 | **Khái niệm** | Dùng model có sẵn để sinh câu trả lời; trọng số không đổi | Cập nhật trọng số model bằng dữ liệu của bạn |
 | **Đầu vào** | Prompt, ảnh, tài liệu, audio | Dataset + model gốc + hyperparameter |
 | **Đầu ra** | Văn bản, ảnh, audio, tool call | Model hoặc LoRA adapter đã train, checkpoint |
-
-::: tip Kiến thức nền
-Loss, learning rate, epoch: xem [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen). LoRA và QLoRA: xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora). SFT và RL: xem [RL & preference](/kien-thuc-nen/rl-va-preference).
-:::
 
 ### Unsloth hỗ trợ inference
 
@@ -303,7 +299,7 @@ Mỗi chỗ trong docs liệt kê một bộ định dạng file dữ liệu kh�
 - PDF, CSV, DOCX "and more" (Data Recipes): [docs](https://unsloth.ai/docs)
 :::
 
-Chi tiết: [Fine-tuning](/fine-tuning/), [Reinforcement Learning](/reinforcement-learning/), [Dữ liệu](/du-lieu/), [Export & deploy](/export-deploy).
+Chi tiết: [Fine-tuning](/fine-tuning/), [Reinforcement Learning](/reinforcement-learning/), [Dữ liệu](/du-lieu/), [Export và deploy](/export-deploy/).
 
 **Nguồn:** https://unsloth.ai/docs/new/studio, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/basics/inference-and-deployment/unsloth-inference, https://unsloth.ai/docs/desktop, https://unsloth.ai/docs
 
@@ -360,3 +356,9 @@ Sơ đồ dưới gom mọi phần ở trên vào một hình: bạn vào từ D
 **[Nhận định]** Đường nét đứt Desktop → Studio là cách hiểu của người viết. Docs ghi "cách dễ nhất để cài Unsloth Studio là dùng app Desktop", nên Desktop có thể chứa sẵn Studio. Quan hệ chính xác giữa hai sản phẩm cần kiểm tra lại.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/install, https://unsloth.ai/docs/new/studio, https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/basics/api
+
+## Đọc tiếp
+
+- [Lộ trình học](/lo-trinh-hoc) — Gợi ý thứ tự đọc các trang theo mục tiêu của bạn.
+- [Cài đặt và phần cứng](/cai-dat) — Các bước cài Desktop, Studio hoặc Core trên từng nền tảng.
+- [Chạy model và gọi API](/inference/) — Chi tiết cách chat trong Studio và gọi endpoint `/v1`.

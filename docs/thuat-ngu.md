@@ -7,6 +7,12 @@ description: Bảng thuật ngữ Anh – Việt dùng trong website, mỗi thu�
 
 Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật ngữ kèm một câu giải thích ngắn bằng tiếng Việt. Cột "Xem" trỏ tới trang giải thích kỹ nhất. Trang thuộc route [Kiến thức nền LLM](/kien-thuc-nen/) giải thích khái niệm; trang thuộc route Unsloth giải thích cách dùng trong Unsloth. Muốn tra nhanh, dùng ô tìm kiếm ở góc trên.
 
+::: tip Tóm tắt
+- **Dùng khi:** Bạn gặp một thuật ngữ tiếng Anh trên website mà chưa rõ nghĩa.
+- **Kết quả:** Một câu giải thích ngắn cho mỗi thuật ngữ và link tới trang giải thích kỹ nhất.
+- **Nên biết trước:** Không cần kiến thức trước.
+:::
+
 ## Mô hình và kiến trúc
 
 | Thuật ngữ | Giải thích | Xem |
@@ -48,7 +54,9 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Expert, shared expert | Expert: một FFN trong lớp MoE. Shared expert: expert mà mọi token đều đi qua | [Dense & MoE](/kien-thuc-nen/dense-va-moe) |
 | Router / gating, top-k routing | Mạng nhỏ quyết định mỗi token đi qua k expert nào | [Dense & MoE](/kien-thuc-nen/dense-va-moe) |
 | Total / active parameters | Total: tổng số tham số, quyết định bộ nhớ cần có. Active: số tham số dùng cho mỗi token, quyết định lượng tính toán | [Dense & MoE](/kien-thuc-nen/dense-va-moe) |
-| Ký hiệu `30B-A3B` | Model có 30 tỷ tham số tổng, trong đó 3 tỷ tham số được kích hoạt | [Dense & MoE](/kien-thuc-nen/dense-va-moe), [Model catalog](/model-catalog) |
+| Ký hiệu `30B-A3B` | Model có 30 tỷ tham số tổng, trong đó 3 tỷ tham số được kích hoạt | [Dense & MoE](/kien-thuc-nen/dense-va-moe), [Danh sách model hỗ trợ](/model-catalog) |
+
+**Nguồn:** giải thích tổng hợp từ các trang được trỏ tới ở cột "Xem"; nguồn gốc của từng khái niệm ghi ở trang đó. Danh sách URL đầy đủ: [Nguồn tham khảo](/nguon).
 
 ## Bộ nhớ, độ chính xác và lượng tử hóa
 
@@ -68,22 +76,24 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Exponent / mantissa | Exponent: bit mũ, quyết định khoảng giá trị. Mantissa: bit định trị, quyết định độ mịn | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | Mixed precision | Tính toán ở 16-bit, nhưng giữ một bản trọng số FP32 để cập nhật | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | FP8 (E4M3, E5M2) | Số 8 bit, có hai biến thể: E4M3 ưu tiên độ mịn, E5M2 ưu tiên khoảng giá trị | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
-| NVFP4 | Định dạng 4-bit của NVIDIA; cứ mỗi khối 16 phần tử dùng chung một hệ số scale | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa), [Export & deploy](/export-deploy) |
+| NVFP4 | Định dạng 4-bit của NVIDIA; cứ mỗi khối 16 phần tử dùng chung một hệ số scale | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa), [Export và deploy](/export-deploy/nvfp4-fp8#nvfp4) |
 | MXFP4, microscaling (MX) | Định dạng 4-bit; cứ mỗi khối 32 phần tử dùng chung một hệ số scale | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | INT8 / INT4 | Lưu bằng số nguyên 8 hoặc 4 bit, kèm hệ số scale | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | Quantization (lượng tử hóa) | Lưu trọng số bằng ít bit hơn (độ chính xác thấp hơn) để model chiếm ít bộ nhớ hơn | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | PTQ / QAT | PTQ: lượng tử hóa sau khi train xong. QAT: trong lúc train đã mô phỏng lượng tử hóa | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa), [Fine-tuning](/fine-tuning/) |
 | Calibration, imatrix | Calibration: dữ liệu mẫu dùng để hiệu chỉnh khi lượng tử hóa. Imatrix: ma trận độ quan trọng của llama.cpp | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | W4A16, W4A4, W8A8 | Cách ghi số bit: W là trọng số, A là activation | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
-| GGUF | Định dạng gói model vào một file duy nhất, dùng bởi llama.cpp và ggml | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa), [Export & deploy](/export-deploy) |
+| GGUF | Định dạng gói model vào một file duy nhất, dùng bởi llama.cpp và ggml | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa), [Export và deploy](/export-deploy/gguf) |
 | K-quant (`Q4_K_M`…), I-quant (`IQ2_XXS`…) | Các kiểu lượng tử hóa trong file GGUF | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | bpw (bits per weight) | Số bit trung bình mỗi trọng số | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
-| Unsloth Dynamic (UD) | Cách lượng tử hóa của Unsloth, chọn mức bit riêng cho từng layer | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa), [Export & deploy](/export-deploy) |
+| Unsloth Dynamic (UD) | Cách lượng tử hóa của Unsloth, chọn mức bit riêng cho từng layer | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa), [Export và deploy](/export-deploy/gguf#dynamic-gguf) |
 | `bnb-4bit`, `unsloth-bnb-4bit` | `bnb-4bit`: safetensors 4-bit dùng BitsAndBytes. `unsloth-bnb-4bit`: bản dynamic 4-bit của Unsloth. Cả hai dùng để fine-tune | [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho) |
 | KL divergence (KLD), perplexity | KLD: mức lệch phân phối so với model gốc. Perplexity: độ "bối rối" của model trên một văn bản | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | NF4, double quantization | NF4: kiểu số 4-bit NormalFloat mà QLoRA dùng. Double quantization: lượng tử hóa luôn cả các hằng số scale | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) |
 | Compute capability, tensor core | Compute capability: mã cho biết GPU NVIDIA có tính năng phần cứng nào. Tensor core: bộ phận chuyên nhân ma trận | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa), [Cài đặt](/cai-dat) |
-| Blackwell | Một thế hệ GPU NVIDIA, ví dụ RTX 50, B200 | [Cài đặt](/cai-dat), [Export & deploy](/export-deploy) |
+| Blackwell | Một thế hệ GPU NVIDIA, ví dụ RTX 50, B200 | [Cài đặt](/cai-dat), [Export và deploy](/export-deploy/nvfp4-fp8#nvfp4) |
+
+**Nguồn:** giải thích tổng hợp từ các trang được trỏ tới ở cột "Xem"; nguồn gốc của từng khái niệm ghi ở trang đó. Danh sách URL đầy đủ: [Nguồn tham khảo](/nguon).
 
 ## Huấn luyện
 
@@ -117,13 +127,15 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | `target_modules` | Danh sách các lớp linear được gắn LoRA | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) |
 | QLoRA | LoRA gắn trên model gốc đã lượng tử hóa 4-bit | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) |
 | Gradient checkpointing | Không giữ hết activation trong bộ nhớ, khi backward thì tính lại. Cách này tiết kiệm VRAM | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) |
-| Merge, `save_method` | Merge: cộng LoRA vào trọng số gốc. `save_method`: chọn cách lưu (`merged_16bit`, `merged_4bit`, `lora`) | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora), [Export & deploy](/export-deploy) |
+| Merge, `save_method` | Merge: cộng LoRA vào trọng số gốc. `save_method`: chọn cách lưu (`merged_16bit`, `merged_4bit`, `lora`) | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora), [Export và deploy](/export-deploy/) |
 | LoRA hot swapping | Nạp hoặc gỡ adapter trên vLLM ngay khi đang chạy | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) |
 | Multi-GPU, DDP | Multi-GPU: train trên nhiều GPU. DDP: song song hóa dữ liệu giữa các GPU | [Fine-tuning](/fine-tuning/) |
 | Dataset format (Alpaca, ShareGPT, ChatML) | Các định dạng dữ liệu dạng instruction hoặc dạng hội thoại | [Các định dạng dữ liệu](/du-lieu/dinh-dang) |
 | Synthetic data | Dữ liệu train do LLM sinh ra | [Dữ liệu tổng hợp](/du-lieu/synthetic) |
-| Data Recipes | Công cụ trong Unsloth Studio để tạo dataset từ tài liệu | [Data Recipes](/du-lieu/data-recipes) |
+| Data Recipes | Công cụ trong Unsloth Studio để tạo dataset từ tài liệu | [Data Recipes](/du-lieu/studio#data-recipes) |
 | `train_on_responses_only` | Chỉ tính loss trên phần câu trả lời, bỏ qua phần câu hỏi | [Chat template](/du-lieu/chat-template#chi-train-tren-cau-tra-loi), [Token & context](/kien-thuc-nen/token-va-context) |
+
+**Nguồn:** giải thích tổng hợp từ các trang được trỏ tới ở cột "Xem"; nguồn gốc của từng khái niệm ghi ở trang đó. Danh sách URL đầy đủ: [Nguồn tham khảo](/nguon).
 
 ## Reinforcement learning và preference
 
@@ -144,11 +156,13 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Reward hacking | Model tìm cách lách luật để tăng reward mà không thực sự làm đúng việc | [RL & preference](/kien-thuc-nen/rl-va-preference) |
 | Unsloth Standby | Cơ chế cho inference (vLLM) và train dùng chung vùng nhớ khi chạy RL | [Memory-efficient RL](/reinforcement-learning/memory-efficient) |
 
+**Nguồn:** giải thích tổng hợp từ các trang được trỏ tới ở cột "Xem"; nguồn gốc của từng khái niệm ghi ở trang đó. Danh sách URL đầy đủ: [Nguồn tham khảo](/nguon).
+
 ## Suy luận và sử dụng
 
 | Thuật ngữ | Giải thích | Xem |
 | --- | --- | --- |
-| Inference (suy luận) | Dùng model để sinh kết quả; model không học thêm gì | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Inference & API](/inference/) |
+| Inference (suy luận) | Dùng model để sinh kết quả; model không học thêm gì | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Chạy model và gọi API](/inference/) |
 | Autoregressive | Sinh từng token một, nối vào chuỗi rồi đoán token tiếp theo | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
 | Prefill / decode | Prefill: pha xử lý cả prompt song song. Decode: pha sinh từng token | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
 | Greedy / sampling | Greedy: luôn chọn token có xác suất cao nhất. Sampling: bốc ngẫu nhiên theo xác suất | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
@@ -157,20 +171,22 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Repetition / presence / frequency penalty | Phạt các token đã xuất hiện để model bớt lặp lại | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
 | Chat template | Quy tắc đổi danh sách tin nhắn thành một chuỗi token, có chèn các token điều khiển | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Chat template](/du-lieu/chat-template) |
 | `add_generation_prompt` | Thêm phần mở đầu lượt của assistant vào cuối prompt, để model biết tới lượt nó trả lời | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) |
-| Thinking / reasoning mode, `reasoning_effort` | Model viết ra một đoạn suy nghĩ trước khi trả lời. `reasoning_effort` chỉnh mức độ suy nghĩ | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Inference & API](/inference/api) |
-| Tool calling (function calling) | Model sinh ra yêu cầu gọi hàm (dạng JSON). App chạy hàm đó rồi trả kết quả lại | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Inference & API](/inference/tool-calling) |
-| Self-healing tool calling | Unsloth tự sửa các tool call bị lỗi | [Inference & API](/inference/tool-calling) |
-| Server-side tools | Các công cụ Unsloth tự chạy, như Python, bash, web search | [Inference & API](/inference/tool-calling) |
-| MCP (Model Context Protocol) | Giao thức chuẩn để model kết nối và gọi dịch vụ bên ngoài | [Inference & API](/inference/mcp) |
-| OpenAI-compatible API, endpoint | API có cùng định dạng với API của OpenAI. Endpoint là địa chỉ HTTP nhận request | [Inference & API](/inference/api) |
-| API key (`sk-unsloth-…`), Bearer token | Khóa xác thực, gửi kèm request qua header `Authorization: Bearer` | [Inference & API](/inference/api) |
-| Streaming / SSE | Trả kết quả từng phần ngay khi có, qua một luồng sự kiện | [Inference & API](/inference/api) |
-| Coding agent | Tác tử (agent) lập trình, ví dụ Claude Code, Codex, OpenCode | [Inference & API](/inference/coding-agent) |
-| Prompt injection | Lệnh độc hại được chèn vào nội dung mà model đọc | [Inference & API](/inference/mcp), [Ứng dụng RAG](/ung-dung-rag) |
-| MTP, speculative decoding | Đoán trước nhiều token để decode nhanh hơn | [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho), [Export & deploy](/export-deploy) |
+| Thinking / reasoning mode, `reasoning_effort` | Model viết ra một đoạn suy nghĩ trước khi trả lời. `reasoning_effort` chỉnh mức độ suy nghĩ | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Chạy model và gọi API](/inference/api) |
+| Tool calling (function calling) | Model sinh ra yêu cầu gọi hàm (dạng JSON). App chạy hàm đó rồi trả kết quả lại | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling), [Chạy model và gọi API](/inference/tool-calling) |
+| Self-healing tool calling | Unsloth tự sửa các tool call bị lỗi | [Chạy model và gọi API](/inference/tool-calling) |
+| Server-side tools | Các công cụ Unsloth tự chạy, như Python, bash, web search | [Chạy model và gọi API](/inference/tool-calling) |
+| MCP (Model Context Protocol) | Giao thức chuẩn để model kết nối và gọi dịch vụ bên ngoài | [Chạy model và gọi API](/inference/mcp) |
+| OpenAI-compatible API, endpoint | API có cùng định dạng với API của OpenAI. Endpoint là địa chỉ HTTP nhận request | [Chạy model và gọi API](/inference/api) |
+| API key (`sk-unsloth-…`), Bearer token | Khóa xác thực, gửi kèm request qua header `Authorization: Bearer` | [Chạy model và gọi API](/inference/api) |
+| Streaming / SSE | Trả kết quả từng phần ngay khi có, qua một luồng sự kiện | [Chạy model và gọi API](/inference/api) |
+| Coding agent | Tác tử (agent) lập trình, ví dụ Claude Code, Codex, OpenCode | [Chạy model và gọi API](/inference/coding-agent) |
+| Prompt injection | Lệnh độc hại được chèn vào nội dung mà model đọc | [Chạy model và gọi API](/inference/mcp), [Ứng dụng RAG](/ung-dung-rag) |
+| MTP, speculative decoding | Đoán trước nhiều token để decode nhanh hơn | [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho), [Export và deploy](/export-deploy/) |
 | RAG | Tìm tài liệu liên quan, đưa vào prompt, rồi để model dựa vào đó trả lời | [Ứng dụng RAG](/ung-dung-rag) |
 | Vector DB, reranker | Vector DB: cơ sở dữ liệu lưu vector. Reranker: model xếp hạng lại kết quả tìm được | [Ứng dụng RAG](/ung-dung-rag) |
 | Hallucination | Model bịa ra thông tin | [Ứng dụng RAG](/ung-dung-rag) |
+
+**Nguồn:** giải thích tổng hợp từ các trang được trỏ tới ở cột "Xem"; nguồn gốc của từng khái niệm ghi ở trang đó. Danh sách URL đầy đủ: [Nguồn tham khảo](/nguon).
 
 ## Sản phẩm, công cụ và triển khai
 
@@ -179,20 +195,26 @@ Trang này gom các thuật ngữ tiếng Anh dùng trên website, mỗi thuật
 | Unsloth Desktop | App native cài trên macOS, Windows, Linux | [Tổng quan](/tong-quan) |
 | Unsloth Studio | Giao diện web không cần code (no-code), cài thủ công | [Tổng quan](/tong-quan) |
 | Unsloth Core | Thư viện Python gốc, dùng bằng cách viết code | [Tổng quan](/tong-quan) |
-| `unsloth run`, `unsloth start` | `unsloth run`: nạp model và mở API. `unsloth start`: nối coding agent với model local | [Inference & API](/inference/coding-agent) |
-| safetensors | Định dạng lưu trọng số chuẩn của Hugging Face | [Export & deploy](/export-deploy) |
-| llama.cpp, llama-server | llama.cpp: engine inference viết bằng C/C++. llama-server: server HTTP của llama.cpp | [Inference & API](/inference/), [Export & deploy](/export-deploy) |
-| vLLM, SGLang | Engine inference hiệu năng cao cho production | [Export & deploy](/export-deploy) |
-| Ollama, LM Studio | Ứng dụng chạy model local | [Export & deploy](/export-deploy) |
-| Modelfile | File cấu hình model của Ollama | [Export & deploy](/export-deploy) |
+| `unsloth run`, `unsloth start` | `unsloth run`: nạp model và mở API. `unsloth start`: nối coding agent với model local | [Chạy model và gọi API](/inference/coding-agent) |
+| safetensors | Định dạng lưu trọng số chuẩn của Hugging Face | [Export và deploy](/export-deploy/) |
+| llama.cpp, llama-server | llama.cpp: engine inference viết bằng C/C++. llama-server: server HTTP của llama.cpp | [Chạy model và gọi API](/inference/), [Export và deploy](/export-deploy/chay-model#llama-server) |
+| vLLM, SGLang | Engine inference hiệu năng cao cho production | [Export và deploy](/export-deploy/chay-model#vllm) |
+| Ollama, LM Studio | Ứng dụng chạy model local | [Ollama](/export-deploy/chay-model#ollama), [LM Studio](/export-deploy/chay-model#lm-studio) |
+| Modelfile | File cấu hình model của Ollama | [Export và deploy](/export-deploy/chay-model#ollama) |
 | MLX | Framework ML trên Apple Silicon | [Cài đặt](/cai-dat) |
 | CUDA, ROCm, XPU/oneAPI | Nền tảng tính toán trên GPU, lần lượt của NVIDIA, AMD, Intel | [Cài đặt](/cai-dat) |
 | WSL | Chạy Linux trong Windows | [Cài đặt](/cai-dat) |
 | venv / uv / conda | Công cụ tạo môi trường Python cô lập và quản lý gói | [Cài đặt](/cai-dat) |
 | bitsandbytes, xformers, triton | bitsandbytes: thư viện lượng tử hóa. xformers, triton: thư viện kernel tăng tốc | [Cài đặt](/cai-dat) |
 | Docker image / container | Image: môi trường đóng gói sẵn. Container: một bản image đang chạy | [Cài đặt](/cai-dat) |
-| LAN access, bind `0.0.0.0` | Mở server để máy khác trong mạng nội bộ truy cập được | [Export & deploy](/export-deploy) |
-| Cloudflare tunnel, `--secure` | Link HTTPS công khai trỏ tới server chạy trên máy bạn | [Export & deploy](/export-deploy) |
-| Push to Hub | Đẩy model lên Hugging Face Hub | [Export & deploy](/export-deploy) |
+| LAN access, bind `0.0.0.0` | Mở server để máy khác trong mạng nội bộ truy cập được | [Export và deploy](/export-deploy/lan-remote) |
+| Cloudflare tunnel, `--secure` | Link HTTPS công khai trỏ tới server chạy trên máy bạn | [Export và deploy](/export-deploy/lan-remote) |
+| Push to Hub | Đẩy model lên Hugging Face Hub | [Export và deploy](/export-deploy/) |
 
 **Nguồn:** thuật ngữ và giải thích tổng hợp từ các trang trên website; nguồn gốc của từng khái niệm ghi ở trang được trỏ tới. Danh sách URL đầy đủ: [Nguồn tham khảo](/nguon).
+
+## Đọc tiếp
+
+- [Nguồn tham khảo](/nguon) — Danh sách đầy đủ URL docs Unsloth mà các trang trên website dùng.
+- [Kiến thức nền LLM](/kien-thuc-nen/) — Đọc kỹ các khái niệm nếu một câu giải thích ở trên chưa đủ.
+- [Tổng quan kiến trúc](/tong-quan) — Xem các thuật ngữ sản phẩm (Desktop, Studio, Core) được đặt vào bức tranh chung.

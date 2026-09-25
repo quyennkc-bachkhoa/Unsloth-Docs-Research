@@ -5,6 +5,14 @@ description: Lộ trình 5 bước từ đọc kiến thức nền, cài Unsloth
 
 # Lộ trình học
 
+Trang này gợi ý thứ tự đọc và làm để đi từ con số 0 đến một model tự train, kèm dấu hiệu cho biết bạn đã xong từng bước.
+
+::: tip Tóm tắt
+- **Dùng khi:** Bạn không biết nên bắt đầu học Unsloth từ đâu, hoặc muốn kiểm tra mình đang ở bước nào.
+- **Kết quả:** Một lộ trình 5 bước (cộng bước mở rộng về RL), mỗi bước có việc cần làm, trang nên đọc và dấu hiệu hoàn thành.
+- **Nên biết trước:** Không cần kiến thức trước; Bước 1 sẽ chỉ các trang [Kiến thức nền LLM](/kien-thuc-nen/) cần đọc. Tới bước export, nên xem lại [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) (chọn mức quantization khi xuất GGUF) và [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) (merge LoRA vào model gốc).
+:::
+
 ## Toàn cảnh lộ trình
 
 Trang này chỉ cho bạn học Unsloth theo thứ tự nào, từ đọc lý thuyết đến khi có một model tự train. Lộ trình có 5 bước, cộng một bước mở rộng về RL (Reinforcement Learning, học tăng cường).
@@ -113,7 +121,7 @@ Trang cài đặt của docs (Nguồn A) và README trên GitHub (Nguồn B) ghi
 | Server-side tools mặc định | Với `unsloth run`: bật khi bind `127.0.0.1`, **tắt** khi bind `0.0.0.0` ([basics/api](https://unsloth.ai/docs/basics/api)) | "Server-side tools are **on** by default - so be careful!"; dùng `--disable-tools` khi mở Unsloth ra ngoài |
 :::
 
-**Trang nội bộ:** [Cài đặt & phần cứng](/cai-dat).
+**Trang nội bộ:** [Cài đặt và phần cứng](/cai-dat).
 
 **Docs Unsloth gốc:** [Unsloth Installation](https://unsloth.ai/docs/get-started/install), [Studio Install](https://unsloth.ai/docs/new/studio/install), [uv, pip install & venv](https://unsloth.ai/docs/get-started/install/pip-install).
 
@@ -162,7 +170,7 @@ Cổng trong base URL của API được ghi khác nhau:
 Cách chắc chắn nhất: base URL thực tế của máy bạn hiển thị ở đầu trang API monitor ([basics/api](https://unsloth.ai/docs/basics/api)).
 :::
 
-**Trang nội bộ:** [Inference & API](/inference/), [Model catalog](/model-catalog).
+**Trang nội bộ:** [Chạy model và gọi API](/inference/), [Danh sách model hỗ trợ](/model-catalog).
 
 **Docs Unsloth gốc:** [Unsloth API](https://unsloth.ai/docs/basics/api), [Studio Chat](https://unsloth.ai/docs/new/studio/chat), [Unsloth Start](https://unsloth.ai/docs/integrations/unsloth-start).
 
@@ -242,11 +250,7 @@ Cách bật truy cập LAN được ghi khác nhau:
 Các nguồn cũng ghi khác nhau về việc server-side tools có bật mặc định khi mở ra mạng hay không: xem hộp "Docs chưa thống nhất" ở Bước 2 phía trên.
 :::
 
-::: tip Kiến thức nền
-Khi export sang GGUF cần chọn mức quantization: xem lại [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa). Merge LoRA vào model gốc: xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora).
-:::
-
-**Trang nội bộ:** [Export & deploy](/export-deploy), [Ứng dụng RAG](/ung-dung-rag).
+**Trang nội bộ:** [Export và deploy](/export-deploy/), [Ứng dụng RAG](/ung-dung-rag).
 
 **Docs Unsloth gốc:** [Model Export](https://unsloth.ai/docs/new/studio/export), [Saving to GGUF](https://unsloth.ai/docs/basics/inference-and-deployment/saving-to-gguf), [Inference & Deployment](https://unsloth.ai/docs/basics/inference-and-deployment).
 
@@ -270,3 +274,9 @@ Khi export sang GGUF cần chọn mức quantization: xem lại [Độ chính x�
 **Dấu hiệu hoàn thành:** bạn chạy xong một notebook GRPO và giải thích được reward (phần thưởng) được tính thế nào trong notebook đó.
 
 **Nguồn:** https://unsloth.ai/docs, https://github.com/unslothai/unsloth
+
+## Đọc tiếp
+
+- [Cài đặt và phần cứng](/cai-dat) — Bắt đầu Bước 2: cài Unsloth và kiểm tra phần cứng của bạn.
+- [Tổng quan kiến trúc](/tong-quan) — Nắm Desktop, Studio và Core khác nhau thế nào trước khi chọn bản cài.
+- [Kiến thức nền LLM](/kien-thuc-nen/) — Các khái niệm cần cho Bước 1.

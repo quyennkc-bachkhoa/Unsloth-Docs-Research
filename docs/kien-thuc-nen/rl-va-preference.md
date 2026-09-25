@@ -133,7 +133,7 @@ Reward lấy từ Reward Model. Số hạng `clip(..., 1-e, 1+e)` ngăn mỗi b�
 
 **Ảnh hưởng khi dùng Unsloth.** Docs Unsloth liệt kê PPO trong nhóm phương pháp "chạy được với Unsloth", nhưng không có notebook PPO riêng. Theo docs, PPO phải train nhiều model cùng lúc nên tốn bộ nhớ. Đó là lý do GRPO bỏ value model và reward model.
 
-**Gặp ở đâu trong Unsloth.** [Từ RLHF, PPO tới GRPO](/reinforcement-learning/rlhf-ppo-grpo).
+**Gặp ở đâu trong Unsloth.** [Từ RLHF, PPO tới GRPO](/reinforcement-learning/#rlhf-ppo-grpo).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto; **[Nguồn ngoài]** https://arxiv.org/abs/2203.02155, https://arxiv.org/abs/1707.06347
 
@@ -265,7 +265,7 @@ Reward hacking là rủi ro bạn cần để ý khi tự viết reward function
 
 **Ảnh hưởng khi dùng Unsloth.** **[Nhận định]** Reward function chỉ đo được những gì nó kiểm tra. Đường reward tăng đẹp chưa chứng minh model tốt lên. Bạn cần đọc mẫu câu trả lời (Unsloth in mẫu trong lúc train), và chạy code của model trong môi trường cô lập. **[Nguồn ngoài]** InstructGPT dùng KL penalty chính để giảm việc tối ưu quá mức theo reward model: https://arxiv.org/abs/2203.02155
 
-**Gặp ở đâu trong Unsloth.** [Reward hacking](/reinforcement-learning/reward-hacking).
+**Gặp ở đâu trong Unsloth.** [Reward hacking](/reinforcement-learning/reward-function#reward-hacking).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation/rl-reward-hacking
 
@@ -298,8 +298,8 @@ Mục này giúp bạn chọn phương pháp dựa trên loại dữ liệu đan
 | Policy, reward, environment | [Reinforcement Learning](/reinforcement-learning/) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
 | Reward function, verifier | [Reward function và verifier](/reinforcement-learning/reward-function) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
 | Reference model, KL, `beta` | [Reinforcement Learning](/reinforcement-learning/) | [Advanced RL Documentation](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation) |
-| RLHF, PPO | [Từ RLHF, PPO tới GRPO](/reinforcement-learning/rlhf-ppo-grpo) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
+| RLHF, PPO | [Từ RLHF, PPO tới GRPO](/reinforcement-learning/#rlhf-ppo-grpo) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
 | DPO, ORPO, KTO | [DPO, ORPO, KTO](/reinforcement-learning/dpo-orpo-kto) | [Preference Optimization](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto) |
 | GRPO, advantage, `num_generations` | [GRPO trong Unsloth](/reinforcement-learning/grpo) | [GRPO Tutorial](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo) |
-| RLVR | [Từ RLHF, PPO tới GRPO](/reinforcement-learning/rlhf-ppo-grpo) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
-| Reward hacking | [Reward hacking](/reinforcement-learning/reward-hacking) | [RL Reward Hacking](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation/rl-reward-hacking) |
+| RLVR | [Từ RLHF, PPO tới GRPO](/reinforcement-learning/#rlhf-ppo-grpo) | [RL Guide](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide) |
+| Reward hacking | [Reward hacking](/reinforcement-learning/reward-function#reward-hacking) | [RL Reward Hacking](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/advanced-rl-documentation/rl-reward-hacking) |

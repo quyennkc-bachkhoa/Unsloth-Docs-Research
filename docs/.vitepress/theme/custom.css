@@ -261,6 +261,37 @@
   color: var(--mark-ext);
 }
 
+/* Tóm tắt đầu trang: thẻ 3 dòng Dùng khi / Kết quả / Nên biết trước */
+.vp-doc .custom-block[data-kind='summary'] {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--ink);
+  color: var(--ink);
+  padding: 12px 18px;
+}
+
+.vp-doc .custom-block[data-kind='summary'] .custom-block-title {
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 4px;
+}
+
+.vp-doc .custom-block[data-kind='summary'] ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.vp-doc .custom-block[data-kind='summary'] li {
+  margin: 4px 0;
+}
+
+.vp-doc .custom-block[data-kind='summary'] a {
+  color: var(--mark-ext);
+}
+
 /* Docs chưa thống nhất: dấu mâu thuẫn, màu đỏ Unsloth */
 .vp-doc .custom-block[data-kind='conflict'] {
   background: color-mix(in srgb, var(--mark-conflict) 5%, var(--paper));

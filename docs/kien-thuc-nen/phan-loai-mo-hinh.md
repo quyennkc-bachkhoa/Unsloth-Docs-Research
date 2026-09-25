@@ -57,7 +57,7 @@ Các nguồn đã duyệt (docs Unsloth, HF LLM Course, Transformers glossary) *
 
 **Ảnh hưởng khi dùng Unsloth.** Đừng dựa vào nhãn LLM hay SLM. Hãy nhìn số tham số (với MoE thì nhìn thêm số tham số kích hoạt), vì con số này quyết định bạn cần bao nhiêu VRAM. Docs chỉ tới bảng VRAM theo số tham số trong trang Unsloth Requirements. Xem thêm [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho) và [Dense & MoE](/kien-thuc-nen/dense-va-moe).
 
-**Gặp ở đâu trong Unsloth.** [Model catalog](/model-catalog), [Cài đặt](/cai-dat), [Fine-tuning — Chọn model](/fine-tuning/chon-model).
+**Gặp ở đâu trong Unsloth.** [Model catalog](/model-catalog), [Cài đặt](/cai-dat), [Fine-tuning — Chọn model](/fine-tuning/chon-cach-train#chon-model).
 
 **Nguồn:** https://huggingface.co/docs/transformers/glossary, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use
 
@@ -100,7 +100,7 @@ Hai chỗ trong docs Unsloth nghiêng về hai hướng khác nhau:
 Hai câu không hẳn mâu thuẫn: một câu nói về điểm bắt đầu, câu kia dựa vào lượng dữ liệu. Nhưng docs không nói nên ưu tiên câu nào khi bạn là người mới **và** có trên 1.000 dòng.
 :::
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning — Chọn model để fine-tune](/fine-tuning/chon-model), [Dữ liệu — Chat template](/du-lieu/chat-template), [Model catalog](/model-catalog). Chi tiết về pre-train và post-train: [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning — Chọn model để fine-tune](/fine-tuning/chon-cach-train#chon-model), [Dữ liệu — Chat template](/du-lieu/chat-template), [Model catalog](/model-catalog). Chi tiết về pre-train và post-train: [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/what-model-should-i-use, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/basics/continued-pretraining, https://huggingface.co/docs/transformers/chat_templating, https://huggingface.co/Qwen/Qwen3-8B-Base, https://huggingface.co/Qwen/Qwen3-8B
 
@@ -195,7 +195,7 @@ model = FastSentenceTransformer.from_pretrained(
 - **Đổi model.** Bạn chỉ cần đổi `model_name` cho khớp tên repo trên Hugging Face, ví dụ `unsloth/llama-3.1-8b-unsloth-bnb-4bit`.
 - **Tiền tố chưa rõ nghĩa.** Docs Unsloth dùng `E2B`/`E4B` của Gemma 4 (kèm ghi chú "Dense + PLE") nhưng không giải thích chữ "E" nghĩa là gì. Điều này **cần kiểm tra lại** trong model card chính thức của Google.
 
-**Gặp ở đâu trong Unsloth.** [Model catalog — Cách đọc bảng](/model-catalog), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy). Chi tiết về 4-bit và GGUF: [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
+**Gặp ở đâu trong Unsloth.** [Model catalog — Cách đọc bảng](/model-catalog), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy/). Chi tiết về 4-bit và GGUF: [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/unsloth-model-catalog, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/models/tutorials/qwen3-how-to-run-and-fine-tune/qwen3-vl-how-to-run-and-fine-tune, https://unsloth.ai/docs/models/gemma-4, https://huggingface.co/Qwen/Qwen3-8B-Base, https://huggingface.co/Qwen/Qwen3-8B, https://huggingface.co/google/gemma-3-4b-pt, https://huggingface.co/google/gemma-3-4b-it, https://huggingface.co/Qwen/Qwen3-Embedding-0.6B
 
@@ -210,4 +210,4 @@ Bảng này gom lại các khái niệm trên trang, kèm trang Unsloth trên we
 | Multimodal: vision / VLM | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu/) | https://unsloth.ai/docs/basics/vision-fine-tuning |
 | Multimodal: audio, TTS/STT | [Model catalog](/model-catalog) | https://unsloth.ai/docs/basics/text-to-speech-tts-fine-tuning, https://unsloth.ai/docs/models/gemma-4 |
 | Embedding model | [Ứng dụng RAG](/ung-dung-rag) | https://unsloth.ai/docs/basics/embedding-finetuning |
-| Hậu tố tên model | [Model catalog](/model-catalog), [Export & deploy](/export-deploy) | https://unsloth.ai/docs/get-started/unsloth-model-catalog, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
+| Hậu tố tên model | [Model catalog](/model-catalog), [Export & deploy](/export-deploy/) | https://unsloth.ai/docs/get-started/unsloth-model-catalog, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |

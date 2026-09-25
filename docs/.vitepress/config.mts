@@ -13,21 +13,21 @@ const unslothSidebar = [
   {
     text: 'Sử dụng',
     items: [
-      { text: 'Cài đặt & phần cứng', link: '/cai-dat' },
+      { text: 'Cài đặt và phần cứng', link: '/cai-dat' },
       {
-        text: 'Inference & API',
+        text: 'Chạy model và gọi API',
         link: '/inference/',
         collapsed: false,
         items: [
-          { text: 'Studio Chat', link: '/inference/studio-chat' },
-          { text: 'API OpenAI & Anthropic', link: '/inference/api' },
-          { text: 'Coding agent', link: '/inference/coding-agent' },
-          { text: 'Connections', link: '/inference/connections' },
-          { text: 'MCP', link: '/inference/mcp' },
-          { text: 'Tool calling', link: '/inference/tool-calling' }
+          { text: 'Chat trong Studio', link: '/inference/studio-chat' },
+          { text: 'Gọi qua API (OpenAI, Anthropic)', link: '/inference/api' },
+          { text: 'Dùng với coding agent', link: '/inference/coding-agent' },
+          { text: 'Kết nối server khác', link: '/inference/connections' },
+          { text: 'Thêm công cụ qua MCP', link: '/inference/mcp' },
+          { text: 'Cho model gọi hàm (tool calling)', link: '/inference/tool-calling' }
         ]
       },
-      { text: 'Model catalog', link: '/model-catalog' }
+      { text: 'Danh sách model hỗ trợ', link: '/model-catalog' }
     ]
   },
   {
@@ -38,14 +38,13 @@ const unslothSidebar = [
         link: '/fine-tuning/',
         collapsed: false,
         items: [
-          { text: 'LoRA, QLoRA hay full', link: '/fine-tuning/lora-qlora-full' },
-          { text: 'Chọn model', link: '/fine-tuning/chon-model' },
-          { text: 'Quy trình', link: '/fine-tuning/quy-trinh' },
-          { text: 'Hyperparameter', link: '/fine-tuning/hyperparameter' },
-          { text: 'Đánh giá & overfitting', link: '/fine-tuning/danh-gia' },
-          { text: 'Notebooks', link: '/fine-tuning/notebooks' },
-          { text: 'Hiệu năng & benchmark', link: '/fine-tuning/benchmark' },
-          { text: 'Mở rộng', link: '/fine-tuning/mo-rong' },
+          { text: 'Chọn cách train và model', link: '/fine-tuning/chon-cach-train' },
+          { text: 'Quy trình từng bước', link: '/fine-tuning/quy-trinh' },
+          { text: 'Chọn hyperparameter', link: '/fine-tuning/hyperparameter' },
+          { text: 'Đánh giá và overfitting', link: '/fine-tuning/danh-gia' },
+          { text: 'Notebook chạy sẵn', link: '/fine-tuning/notebooks' },
+          { text: 'Hiệu năng và benchmark', link: '/fine-tuning/benchmark' },
+          { text: 'Kỹ thuật nâng cao', link: '/fine-tuning/mo-rong' },
           { text: 'Lỗi thường gặp', link: '/fine-tuning/loi-thuong-gap' }
         ]
       },
@@ -54,14 +53,11 @@ const unslothSidebar = [
         link: '/reinforcement-learning/',
         collapsed: false,
         items: [
-          { text: 'Từ RLHF tới GRPO', link: '/reinforcement-learning/rlhf-ppo-grpo' },
-          { text: 'GRPO trong Unsloth', link: '/reinforcement-learning/grpo' },
-          { text: 'Reward function', link: '/reinforcement-learning/reward-function' },
-          { text: 'DPO, ORPO, KTO', link: '/reinforcement-learning/dpo-orpo-kto' },
-          { text: 'SFT vs DPO vs GRPO', link: '/reinforcement-learning/chon-phuong-phap' },
-          { text: 'Memory-efficient RL', link: '/reinforcement-learning/memory-efficient' },
-          { text: 'Reward hacking', link: '/reinforcement-learning/reward-hacking' },
-          { text: 'Huấn luyện agent', link: '/reinforcement-learning/agent' },
+          { text: 'Train bằng GRPO', link: '/reinforcement-learning/grpo' },
+          { text: 'Viết reward function', link: '/reinforcement-learning/reward-function' },
+          { text: 'Train theo cặp tốt/xấu (DPO, ORPO, KTO)', link: '/reinforcement-learning/dpo-orpo-kto' },
+          { text: 'Tiết kiệm VRAM khi chạy RL', link: '/reinforcement-learning/memory-efficient' },
+          { text: 'Train AI agent', link: '/reinforcement-learning/agent' },
           { text: 'Lỗi thường gặp', link: '/reinforcement-learning/loi-thuong-gap' }
         ]
       },
@@ -71,20 +67,29 @@ const unslothSidebar = [
         collapsed: false,
         items: [
           { text: 'Định dạng dữ liệu', link: '/du-lieu/dinh-dang' },
-          { text: 'Lượng dữ liệu cần có', link: '/du-lieu/so-luong' },
           { text: 'Chat template', link: '/du-lieu/chat-template' },
-          { text: 'Nạp dữ liệu trong Studio', link: '/du-lieu/studio' },
-          { text: 'Data Recipes', link: '/du-lieu/data-recipes' },
-          { text: 'Dữ liệu tổng hợp', link: '/du-lieu/synthetic' },
-          { text: 'Checklist', link: '/du-lieu/checklist' }
+          { text: 'Làm dữ liệu trong Studio', link: '/du-lieu/studio' },
+          { text: 'Sinh dữ liệu tổng hợp', link: '/du-lieu/synthetic' },
+          { text: 'Checklist chuẩn bị dữ liệu', link: '/du-lieu/checklist' }
         ]
       }
     ]
   },
   {
-    text: 'Triển khai & ứng dụng',
+    text: 'Triển khai và ứng dụng',
     items: [
-      { text: 'Export & deploy', link: '/export-deploy' },
+      {
+        text: 'Export và deploy',
+        link: '/export-deploy/',
+        collapsed: false,
+        items: [
+          { text: 'Xuất file GGUF', link: '/export-deploy/gguf' },
+          { text: 'Định dạng trọng số NVFP4 và FP8', link: '/export-deploy/nvfp4-fp8' },
+          { text: 'Chạy model đã xuất', link: '/export-deploy/chay-model' },
+          { text: 'Mở cho máy khác (LAN, Cloudflare)', link: '/export-deploy/lan-remote' },
+          { text: 'Lỗi thường gặp', link: '/export-deploy/loi-thuong-gap' }
+        ]
+      },
       { text: 'Ứng dụng RAG', link: '/ung-dung-rag' }
     ]
   },

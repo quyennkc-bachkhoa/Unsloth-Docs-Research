@@ -1,24 +1,32 @@
 ---
-title: Memory-efficient RL
+title: Tiết kiệm VRAM khi chạy RL
 description: "Vì sao RL tốn bộ nhớ GPU, các kỹ thuật Unsloth dùng để giảm (chia sẻ trọng số với vLLM, Standby, FP8 RL) và các con số kèm điều kiện đo."
 ---
 
-# Memory-efficient RL
+# Tiết kiệm VRAM khi chạy RL
 
-RL tốn nhiều bộ nhớ GPU hơn fine-tune thường. Mục này giải thích vì sao, rồi liệt kê các kỹ thuật Unsloth dùng để giảm mức tốn đó.
+RL tốn nhiều bộ nhớ GPU (VRAM) hơn fine-tune thường, vì GPU vừa phải sinh văn bản vừa phải train. Trang này giải thích vì sao, rồi liệt kê các kỹ thuật Unsloth dùng để giảm mức tốn đó và cách bật chúng.
 
-**Vì sao RL tốn bộ nhớ:** GRPO sinh văn bản rất nhiều, và việc sinh này chạy bằng vLLM (engine inference, tức engine chạy suy luận). Vì vậy GPU phải giữ cùng lúc hai "bộ":
+::: tip Tóm tắt
+- **Dùng khi:** chạy GRPO bị thiếu VRAM, hoặc bạn muốn train với context dài hơn trên cùng GPU.
+- **Kết quả:** hiểu hai "bộ" nào chiếm bộ nhớ khi làm RL, biết các kỹ thuật Unsloth (chia sẻ trọng số với vLLM, Standby, FP8 RL) cùng con số kèm điều kiện đo, và biết cách bật Standby.
+- **Nên biết trước:** [Train bằng GRPO](/reinforcement-learning/grpo), [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) (KV cache là gì), [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) (FP8/BF16).
+:::
+
+## Vì sao RL tốn bộ nhớ
+
+GRPO sinh văn bản rất nhiều, và việc sinh này chạy bằng vLLM (engine inference, tức engine chạy suy luận). Vì vậy GPU phải giữ cùng lúc hai "bộ":
 
 1. Inference engine: trọng số model và KV cache.
 2. Training engine: trọng số model, activation, gradient, optimizer state.
 
 Theo docs, các framework khác thường chia GPU 80GB theo tỉ lệ 50/50 cho hai engine.
 
-::: tip Kiến thức nền
-KV cache là gì? Xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling). FP8/BF16: xem [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
-:::
+**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl
 
-**Unsloth tối ưu gì:**
+## Unsloth tối ưu gì
+
+Unsloth giảm bộ nhớ bằng cách cho hai engine dùng chung trọng số và vùng nhớ, cộng thêm các kernel và kỹ thuật tiết kiệm riêng:
 
 | Kỹ thuật | Tác dụng theo docs |
 | --- | --- |
@@ -28,7 +36,11 @@ KV cache là gì? Xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-samplin
 | Unsloth gradient checkpointing | Chuyển activation sang RAM hệ thống, chỉ chậm hơn 1%, bớt 52GB |
 | FP8 RL (`load_in_fp8 = True`) | Ít hơn 60% VRAM, context dài hơn 10 lần so với các cách làm FP8 RL khác; inference nhanh hơn khoảng 1.4 lần |
 
-**Con số chính (ghi rõ điều kiện):**
+**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning
+
+## Con số chính (ghi rõ điều kiện)
+
+Mỗi con số tiết kiệm dưới đây chỉ đúng với cấu hình đi kèm, nên hãy đọc cả cột điều kiện:
 
 | Kết quả | Điều kiện |
 | --- | --- |
@@ -41,13 +53,6 @@ KV cache là gì? Xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-samplin
 
 Lưu ý khi đọc bảng: với GRPO, context 6,144 của Qwen3-32B thực chất là 6,144 × 2 generation = 12,288.
 
-**Cách bật Standby.** Docs dặn đặt biến này trước mọi lệnh import Unsloth:
-
-```python
-import os
-os.environ["UNSLOTH_VLLM_STANDBY"] = "1"
-```
-
 ::: warning Docs chưa thống nhất
 Các chỗ trong docs ghi mức tiết kiệm bộ nhớ và mức tăng context khác nhau:
 
@@ -58,6 +63,23 @@ Các chỗ trong docs ghi mức tiết kiệm bộ nhớ và mức tăng context
 | Mức tăng context | "1.2 to 1.7x increased context lengths" ([Memory Efficient RL](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl), phần mở đầu) | Llama-3.1-8B QLoRA 4-bit: 47,500 so với 42,000, tức 1.13x ([Memory Efficient RL](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl), cùng trang) |
 :::
 
+**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning
+
+## Cách bật Standby
+
+Docs dặn đặt biến này trước mọi lệnh import Unsloth:
+
+```python
+import os
+os.environ["UNSLOTH_VLLM_STANDBY"] = "1"
+```
+
 Khi có Standby, bạn chỉ cần đặt `gpu_memory_utilization` ở 0.9 hoặc 0.95. Không còn phải dò từ 30% đến 95% như trước. Đừng đặt 100%, vì cần chừa chỗ cho các tensor nhỏ. Theo docs, mọi notebook GRPO của Unsloth đã bật sẵn Standby.
 
-**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning
+**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl
+
+## Đọc tiếp
+
+- [Train AI agent](/reinforcement-learning/agent) — trang kế tiếp: train agent làm nhiều bước bằng ART và reward RULER.
+- [Train bằng GRPO](/reinforcement-learning/grpo) — đối chiếu với bảng VRAM theo cỡ model của GRPO.
+- [Lỗi thường gặp](/reinforcement-learning/loi-thuong-gap) — các lỗi cấu hình máy như `gpu_memory_utilization` hay FP8 trên T4.

@@ -1,11 +1,17 @@
 ---
-title: Mở rộng
+title: Kỹ thuật nâng cao
 description: "Multi-GPU, vision fine-tuning, continued pretraining, resume từ checkpoint và QAT."
 ---
 
-# Mở rộng
+# Kỹ thuật nâng cao
 
 Trang này dành cho lúc bạn đã fine-tune cơ bản xong và muốn đi tiếp: train trên nhiều GPU, train model nhận ảnh, dạy model ngôn ngữ hoặc lĩnh vực mới, train tiếp từ checkpoint, và train sẵn cho bản 4-bit (QAT).
+
+::: tip Tóm tắt
+- **Dùng khi:** bạn đã fine-tune cơ bản xong và cần nhiều GPU, model nhận ảnh, dạy ngôn ngữ hoặc lĩnh vực mới, train tiếp từ checkpoint, hoặc giữ chất lượng khi chạy 4-bit.
+- **Kết quả:** biết cách bật từng kỹ thuật (DDP, `FastVisionModel`, CPT, `resume_from_checkpoint`, `qat_scheme`) kèm code mẫu từ docs.
+- **Nên biết trước:** code nạp model và trainer ở [Quy trình từng bước](/fine-tuning/quy-trinh).
+:::
 
 ## Multi-GPU
 
@@ -75,7 +81,7 @@ Lưu ý từ docs:
 - Ảnh trong dataset nên cùng kích thước, khoảng 300–1000px, để train không quá lâu.
 - Với multi-image, dùng list comprehension thay cho `ds.map(...)`.
 - Muốn train-on-responses-only cho VLM, bật qua các tham số `train_on_responses_only`, `instruction_part`, `response_part` của `UnslothVisionDataCollator`.
-- Định dạng dữ liệu vision: xem trang [Các định dạng dữ liệu](/du-lieu/dinh-dang#vision-anh-chu).
+- Định dạng dữ liệu vision: xem trang [Định dạng dữ liệu](/du-lieu/dinh-dang#vision-anh-chu).
 
 **Nguồn:** https://unsloth.ai/docs/basics/vision-fine-tuning
 
@@ -104,7 +110,7 @@ Bạn có thể nạp lại LoRA adapter đã lưu để train tiếp. Cách là
 
 ## Resume từ checkpoint
 
-Resume giúp bạn train tiếp từ chỗ đã dừng thay vì chạy lại từ đầu. Trước hết, thêm `save_strategy` và `save_steps` vào `TrainingArguments`. Ví dụ ở trang [Quy trình](/fine-tuning/quy-trinh) lưu mỗi 50 bước vào thư mục `outputs` (xem khối `SFTTrainer`). Sau đó gọi:
+Resume giúp bạn train tiếp từ chỗ đã dừng thay vì chạy lại từ đầu. Trước hết, thêm `save_strategy` và `save_steps` vào `TrainingArguments`. Ví dụ ở trang [Quy trình từng bước](/fine-tuning/quy-trinh) lưu mỗi 50 bước vào thư mục `outputs` (xem khối `SFTTrainer`). Sau đó gọi:
 
 ```python
 trainer_stats = trainer.train(resume_from_checkpoint = True)
@@ -127,7 +133,7 @@ Docs Unsloth ghi các con số sau:
 
 Cách dùng:
 
-- Bật qua tham số `qat_scheme` trong `get_peft_model` (xem khối code ở trang [Quy trình](/fine-tuning/quy-trinh)). Các giá trị hỗ trợ: `fp8-int4`, `fp8-fp8`, `int8-int4`, `int4`.
+- Bật qua tham số `qat_scheme` trong `get_peft_model` (xem khối code ở trang [Quy trình từng bước](/fine-tuning/quy-trinh)). Các giá trị hỗ trợ: `fp8-int4`, `fp8-fp8`, `int8-int4`, `int4`.
 - Sau khi train: gọi `quantize_(model, QATConfig(step = "convert"))` rồi `model.save_pretrained_torchao(...)`.
 - Cài đặt:
 
@@ -139,3 +145,9 @@ pip install torchao==0.14.0 fbgemm-gpu-genai==1.3.0
 Thử với [notebook Qwen3 (4B) QAT](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Qwen3_\(4B\)_Instruct-QAT.ipynb).
 
 **Nguồn:** https://unsloth.ai/docs/blog/quantization-aware-training-qat
+
+## Đọc tiếp
+
+- [Lỗi thường gặp](/fine-tuning/loi-thuong-gap) — rà lại các lỗi hay gặp trước khi chạy một lần train lớn.
+- [Định dạng dữ liệu](/du-lieu/dinh-dang) — chuẩn bị dữ liệu ảnh và chữ cho vision fine-tuning.
+- [Export và deploy](/export-deploy/) — lưu và xuất model sau khi train, kể cả bản lượng tử hóa.

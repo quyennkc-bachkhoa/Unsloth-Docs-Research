@@ -5,15 +5,23 @@ description: RAG và fine-tuning theo FAQ của Unsloth, cùng kịch bản chat
 
 # Ứng dụng RAG
 
+Trang này giúp bạn quyết định khi nào dùng RAG, khi nào fine-tune, và phác một chatbot RAG nội bộ chạy bằng Unsloth. Ví dụ xuyên suốt là một ngân hàng cần giữ dữ liệu trong mạng nội bộ.
+
+::: tip Tóm tắt
+- **Dùng khi:** Bạn muốn LLM trả lời dựa trên tài liệu riêng và đang cân nhắc giữa RAG và fine-tuning.
+- **Kết quả:** Hiểu RAG khác fine-tuning thế nào theo FAQ của Unsloth, cùng một kịch bản gồm chạy LLM local qua API, fine-tune embedding tiếng Việt và các rủi ro cần lường trước.
+- **Nên biết trước:** Embedding model khác LLM thế nào: [Phân loại mô hình](/kien-thuc-nen/phan-loai-mo-hinh). Token và context window: [Token & context](/kien-thuc-nen/token-va-context). LoRA/QLoRA: [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora). Nên đọc trước [Chạy model và gọi API](/inference/) nếu chưa từng gọi API của Unsloth.
+:::
+
 ::: info Lưu ý về nội dung
 Phần lớn trang này là nhận định của người viết. Chỗ nào lấy từ docs Unsloth sẽ có dòng Nguồn.
 :::
 
 ## RAG là gì
 
-[Nhận định] RAG — Retrieval-Augmented Generation (sinh câu trả lời có truy xuất tài liệu) — là cách cho LLM (mô hình ngôn ngữ lớn) trả lời dựa trên tài liệu của bạn mà không cần train lại model.
+**[Nhận định]** RAG — Retrieval-Augmented Generation (sinh câu trả lời có truy xuất tài liệu) — là cách cho LLM (mô hình ngôn ngữ lớn) trả lời dựa trên tài liệu của bạn mà không cần train lại model.
 
-[Nhận định] RAG ghép một hệ thống tìm kiếm với LLM. Luồng chạy gồm ba bước:
+**[Nhận định]** RAG ghép một hệ thống tìm kiếm với LLM. Luồng chạy gồm ba bước:
 
 1. Người dùng đặt câu hỏi.
 2. Hệ thống tìm các đoạn tài liệu liên quan trong kho. Việc tìm thường dùng vector embedding, tức vector số biểu diễn ý nghĩa của câu.
@@ -22,10 +30,6 @@ Phần lớn trang này là nhận định của người viết. Chỗ nào l�
 Khi tài liệu thay đổi, bạn chỉ cần cập nhật kho, không phải train lại model.
 
 Docs Unsloth không định nghĩa RAG chi tiết. FAQ chỉ nhắc điểm mạnh của RAG là **truy cập thông tin mới từ cơ sở dữ liệu bên ngoài**. Trang embedding thì nói fine-tune embedding model giúp cải thiện retrieval (khâu truy xuất) và RAG.
-
-::: tip Kiến thức nền
-Embedding model là gì, khác LLM thế nào: xem [Phân loại mô hình](/kien-thuc-nen/phan-loai-mo-hinh). Token và context window (giới hạn độ dài đầu vào): xem [Token & context](/kien-thuc-nen/token-va-context).
-:::
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me, https://unsloth.ai/docs/basics/embedding-finetuning
 
@@ -63,11 +67,11 @@ FAQ của Unsloth có các ý sau.
 
 Các ví dụ ứng dụng fine-tune trong FAQ có **phân tích cảm xúc tin tài chính** và **chatbot chăm sóc khách hàng** theo phong cách, thuật ngữ của công ty.
 
-[Nhận định] FAQ này là tài liệu của một công ty bán công cụ fine-tune, nên lập luận nghiêng về fine-tuning. Bạn nên đọc kèm bảng so sánh bên dưới.
+**[Nhận định]** FAQ này là tài liệu của một công ty bán công cụ fine-tune, nên lập luận nghiêng về fine-tuning. Bạn nên đọc kèm bảng so sánh bên dưới.
 
 ### Bảng so sánh
 
-[Nhận định] Toàn bộ bảng là đánh giá của người viết, không lấy từ docs. Cột "Gợi ý" cho biết cách nào hợp hơn với từng tiêu chí.
+**[Nhận định]** Toàn bộ bảng là đánh giá của người viết, không lấy từ docs. Cột "Gợi ý" cho biết cách nào hợp hơn với từng tiêu chí.
 
 | Tiêu chí | RAG | Fine-tuning | Gợi ý |
 | --- | --- | --- | --- |
@@ -85,9 +89,9 @@ Các ví dụ ứng dụng fine-tune trong FAQ có **phân tích cảm xúc tin 
 
 ## Kịch bản: chatbot RAG nội bộ cho ngân hàng
 
-[Nhận định] Mục này dựng một ví dụ cụ thể để thấy các phần của Unsloth ghép vào một hệ thống RAG thật như thế nào.
+**[Nhận định]** Mục này dựng một ví dụ cụ thể để thấy các phần của Unsloth ghép vào một hệ thống RAG thật như thế nào.
 
-[Nhận định] Bối cảnh giả định: một ngân hàng muốn có chatbot trả lời nhân viên về quy trình, sản phẩm và văn bản nội bộ. Dữ liệu nhạy cảm nên **không gửi ra API đám mây**. Mọi model chạy trên máy chủ trong mạng nội bộ. Backend viết bằng FastAPI.
+**[Nhận định]** Bối cảnh giả định: một ngân hàng muốn có chatbot trả lời nhân viên về quy trình, sản phẩm và văn bản nội bộ. Dữ liệu nhạy cảm nên **không gửi ra API đám mây**. Mọi model chạy trên máy chủ trong mạng nội bộ. Backend viết bằng FastAPI.
 
 <div class="dg">
 <div class="dg-title">Luồng hỏi–đáp</div>
@@ -111,7 +115,7 @@ Các ví dụ ứng dụng fine-tune trong FAQ có **phân tích cảm xúc tin 
 <div class="dg-cap">Mũi tên hai chiều: backend gửi yêu cầu đi và nhận kết quả về (từ Vector DB và Unsloth API). Audit log chỉ nhận ghi.</div>
 </div>
 
-[Nhận định] Một câu hỏi đi qua hệ thống theo thứ tự sau:
+**[Nhận định]** Một câu hỏi đi qua hệ thống theo thứ tự sau:
 
 1. FastAPI nhận câu hỏi.
 2. Kiểm tra quyền của người dùng.
@@ -122,7 +126,7 @@ Các ví dụ ứng dụng fine-tune trong FAQ có **phân tích cảm xúc tin 
 7. Trả lời kèm danh sách tài liệu nguồn.
 8. Ghi audit log.
 
-pgvector và FAISS nằm trong danh sách công cụ mà docs nói embedding model của Unsloth dùng được. Việc chọn cái nào là [Nhận định].
+pgvector và FAISS nằm trong danh sách công cụ mà docs nói embedding model của Unsloth dùng được. Việc chọn cái nào là **[Nhận định]**.
 
 **Nguồn:** https://unsloth.ai/docs/basics/embedding-finetuning, https://unsloth.ai/docs/basics/api
 
@@ -200,25 +204,25 @@ Phía FastAPI chỉ cần dùng OpenAI SDK, với hai thiết lập:
 - `base_url` trỏ tới địa chỉ LAN của máy GPU, dạng `http://<IP máy GPU>:8888/v1`.
 - API key `sk-unsloth-…`.
 
-Cách gọi giống ví dụ OpenAI SDK ở trang [Export & deploy](/export-deploy).
+Cách gọi giống ví dụ OpenAI SDK ở trang [Deploy: llama-server](/export-deploy/chay-model#llama-server).
 
-[Nhận định] Nên để FastAPI là điểm duy nhất giữ API key. Trình duyệt của nhân viên không gọi thẳng vào Unsloth.
+**[Nhận định]** Nên để FastAPI là điểm duy nhất giữ API key. Trình duyệt của nhân viên không gọi thẳng vào Unsloth.
 
 ::: warning LAN access không mã hóa
 Docs ghi rõ: LAN dùng **HTTP thường**, nên ai cùng phân đoạn mạng đều đọc được traffic. Nếu bạn đặt Unsloth sau reverse proxy của mình, biến `UNSLOTH_STUDIO_TRUST_FORWARDED=1` cho phép Unsloth nhận header `X-Forwarded-For`.
 
-[Nhận định] Với ngân hàng, nên làm các việc sau: đặt máy GPU trong VLAN riêng; chỉ cho IP của FastAPI truy cập port 8888 (bằng firewall); và/hoặc đặt reverse proxy có TLS phía trước. **Không** dùng `--secure` / Cloudflare tunnel cho dữ liệu ngân hàng, vì traffic đi qua hạ tầng bên thứ ba và URL là công khai.
+**[Nhận định]** Với ngân hàng, nên làm các việc sau: đặt máy GPU trong VLAN riêng; chỉ cho IP của FastAPI truy cập port 8888 (bằng firewall); và/hoặc đặt reverse proxy có TLS phía trước. **Không** dùng `--secure` / Cloudflare tunnel cho dữ liệu ngân hàng, vì traffic đi qua hạ tầng bên thứ ba và URL là công khai.
 :::
 
 ::: info Môi trường không có internet
-Khi bind wildcard (`0.0.0.0`), Unsloth tự kiểm tra xem port có lộ ra internet không, bằng cách gọi `ifconfig.me` và `check-host.net`. Đặt `UNSLOTH_STUDIO_DISABLE_PUBLIC_CHECK=1` để bỏ bước này. [Nhận định] Trong mạng ngân hàng cách ly, nên bật biến này để máy không cố gọi ra ngoài.
+Khi bind wildcard (`0.0.0.0`), Unsloth tự kiểm tra xem port có lộ ra internet không, bằng cách gọi `ifconfig.me` và `check-host.net`. Đặt `UNSLOTH_STUDIO_DISABLE_PUBLIC_CHECK=1` để bỏ bước này. **[Nhận định]** Trong mạng ngân hàng cách ly, nên bật biến này để máy không cố gọi ra ngoài.
 :::
 
 **Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/basics/lan
 
 ## (b) Fine-tune embedding tiếng Việt bằng Unsloth
 
-[Nhận định] Embedding model quyết định RAG tìm đúng đoạn tài liệu hay không. Fine-tune embedding giúp model hiểu "giống nhau" theo đúng nghĩa mà bài toán của bạn cần.
+**[Nhận định]** Embedding model quyết định RAG tìm đúng đoạn tài liệu hay không. Fine-tune embedding giúp model hiểu "giống nhau" theo đúng nghĩa mà bài toán của bạn cần.
 
 Theo docs, fine-tune embedding model giúp vector "hiểu" đúng kiểu tương đồng mà bài toán cần, nhờ đó cải thiện search và RAG trên dữ liệu riêng. Unsloth hỗ trợ các điểm sau.
 
@@ -253,7 +257,7 @@ sentence-transformers/all-mpnet-base-v2
 Snowflake/snowflake-arctic-embed-l-v2.0
 ```
 
-[Nhận định] Docs **không** nói model nào hỗ trợ tiếng Việt. Nhìn theo tên, các ứng viên đa ngôn ngữ là `BAAI/bge-m3` và `intfloat/multilingual-e5-large-instruct`, cùng Qwen3-Embedding. Khả năng tiếng Việt của chúng cần kiểm tra lại trên model card và bằng đánh giá trên dữ liệu thật.
+**[Nhận định]** Docs **không** nói model nào hỗ trợ tiếng Việt. Nhìn theo tên, các ứng viên đa ngôn ngữ là `BAAI/bge-m3` và `intfloat/multilingual-e5-large-instruct`, cùng Qwen3-Embedding. Khả năng tiếng Việt của chúng cần kiểm tra lại trên model card và bằng đánh giá trên dữ liệu thật.
 
 ### Lưu và load
 
@@ -313,24 +317,20 @@ Model sau fine-tune dùng được với nhiều công cụ:
 ::: info Code train và định dạng dữ liệu không có trong trang docs
 Trang embedding **không** có code vòng train và không mô tả định dạng dataset (ví dụ dạng cặp câu hỏi–đoạn văn). Phần này nằm trong các notebook (EmbeddingGemma 300M, Qwen3-Embedding 4B/0.6B, BGE M3, All-MiniLM-L6-v2, ModernBERT) — cần kiểm tra lại trực tiếp trong notebook.
 
-[Nhận định] Với ngân hàng, dữ liệu train hợp lý là các cặp (câu hỏi thực tế của nhân viên, đoạn quy trình trả lời đúng), lấy từ log hỏi đáp nội bộ đã ẩn danh hóa.
+**[Nhận định]** Với ngân hàng, dữ liệu train hợp lý là các cặp (câu hỏi thực tế của nhân viên, đoạn quy trình trả lời đúng), lấy từ log hỏi đáp nội bộ đã ẩn danh hóa.
 :::
 
 **Nguồn:** https://unsloth.ai/docs/basics/embedding-finetuning
 
 ## (c) Tùy chọn: fine-tune LLM cho giọng văn và định dạng
 
-Bước này không bắt buộc. [Nhận định] Nó dùng khi bạn muốn chatbot luôn trả lời theo một khuôn cố định mà prompt không giữ được ổn định.
+Bước này không bắt buộc. **[Nhận định]** Nó dùng khi bạn muốn chatbot luôn trả lời theo một khuôn cố định mà prompt không giữ được ổn định.
 
 FAQ nói fine-tune giúp kiểm soát giọng văn, bám thương hiệu và **tuân thủ yêu cầu quy định**. FAQ cũng khuyên bắt đầu bằng QLoRA (LoRA trên model lượng tử hóa 4-bit).
 
-[Nhận định] Trong kịch bản này, bạn chỉ nên fine-tune LLM để cố định **cách trả lời**: luôn trích nguồn, giữ cấu trúc câu trả lời, từ chối câu hỏi ngoài phạm vi, xưng hô chuẩn. Còn **kiến thức nghiệp vụ** thay đổi liên tục nên để RAG lo.
+**[Nhận định]** Trong kịch bản này, bạn chỉ nên fine-tune LLM để cố định **cách trả lời**: luôn trích nguồn, giữ cấu trúc câu trả lời, từ chối câu hỏi ngoài phạm vi, xưng hô chuẩn. Còn **kiến thức nghiệp vụ** thay đổi liên tục nên để RAG lo.
 
-Sau khi train, bạn xuất model sang GGUF để chạy trên Unsloth API. Các bước xuất xem [Export & deploy](/export-deploy). Việc `unsloth run` load file GGUF cục bộ (thay vì repo Hugging Face) cần kiểm tra lại, vì trang API chỉ đưa ví dụ tên repo. Quy trình train xem [Fine-tuning](/fine-tuning/).
-
-::: tip Kiến thức nền
-LoRA/QLoRA: xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora).
-:::
+Sau khi train, bạn xuất model sang GGUF để chạy trên Unsloth API. Các bước xuất xem [Export sang GGUF](/export-deploy/gguf). Việc `unsloth run` load file GGUF cục bộ (thay vì repo Hugging Face) cần kiểm tra lại, vì trang API chỉ đưa ví dụ tên repo. Quy trình train xem [Fine-tuning](/fine-tuning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me, https://unsloth.ai/docs/basics/api
 
@@ -346,7 +346,7 @@ Mục này chia làm hai phần: các cảnh báo có sẵn trong docs Unsloth, 
 - Câu trả lời bị cắt: kiểm tra **Context used** trong API monitor. Nếu gần 100% hoặc stop reason là `length`, nghĩa là context đã đầy.
 :::
 
-::: warning [Nhận định] Riêng cho ngân hàng
+::: warning **[Nhận định]** Riêng cho ngân hàng
 - **Rò rỉ qua retrieval**: nếu không lọc theo quyền trước khi đưa đoạn văn vào prompt, người dùng có thể hỏi ra tài liệu họ không được xem. Phân quyền phải làm ở tầng FastAPI hoặc vector DB, không trông vào LLM.
 - **Prompt injection** (chèn lệnh độc qua nội dung tài liệu): tài liệu nạp vào kho có thể chứa câu điều khiển model. Hãy giữ tool tắt, và không cho LLM gọi hành động nghiệp vụ trực tiếp.
 - **Hallucination**: bắt buộc hiển thị nguồn trích dẫn và cho phép nhân viên mở tài liệu gốc. Câu trả lời chỉ mang tính tham khảo.
@@ -357,3 +357,10 @@ Mục này chia làm hai phần: các cảnh báo có sẵn trong docs Unsloth, 
 :::
 
 **Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/basics/lan, https://unsloth.ai/docs/basics/how-to-serve-local-llms-anywhere-secure-remote-access-with-cloudflare-and-unsloth
+
+## Đọc tiếp
+
+- [Thuật ngữ](/thuat-ngu) — Tra nhanh các thuật ngữ như embedding, LoRA, endpoint gặp trên trang này.
+- [Chạy model và gọi API](/inference/) — Chi tiết cách chạy `unsloth run` và gọi endpoint mà kịch bản RAG dùng.
+- [Xuất file GGUF](/export-deploy/gguf) — Các bước xuất LLM đã fine-tune sang GGUF để chạy trên Unsloth API.
+- [Fine-tuning](/fine-tuning/) — Quy trình train nếu bạn chọn fine-tune LLM cho giọng văn và định dạng.

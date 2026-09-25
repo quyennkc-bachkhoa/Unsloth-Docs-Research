@@ -19,7 +19,7 @@ Bạn không cần đọc hết từ đầu đến cuối. Hãy chọn theo vi�
 | Chạy model, gọi API, chỉnh sampling | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) | [Inference & API](/inference/) |
 | Fine-tune bằng LoRA hoặc QLoRA | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen), [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) | [Fine-tuning](/fine-tuning/), [Dữ liệu](/du-lieu/) |
 | Train bằng GRPO hoặc DPO | [RL & preference](/kien-thuc-nen/rl-va-preference) | [Reinforcement Learning](/reinforcement-learning/) |
-| Export sang GGUF hoặc NVFP4 | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) | [Export & deploy](/export-deploy) |
+| Export sang GGUF hoặc NVFP4 | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) | [Export & deploy](/export-deploy/) |
 
 Nếu muốn học theo thứ tự từ đầu, xem [Lộ trình học](/lo-trinh-hoc).
 
@@ -64,18 +64,18 @@ Gặp một thuật ngữ lạ trong docs Unsloth? Tìm nó ở cột đầu đ�
 | `q_proj` … `down_proj` | [Kiến trúc Transformer](/kien-thuc-nen/kien-truc-transformer) | [Fine-tuning](/fine-tuning/) |
 | Dense, MoE, "A3B", tham số kích hoạt | [Dense & MoE](/kien-thuc-nen/dense-va-moe) | [Model catalog](/model-catalog) |
 | Số tham số, VRAM, RAM, offload | [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho) | [Cài đặt & phần cứng](/cai-dat), [Model catalog](/model-catalog) |
-| Tên file `UD-Q4_K_XL`, `-bnb-4bit` | [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho) | [Model catalog](/model-catalog), [Export & deploy](/export-deploy) |
-| BF16, FP8, NVFP4, MXFP4, INT4 | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) | [Export & deploy](/export-deploy), [Reinforcement Learning](/reinforcement-learning/) |
-| GGUF quant, Dynamic quants | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) | [Export & deploy](/export-deploy), [Model catalog](/model-catalog) |
+| Tên file `UD-Q4_K_XL`, `-bnb-4bit` | [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho) | [Model catalog](/model-catalog), [Export & deploy](/export-deploy/) |
+| BF16, FP8, NVFP4, MXFP4, INT4 | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) | [Export & deploy](/export-deploy/), [Reinforcement Learning](/reinforcement-learning/) |
+| GGUF quant, Dynamic quants | [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa) | [Unsloth Dynamic GGUF](/export-deploy/gguf#dynamic-gguf), [Model catalog](/model-catalog) |
 | Loss, learning rate, epoch, batch | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) | [Fine-tuning](/fine-tuning/) |
 | Optimizer AdamW 8-bit, scheduler, warmup | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) | [Fine-tuning](/fine-tuning/) |
 | Overfitting, eval loss | [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen) | [Fine-tuning](/fine-tuning/) |
-| LoRA `r`, `lora_alpha`, QLoRA, merge | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) | [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy) |
+| LoRA `r`, `lora_alpha`, QLoRA, merge | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) | [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy/) |
 | Gradient checkpointing | [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora) | [Fine-tuning](/fine-tuning/), [Reinforcement Learning](/reinforcement-learning/) |
 | SFT, reward, DPO, GRPO, reward hacking | [RL & preference](/kien-thuc-nen/rl-va-preference) | [Reinforcement Learning](/reinforcement-learning/) |
 | KV cache | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) | [Inference & API](/inference/), [Model catalog](/model-catalog) |
 | Temperature, top-p, top-k, min-p | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) | [Inference & API](/inference/), [Model catalog](/model-catalog) |
-| Chat template | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) | [Chat template](/du-lieu/chat-template), [Export & deploy](/export-deploy) |
+| Chat template | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) | [Chat template](/du-lieu/chat-template), [Export & deploy](/export-deploy/) |
 | Tool calling | [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling) | [Inference & API](/inference/) |
 
 Không thấy thuật ngữ bạn cần? Xem bảng đầy đủ ở trang [Thuật ngữ](/thuat-ngu).

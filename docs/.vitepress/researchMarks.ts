@@ -26,6 +26,9 @@ export function researchMarks(md: MarkdownRenderer) {
       if (t.type === 'container_tip_open' && /^tip\s+Kiến thức nền/.test(t.info.normalize('NFC').trim())) {
         t.attrSet('data-kind', 'kb')
       }
+      if (t.type === 'container_tip_open' && /^tip\s+Tóm tắt/.test(t.info.normalize('NFC').trim())) {
+        t.attrSet('data-kind', 'summary')
+      }
 
       if (t.type !== 'inline' || !t.children) continue
       const kids = t.children

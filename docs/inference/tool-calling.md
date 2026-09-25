@@ -1,11 +1,19 @@
 ---
-title: "Tool calling"
+title: Cho model gọi hàm (tool calling)
 description: "Tool calling trong Studio, qua API (client-side và server-side tools) và vòng lặp tự viết với llama-server."
 ---
 
-# Tool calling
+# Cho model gọi hàm (tool calling)
 
 Tool calling (gọi công cụ) cho phép LLM kích hoạt một hàm cụ thể, như "tìm file", "chạy máy tính", "gọi API". Thay vì đoán câu trả lời bằng văn bản, model xuất ra một request có cấu trúc.
+
+::: tip Tóm tắt
+- **Dùng khi:** bạn muốn model gọi hàm do bạn viết, hoặc dùng công cụ Python, bash, web search của Unsloth.
+- **Kết quả:** biết ba cách dùng tool calling với Unsloth (trong Studio, qua API, tự viết vòng lặp Python) và ai là bên chạy hàm ở mỗi cách.
+- **Nên biết trước:** cơ chế tool calling và vai trò của chat template ở [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling); cách gọi API ở [Gọi qua API (OpenAI, Anthropic)](/inference/api).
+:::
+
+## Tool calling hoạt động thế nào
 
 Điểm quan trọng: model chỉ **đề xuất** lời gọi, gồm tên hàm và tham số JSON. Chương trình của bạn mới là bên chạy hàm. Sau đó chương trình gửi kết quả lại cho model ở lượt sau.
 
@@ -24,9 +32,7 @@ Tool calling (gọi công cụ) cho phép LLM kích hoạt một hàm cụ thể
 </div>
 </div>
 
-::: tip Kiến thức nền
-Cơ chế tool calling và vai trò của chat template: xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling).
-:::
+**Nguồn:** https://unsloth.ai/docs/basics/tool-calling-guide-for-local-llms
 
 ## Unsloth hỗ trợ thế nào
 
@@ -177,4 +183,10 @@ Ví dụ này dùng Devstral 2. Nếu đổi model, bạn phải dùng đúng sa
 
 **[Nhận định]** Đoạn code trên có một điểm dễ bỏ sót. Trong Python, `for ... else` chạy nhánh `else` khi vòng `for` kết thúc mà không gặp `break`. Vì vậy code luôn đặt `has_tool_calls = False` sau lượt đầu. Nó chạy tool đúng một vòng rồi dừng, không tự gửi kết quả tool lại cho model. Nếu cần vòng lặp nhiều bước, bạn phải tự sửa điều kiện dừng.
 
-**Nguồn:** https://unsloth.ai/docs/basics/tool-calling-guide-for-local-llms, https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/new/studio/chat
+**Nguồn:** https://unsloth.ai/docs/basics/tool-calling-guide-for-local-llms
+
+## Đọc tiếp
+
+- [Danh sách model hỗ trợ](/model-catalog) — chọn model phù hợp để chạy tool calling trên máy.
+- [Thêm công cụ qua MCP](/inference/mcp) — gắn công cụ có sẵn từ MCP server thay vì tự viết hàm.
+- [Dùng với coding agent](/inference/coding-agent) — ví dụ thực tế của tool calling: agent sửa file và chạy lệnh qua model local.

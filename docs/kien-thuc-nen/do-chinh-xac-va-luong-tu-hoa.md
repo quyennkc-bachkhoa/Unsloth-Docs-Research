@@ -5,7 +5,7 @@ description: FP32, BF16, FP16, FP8, NVFP4/MXFP4, INT8/INT4; lượng tử hóa P
 
 # Độ chính xác & lượng tử hóa
 
-Docs Unsloth dùng rất nhiều ký hiệu như BF16, FP8, NVFP4 (các kiểu số) và Q4_K_M, UD-Q4_K_XL, bnb-4bit (các mức quant). Trang này giải thích chúng, để bạn chọn được file model và cờ `load_in_*` hợp với GPU của mình. Bạn nên đọc sau trang [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho), và trước khi tải model ở [Model catalog](/model-catalog) hoặc xuất model ở [Export & deploy](/export-deploy).
+Docs Unsloth dùng rất nhiều ký hiệu như BF16, FP8, NVFP4 (các kiểu số) và Q4_K_M, UD-Q4_K_XL, bnb-4bit (các mức quant). Trang này giải thích chúng, để bạn chọn được file model và cờ `load_in_*` hợp với GPU của mình. Bạn nên đọc sau trang [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho), và trước khi tải model ở [Model catalog](/model-catalog) hoặc xuất model ở [Export & deploy](/export-deploy/).
 
 ## Số dấu phẩy động: FP32, BF16, FP16
 
@@ -107,7 +107,7 @@ Docs Unsloth nêu hai lý do NVFP4 chính xác hơn MXFP4:
 Docs chưa nói rõ engine nào chạy được NVFP4. Trang Qwen3.8 ghi "You can run NVFP4 quants in vLLM only for now (SGLang is not supported)". Nhưng cùng trang đó lại hướng dẫn `sglang serve unsloth/Qwen3.8-27B-NVFP4` và ghi "v0.5.19 works now!". Trang NVFP4 cũng có hướng dẫn SGLang. Xem https://unsloth.ai/docs/models/qwen3.8 và https://unsloth.ai/docs/basics/nvfp4 .
 :::
 
-**Gặp ở đâu trong Unsloth.** [Inference](/inference/), [Export & deploy](/export-deploy).
+**Gặp ở đâu trong Unsloth.** [Inference](/inference/), [Export & deploy](/export-deploy/).
 
 **Nguồn:** https://unsloth.ai/docs/basics/nvfp4, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/models/qwen3.5/gguf-benchmarks ; **[Nguồn ngoài]** https://arxiv.org/abs/2310.10537 , https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/ , https://docs.nvidia.com/deeplearning/transformer-engine-releases/release-2.8/user-guide/examples/fp8_primer.html , https://docs.pytorch.org/docs/stable/tensor_attributes.html
 
@@ -124,7 +124,7 @@ INT4 theo cùng ý tưởng, nhưng chỉ có 16 mức giá trị.
 
 **Ảnh hưởng khi dùng Unsloth.** `load_in_8bit = True` bật fine-tune 8-bit. Với QAT, Unsloth hỗ trợ `qat_scheme` gồm `fp8-int4`, `fp8-fp8`, `int8-int4`, `int4`.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy/).
 
 **Nguồn:** https://unsloth.ai/docs/blog/quantization-aware-training-qat, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide ; **[Nguồn ngoài]** https://arxiv.org/abs/2208.07339 , https://huggingface.co/docs/transformers/quantization/bitsandbytes
 
@@ -192,7 +192,7 @@ model = FastLanguageModel.get_peft_model(
 
 Sau khi train, xuất model bằng `model.save_pretrained_torchao`. Docs Unsloth cũng khuyên "training and serving in the same precision": nếu định chạy 4-bit thì train 4-bit.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy/).
 
 **Nguồn:** https://unsloth.ai/docs/blog/quantization-aware-training-qat, https://unsloth.ai/docs/basics/dynamic-3.0-ggufs, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide
 
@@ -211,7 +211,7 @@ Sau khi train, xuất model bằng `model.save_pretrained_torchao`. Docs Unsloth
 
 **Ảnh hưởng khi dùng Unsloth.** Docs NVFP4 khuyên không tự chọn backend MoE trong vLLM, vì Marlin chậm 2.5 lần với W4A4. Hãy để vLLM tự chọn.
 
-**Gặp ở đâu trong Unsloth.** [Inference](/inference/), [Export & deploy](/export-deploy).
+**Gặp ở đâu trong Unsloth.** [Inference](/inference/), [Export & deploy](/export-deploy/).
 
 **Nguồn:** https://unsloth.ai/docs/basics/nvfp4, https://unsloth.ai/docs/blog/quantization-aware-training-qat ; **[Nguồn ngoài]** https://arxiv.org/abs/2305.14314
 
@@ -259,7 +259,7 @@ model.save_pretrained_gguf("directory", tokenizer, quantization_method = "f16")
 - Docs Unsloth (Qwen3.5 GGUF Benchmarks) ghi imatrix giảm KLD và PPL rõ rệt, nhất là ở bit thấp. I-quant như `iq3_xxs`, `iq2_s` tiết kiệm dung lượng hơn, nhưng inference chậm hơn 5-10%.
 - Unsloth khuyên dùng tối thiểu `UD-Q2_K_XL` (2-bit dynamic) để cân bằng kích thước và độ chính xác.
 
-**Gặp ở đâu trong Unsloth.** [Export & deploy](/export-deploy), [Inference](/inference/), [Model catalog](/model-catalog).
+**Gặp ở đâu trong Unsloth.** [Export & deploy](/export-deploy/), [Inference](/inference/), [Model catalog](/model-catalog).
 
 **Nguồn:** https://unsloth.ai/docs/basics/inference-and-deployment/saving-to-gguf, https://unsloth.ai/docs/models/qwen3.5/gguf-benchmarks, https://unsloth.ai/docs/models/qwen3.5 ; **[Nguồn ngoài]** https://huggingface.co/docs/hub/gguf , https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md , https://github.com/ggml-org/ggml/blob/master/docs/gguf.md
 
@@ -370,7 +370,7 @@ QLoRA 4-bit mất bao nhiêu độ chính xác so với LoRA 16-bit? Mỗi trang
 - Chạy local cho một người trên GPU thường, CPU hoặc Mac: dùng GGUF `UD-Q4_K_XL`, rồi hạ dần mức quant nếu không vừa bộ nhớ.
 - Fine-tune: bắt đầu bằng QLoRA theo khuyến nghị Unsloth; nếu đủ VRAM thì dùng LoRA 16-bit.
 
-**Gặp ở đâu trong Unsloth.** [Inference](/inference/), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy), [Reinforcement Learning](/reinforcement-learning/).
+**Gặp ở đâu trong Unsloth.** [Inference](/inference/), [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy/), [Reinforcement Learning](/reinforcement-learning/).
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning, https://unsloth.ai/docs/basics/nvfp4, https://unsloth.ai/docs/models/qwen3.8, https://unsloth.ai/docs/basics/dynamic-3.0-ggufs, https://unsloth.ai/docs/models/qwen3.5/gguf-benchmarks, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide ; **[Nguồn ngoài]** https://huggingface.co/docs/transformers/perf_train_gpu_one , https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md
 
@@ -380,9 +380,9 @@ QLoRA 4-bit mất bao nhiêu độ chính xác so với LoRA 16-bit? Mỗi trang
 |---|---|---|
 | BF16/FP16, `dtype` | [/fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |
 | FP8, `load_in_fp8` | [/reinforcement-learning/memory-efficient](/reinforcement-learning/memory-efficient) | https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning |
-| NVFP4, MXFP4, W4A4/W4A16 | [/inference](/inference/), [/export-deploy](/export-deploy) | https://unsloth.ai/docs/basics/nvfp4 |
-| PTQ, QAT, `qat_scheme` | [/fine-tuning](/fine-tuning/), [/export-deploy](/export-deploy) | https://unsloth.ai/docs/blog/quantization-aware-training-qat |
-| Mức quant GGUF, `quantization_method`, imatrix | [/export-deploy](/export-deploy), [/inference](/inference/) | https://unsloth.ai/docs/basics/inference-and-deployment/saving-to-gguf |
+| NVFP4, MXFP4, W4A4/W4A16 | [/inference](/inference/), [/export-deploy/nvfp4-fp8](/export-deploy/nvfp4-fp8#nvfp4) | https://unsloth.ai/docs/basics/nvfp4 |
+| PTQ, QAT, `qat_scheme` | [/fine-tuning](/fine-tuning/), [/export-deploy/](/export-deploy/) | https://unsloth.ai/docs/blog/quantization-aware-training-qat |
+| Mức quant GGUF, `quantization_method`, imatrix | [/export-deploy/gguf](/export-deploy/gguf), [/inference](/inference/) | https://unsloth.ai/docs/basics/inference-and-deployment/saving-to-gguf |
 | Unsloth Dynamic 2.0/3.0, KLD | [/inference](/inference/), [/model-catalog](/model-catalog) | https://unsloth.ai/docs/basics/dynamic-3.0-ggufs |
 | GPU hỗ trợ FP8/FP4 | [/cai-dat](/cai-dat) | https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements |
 | QLoRA, NF4, `unsloth-bnb-4bit` | [/fine-tuning](/fine-tuning/) | https://unsloth.ai/docs/get-started/fine-tuning-llms-guide |

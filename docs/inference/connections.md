@@ -1,11 +1,21 @@
 ---
-title: "Connections"
+title: Kết nối server khác
 description: "Nối model server local (llama.cpp, vLLM, Ollama) vào giao diện Unsloth; nhà cung cấp cloud chỉ nói qua."
 ---
 
-# Connections: nối model server local vào Unsloth
+# Kết nối server khác
 
-Connections cho bạn dùng model không nạp trực tiếp trong Unsloth, ngay trong giao diện chat của Unsloth. Trọng tâm của trang này là **model server bạn tự chạy trên máy**: llama.cpp, vLLM, Ollama. Bạn vẫn gắn được bộ công cụ của Unsloth cho các model này: web search, code execution, deep research.
+Connections cho bạn dùng model không nạp trực tiếp trong Unsloth, ngay trong giao diện chat của Unsloth. Trọng tâm của trang này là **model server bạn tự chạy trên máy**: llama.cpp, vLLM, Ollama.
+
+::: tip Tóm tắt
+- **Dùng khi:** bạn đã chạy model bằng llama.cpp, vLLM hoặc Ollama và muốn chat với nó trong giao diện Unsloth.
+- **Kết quả:** thêm được kết nối trong **Settings → Connections** và dùng model đó kèm web search, code execution, deep research của Unsloth.
+- **Nên biết trước:** cách dùng trang Chat ở [Chat trong Studio](/inference/studio-chat).
+:::
+
+## Chọn model server
+
+Bạn vẫn gắn được bộ công cụ của Unsloth (web search, code execution, deep research) cho model ở cả ba loại server dưới đây; chỗ khác nhau là đặc điểm, key và Base URL.
 
 | Model server | Đặc điểm | Cần key? | Base URL mẫu | Model xuất hiện ở |
 | --- | --- | --- | --- | --- |
@@ -13,8 +23,9 @@ Connections cho bạn dùng model không nạp trực tiếp trong Unsloth, ngay
 | vLLM | Throughput cao, cần GPU | Chỉ khi chạy với `--api-key` | `http://localhost:8000/v1` | **Connected** |
 | Ollama | Đơn giản, dễ cài | Thường không cần | `http://localhost:11434` hoặc `http://localhost:11434/v1` | **Connected** |
 
-## Các bước với model server
+**Nguồn:** https://unsloth.ai/docs/integrations/connections, https://unsloth.ai/docs/integrations/connections/connect-llama.cpp-to-unsloth-run-ggufs-with-llama-server, https://unsloth.ai/docs/integrations/connections/vllm, https://unsloth.ai/docs/integrations/connections/ollama
 
+## Các bước với model server
 
 Bạn cần khởi động server trước, rồi mới thêm kết nối trong Unsloth.
 
@@ -121,3 +132,9 @@ Hai trang ghi Base URL của Ollama khi thêm vào Connections khác nhau:
 Connections cũng nhận model cloud của **OpenAI, Anthropic, OpenRouter**: tạo API key ở dashboard của hãng, vào **Settings → Connections → Add Connection**, dán key, bấm **Reload Models** rồi chọn model ở nhóm **Connected**. Với các model này, Unsloth dùng code execution, web search và thinking của chính nhà cung cấp. Phần này nằm ngoài trọng tâm local, chi tiết xem nguồn.
 
 **Nguồn:** https://unsloth.ai/docs/integrations/connections/openai, https://unsloth.ai/docs/integrations/connections/anthropic-claude, https://unsloth.ai/docs/integrations/connections/openrouter
+
+## Đọc tiếp
+
+- [Thêm công cụ qua MCP](/inference/mcp) — gắn thêm công cụ bên ngoài cho model, như tra docs hay thao tác với dịch vụ khác.
+- [Chat trong Studio](/inference/studio-chat) — các tính năng của trang Chat mà model kết nối cũng dùng được.
+- [Chạy model đã xuất](/export-deploy/chay-model) — cách chạy model của bạn bằng llama.cpp, vLLM hay Ollama trước khi nối vào Unsloth.

@@ -50,9 +50,9 @@ const unsloth = [
   {
     group: 'Sử dụng',
     items: [
-      { t: 'Cài đặt & phần cứng', d: 'Windows, macOS, Linux, AMD, Intel, CPU', l: '/cai-dat' },
-      { t: 'Inference & API', d: 'Chạy model, endpoint /v1, agent, MCP', l: '/inference/' },
-      { t: 'Model catalog', d: 'Tham số, kiến trúc, bộ nhớ theo docs', l: '/model-catalog' }
+      { t: 'Cài đặt và phần cứng', d: 'Windows, macOS, Linux, AMD, Intel, CPU', l: '/cai-dat' },
+      { t: 'Chạy model và gọi API', d: 'Chạy model, endpoint /v1, agent, MCP', l: '/inference/' },
+      { t: 'Danh sách model hỗ trợ', d: 'Tham số, kiến trúc, bộ nhớ theo docs', l: '/model-catalog' }
     ]
   },
   {
@@ -66,7 +66,7 @@ const unsloth = [
   {
     group: 'Triển khai & ứng dụng',
     items: [
-      { t: 'Export & deploy', d: 'GGUF, NVFP4; Ollama, vLLM; LAN', l: '/export-deploy' },
+      { t: 'Export và deploy', d: 'GGUF, NVFP4; Ollama, vLLM; LAN', l: '/export-deploy/' },
       { t: 'Ứng dụng RAG', d: 'Chatbot RAG chạy local', l: '/ung-dung-rag' }
     ]
   }

@@ -363,7 +363,7 @@ Checkpoint giúp bạn không mất công train khi quá trình bị ngắt gi�
 - Studio: nút **Stop Training → Stop & Save** lưu checkpoint trước khi dừng. Nút **Cancel** dừng luôn, không lưu. Save Steps mặc định `0`. Trang Export của Studio cho chọn checkpoint để xuất. CLI có lệnh `list-checkpoints`.
 - Bạn có thể đẩy checkpoint lên Weights & Biases (`WANDB_LOG_MODEL = "checkpoint"`) và resume từ artifact.
 
-**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/mo-rong) (mục Resume từ checkpoint), [Export & deploy](/export-deploy) (chọn checkpoint để xuất); docs gốc [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint), [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining).
+**Gặp ở đâu trong Unsloth.** [Fine-tuning](/fine-tuning/mo-rong) (mục Resume từ checkpoint), [Export & deploy](/export-deploy/) (chọn checkpoint để xuất); docs gốc [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint), [Continued Pretraining](https://unsloth.ai/docs/basics/continued-pretraining).
 
 **Nguồn:** https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint, https://unsloth.ai/docs/basics/continued-pretraining, https://unsloth.ai/docs/new/studio/start, https://huggingface.co/docs/trl/sft_trainer
 
@@ -382,4 +382,4 @@ Checkpoint giúp bạn không mất công train khi quá trình bị ngắt gi�
 | Overfitting / underfitting | [Fine-tuning](/fine-tuning/) | [LoRA Hyperparameters Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide) |
 | Train loss vs eval loss, early stopping | [Fine-tuning](/fine-tuning/) | [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint), [Fine-tuning LLMs Guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide) |
 | Biểu đồ loss | [Fine-tuning](/fine-tuning/) | [Unsloth Studio](https://unsloth.ai/docs/new/studio/start) |
-| Checkpoint | [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy) | [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint) |
+| Checkpoint | [Fine-tuning](/fine-tuning/), [Export & deploy](/export-deploy/) | [Finetuning from Last Checkpoint](https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint) |

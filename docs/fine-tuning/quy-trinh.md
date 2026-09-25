@@ -1,11 +1,21 @@
 ---
-title: Quy trình fine-tune
+title: Quy trình từng bước
 description: "Các bước chọn model, chuẩn bị dữ liệu, train, đánh giá, export; so sánh Studio và Core, kèm code Core chép nguyên văn từ docs."
 ---
 
-# Quy trình data → train → đánh giá → export
+# Quy trình từng bước
 
 Một lượt fine-tune đi qua các bước: chọn model, chuẩn bị dữ liệu, đặt tham số, train, đánh giá, rồi lưu và export. Nếu đánh giá chưa đạt, bạn quay lại bước dữ liệu.
+
+::: tip Tóm tắt
+- **Dùng khi:** bạn fine-tune lần đầu và muốn biết cần làm gì ở từng bước, trong Studio hoặc bằng code Python.
+- **Kết quả:** nắm được các bước từ chọn model tới export, biết mỗi bước làm ở đâu trong Studio và gọi hàm nào trong Core, có code mẫu chép từ docs.
+- **Nên biết trước:** đã chọn cách train và model ở [Chọn cách train và model](/fine-tuning/chon-cach-train).
+:::
+
+## Các bước trong Studio và Core
+
+Mỗi bước dưới đây đều làm được bằng giao diện Studio hoặc bằng code Core; sơ đồ cho thấy thứ tự và vòng quay lại khi chưa đạt.
 
 <div class="dg">
 <div class="dg-flow">
@@ -29,15 +39,15 @@ Unsloth có hai cách làm. **Studio** là giao diện web chạy local, không 
 | 3. Hyperparameter | Các nhóm tham số thu gọn được. Lưu và tải cấu hình dạng YAML. | `FastLanguageModel.get_peft_model(...)` + tham số của trainer |
 | 4. Train | Bấm **Start Training**. Theo dõi Loss, LR, Grad Norm và GPU (utilization, nhiệt độ, VRAM, công suất). Có biểu đồ Training Loss, Learning Rate, Gradient Norm, Eval Loss. Nút **Stop & Save** lưu checkpoint trước khi dừng. | `SFTTrainer(...)` rồi `trainer.train()` |
 | 5. Đánh giá | Biểu đồ Eval Loss, chỉ hiện khi đã chọn eval split. Chat thử model trong Studio Chat. | `eval_dataset`, `eval_strategy`, `EarlyStoppingCallback`; `FastLanguageModel.for_inference(model)` rồi chat thử |
-| 6. Export | Trang **Export**: GGUF, Safetensors hoặc LoRA, dùng cho Unsloth, llama.cpp, Ollama, vLLM... | Lưu LoRA adapter (~100MB) hoặc push lên Hugging Face; export GGUF cho Ollama — xem [Export & Deploy](/export-deploy) |
+| 6. Export | Trang **Export**: GGUF, Safetensors hoặc LoRA, dùng cho Unsloth, llama.cpp, Ollama, vLLM... | Lưu LoRA adapter (~100MB) hoặc push lên Hugging Face; export GGUF cho Ollama — xem [Export và deploy](/export-deploy/) |
 
 **Nguồn:** https://unsloth.ai/docs/new/studio/start, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama
 
 ## Code Core tiêu biểu
 
-Trong các trang nguồn, code Core chỉ xuất hiện theo từng mảnh. Bản đầy đủ chạy được nằm trong các notebook (xem trang [Notebooks](/fine-tuning/notebooks)). Các mảnh dưới đây được chép nguyên văn.
+Trong các trang nguồn, code Core chỉ xuất hiện theo từng mảnh. Bản đầy đủ chạy được nằm trong các notebook (xem trang [Notebook chạy sẵn](/fine-tuning/notebooks)). Các mảnh dưới đây được chép nguyên văn.
 
-**Nạp model + gắn LoRA.** Trong các trang nguồn, chỉ có một khối code chứa đủ cả `from_pretrained` và `get_peft_model`: ví dụ ở trang QAT. Vì vậy khối đó được giữ nguyên văn. Dòng `qat_scheme` chỉ dùng khi làm QAT (xem mục QAT ở trang [Mở rộng](/fine-tuning/mo-rong)). Khi fine-tune LoRA thường, bạn bỏ dòng này.
+**Nạp model + gắn LoRA.** Trong các trang nguồn, chỉ có một khối code chứa đủ cả `from_pretrained` và `get_peft_model`: ví dụ ở trang QAT. Vì vậy khối đó được giữ nguyên văn. Dòng `qat_scheme` chỉ dùng khi làm QAT (xem mục QAT ở trang [Kỹ thuật nâng cao](/fine-tuning/mo-rong)). Khi fine-tune LoRA thường, bạn bỏ dòng này.
 
 ```python
 from unsloth import FastLanguageModel
@@ -144,7 +154,7 @@ Các giá trị mẫu vừa nêu không giống nhau giữa các trang docs:
 - `lora_dropout`: 0 — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama), [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide); 0.05 — [Studio](https://unsloth.ai/docs/new/studio/start).
 - Số epoch: `max_steps = 60` / `num_train_epochs = 1` — [Tutorial](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama); 3 — [Studio](https://unsloth.ai/docs/new/studio/start); 1–3 — [Hyperparameters guide](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide).
 
-Bảng đầy đủ ở mục "So sánh mặc định: Studio vs Core" của trang [Hyperparameter khuyến nghị](/fine-tuning/hyperparameter).
+Bảng đầy đủ ở mục "So sánh mặc định: Studio vs Core" của trang [Chọn hyperparameter](/fine-tuning/hyperparameter).
 :::
 
 **Chỉ train trên câu trả lời** (train on completions). Cách này che phần input của user và chỉ tính loss trên phần assistant trả lời. Docs dẫn bài báo QLoRA: cách này tăng độ chính xác, nhất là với hội thoại nhiều lượt. Với Llama 3, 3.1, 3.2, 3.3 và 4:
@@ -178,3 +188,10 @@ trainer = train_on_responses_only(
 - Unsloth tự tạo `Modelfile` cho Ollama.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/fine-tuning-llms-guide, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama, https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/lora-hyperparameters-guide, https://unsloth.ai/docs/basics/finetuning-from-last-checkpoint, https://unsloth.ai/docs/blog/quantization-aware-training-qat, https://unsloth.ai/docs/new/studio/start
+
+## Đọc tiếp
+
+- [Chọn hyperparameter](/fine-tuning/hyperparameter) — chọn giá trị cho các tham số đã thấy trong code mẫu và biết đặt sai thì sao.
+- [Đánh giá và overfitting](/fine-tuning/danh-gia) — đọc loss ở bước 4–5 để biết model học thật hay học thuộc.
+- [Dữ liệu](/du-lieu/) — chuẩn bị dataset và chat template cho bước 2.
+- [Export và deploy](/export-deploy/) — chi tiết bước lưu và export sau khi train.

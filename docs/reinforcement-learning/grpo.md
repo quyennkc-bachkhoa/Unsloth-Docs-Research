@@ -1,13 +1,21 @@
 ---
-title: GRPO trong Unsloth
+title: Train bằng GRPO
 description: "Vòng lặp train GRPO, dữ liệu cần có, yêu cầu VRAM theo kích thước model và các mẹo từ docs."
 ---
 
-# GRPO trong Unsloth
+# Train bằng GRPO
 
-GRPO là phương pháp RL chính mà Unsloth hướng dẫn. Trang này đi qua vòng lặp train, dữ liệu cần có, yêu cầu VRAM và các mẹo thực tế. Cách viết reward nằm ở trang [Reward function và verifier](/reinforcement-learning/reward-function).
+GRPO là cách train để model tự thử nhiều câu trả lời, được chấm điểm, rồi nghiêng dần về câu được điểm cao; đây là phương pháp RL chính mà Unsloth hướng dẫn. Trang này đi qua vòng lặp train, dữ liệu cần có, yêu cầu VRAM và các mẹo thực tế; cách viết reward nằm ở trang [Viết reward function](/reinforcement-learning/reward-function).
+
+::: tip Tóm tắt
+- **Dùng khi:** bạn muốn dạy model suy luận hoặc làm tác vụ kiểm chứng được (toán, code...) bằng điểm thưởng thay vì đáp án mẫu.
+- **Kết quả:** hiểu một bước train GRPO diễn ra thế nào, chuẩn bị đúng dataset, ước được VRAM cần và biết các mẹo về số bước, số dòng dữ liệu.
+- **Nên biết trước:** [Reinforcement Learning](/reinforcement-learning/), [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho) (con số "8B tham số", cách ước tính VRAM), [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora).
+:::
 
 ## Vòng lặp GRPO
+
+Mỗi bước GRPO gồm: sinh nhiều câu trả lời cho một prompt, chấm điểm từng câu, so với cả nhóm rồi cập nhật trọng số.
 
 <div class="dg">
 <div class="dg-flow">
@@ -29,17 +37,17 @@ Theo docs, một bước train diễn ra như sau:
 
 Bạn cần ít nhất **2 generation mỗi prompt**. Lý do: với 1 mẫu, độ lệch chuẩn bằng 0, nên công thức advantage (reward - mean)/std không xác định.
 
+**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo
+
 ## Dữ liệu cho GRPO
 
 Dataset cần ít nhất 2 cột: câu hỏi và đáp án. Đáp án **không được** chứa lập luận dẫn tới nó, vì model phải tự sinh phần lập luận. Tutorial dùng dataset [GSM8K](https://huggingface.co/datasets/openai/gsm8k) (toán tiểu học). Xem thêm [Dữ liệu](/du-lieu/).
 
+**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo
+
 ## Yêu cầu VRAM và kích thước model
 
-::: tip Kiến thức nền
-Chưa rõ "8B tham số" hay cách ước tính VRAM (bộ nhớ card đồ họa)? Xem [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho). QLoRA/LoRA: xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora).
-:::
-
-Bảng dưới gom các con số VRAM mà docs đưa ra. Mỗi con số đi kèm điều kiện riêng, nên hãy đọc cả cột điều kiện.
+VRAM (bộ nhớ card đồ họa) cần cho GRPO phụ thuộc vào cỡ model, cách nạp (QLoRA 4-bit, LoRA 16-bit, FP8) và độ dài context. Bảng dưới gom các con số VRAM mà docs đưa ra. Mỗi con số đi kèm điều kiện riêng, nên hãy đọc cả cột điều kiện.
 
 | Nội dung | Con số theo docs | Điều kiện |
 | --- | --- | --- |
@@ -63,7 +71,11 @@ Các trang docs đưa ra con số VRAM và kích thước model không khớp nh
 
 Trước đây GRPO chỉ hỗ trợ full fine-tuning. Unsloth đã làm cho nó chạy được với QLoRA và LoRA.
 
+**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning
+
 ## Mẹo từ docs {#meo-tu-docs}
+
+Mẹo quan trọng nhất là kiên nhẫn: GRPO cần đủ số bước và đủ dữ liệu thì reward mới tăng.
 
 - **Kiên nhẫn với số bước.** Chờ ít nhất **300 bước** thì reward mới bắt đầu tăng; có khi cần 1000 bước hoặc hơn. Để có kết quả tốt có thể mất tối thiểu 12 giờ, nhưng bạn dừng lúc nào cũng được.
 - **Đủ dữ liệu.** Nên có ít nhất **500 dòng dữ liệu**. Thử với 10 dòng vẫn được, nhưng càng nhiều càng tốt.
@@ -82,4 +94,11 @@ Hai trang docs ghi khác nhau về thời gian train và về danh sách giá tr
 
 Tutorial từng bước: https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo
 
-**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/memory-efficient-rl, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/fp8-reinforcement-learning
+**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide, https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/tutorial-train-your-own-reasoning-model-with-grpo
+
+## Đọc tiếp
+
+- [Viết reward function](/reinforcement-learning/reward-function) — bước tiếp theo: GRPO chỉ học tốt khi reward function chấm điểm đúng.
+- [Tiết kiệm VRAM khi chạy RL](/reinforcement-learning/memory-efficient) — khi bảng VRAM ở trên chưa vừa GPU của bạn.
+- [Dữ liệu](/du-lieu/) — chuẩn bị dataset câu hỏi và đáp án cho GRPO.
+- [Lỗi thường gặp](/reinforcement-learning/loi-thuong-gap) — tra nhanh khi reward không tăng hoặc train bị lỗi.

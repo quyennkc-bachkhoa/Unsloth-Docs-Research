@@ -1,11 +1,19 @@
 ---
-title: DPO, ORPO, KTO
+title: Train theo cặp tốt/xấu (DPO, ORPO, KTO)
 description: "Nhóm phương pháp căn chỉnh model theo câu trả lời được ưa thích: danh sách notebook, code DPO từ docs và những chỗ docs còn thiếu."
 ---
 
-# DPO, ORPO, KTO (Preference Optimization)
+# Train theo cặp tốt/xấu (DPO, ORPO, KTO)
 
-Nhóm phương pháp này dạy model bằng cách so sánh: câu trả lời nào được ưa thích hơn. Bạn không cần viết reward function như GRPO.
+DPO, ORPO và KTO dạy model bằng cách so sánh: với cùng một câu hỏi, câu trả lời nào được ưa thích hơn. Bạn không cần viết reward function như GRPO; trang này liệt kê các notebook, chép code DPO từ docs và chỉ ra những chỗ docs còn thiếu.
+
+::: tip Tóm tắt
+- **Dùng khi:** bạn có sẵn dữ liệu kiểu "câu này tốt hơn câu kia" và muốn căn chỉnh model theo đó thay vì viết reward function.
+- **Kết quả:** biết Unsloth chạy được những phương pháp preference nào, notebook nào để bắt đầu, và đọc hiểu đoạn code DPO mẫu cùng các chỗ cần tự bổ sung.
+- **Nên biết trước:** [Nên chọn SFT, DPO hay GRPO](/reinforcement-learning/#chon-phuong-phap), [Fine-tuning](/fine-tuning/) (code mẫu xuất phát từ model đã SFT).
+:::
+
+## Các phương pháp chạy được với Unsloth
 
 Preference optimization (tối ưu theo sở thích) là nhóm phương pháp căn chỉnh model theo câu trả lời được ưa thích hơn. Theo docs, các phương pháp sau đều chạy được với Unsloth:
 
@@ -17,9 +25,18 @@ Preference optimization (tối ưu theo sở thích) là nhóm phương pháp c�
 | SimPO | (docs không ghi tên đầy đủ) | [SimPO](https://colab.research.google.com/drive/1Hs5oQDovOay4mFA6Y9lQhVJ8TnbFLFh2?usp=sharing) |
 | PPO, Reward Modelling | | Docs chỉ ghi "chạy được với Unsloth" |
 
-**Khác nhau về dữ liệu:** trang docs Preference Optimization **không** mô tả định dạng dữ liệu cho từng phương pháp. Ví dụ, trang không nói DPO và ORPO cần cột prompt, chosen, rejected, hay KTO cần nhãn tốt và xấu. Phần này **cần kiểm tra lại** trong notebook tương ứng hoặc tài liệu TRL. Docs có ghi Unsloth xuất hiện trong tài liệu chính thức của Hugging Face cho [DPO Trainer](https://huggingface.co/docs/trl/main/en/dpo_trainer#accelerate-dpo-fine-tuning-using-unsloth).
+**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto
 
-**Code DPO từ docs.** Chỉ DPO có code; ORPO và KTO chỉ có notebook.
+## Dữ liệu cho từng phương pháp
+
+
+Trang docs Preference Optimization **không** mô tả định dạng dữ liệu cho từng phương pháp. Ví dụ, trang không nói DPO và ORPO cần cột prompt, chosen, rejected, hay KTO cần nhãn tốt và xấu. Điểm này **cần kiểm tra lại** trong notebook tương ứng hoặc tài liệu TRL. Docs có ghi Unsloth xuất hiện trong tài liệu chính thức của Hugging Face cho [DPO Trainer](https://huggingface.co/docs/trl/main/en/dpo_trainer#accelerate-dpo-fine-tuning-using-unsloth).
+
+**Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto
+
+## Code DPO từ docs
+
+Chỉ DPO có code; ORPO và KTO chỉ có notebook.
 
 ```python
 import os
@@ -90,6 +107,12 @@ Các điểm đáng chú ý trong đoạn code:
 Đoạn code DPO trên [trang Preference Optimization](https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto) không tự chạy được. Lý do: code dùng `max_seq_length` và `YOUR_DATASET_HERE` nhưng không định nghĩa chúng ở đâu. Docs cũng không nêu giá trị hay định dạng dataset cần truyền vào. Hai giá trị này cần kiểm tra lại (ví dụ trong [notebook DPO Zephyr](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Zephyr_(7B)-DPO.ipynb)).
 :::
 
-[Nhận định] Tham số `tokenizer = tokenizer` của `DPOTrainer` có thể không khớp với các phiên bản TRL mới. Bạn nên đối chiếu với phiên bản TRL mình cài.
+**[Nhận định]** Tham số `tokenizer = tokenizer` của `DPOTrainer` có thể không khớp với các phiên bản TRL mới. Bạn nên đối chiếu với phiên bản TRL mình cài.
 
 **Nguồn:** https://unsloth.ai/docs/get-started/reinforcement-learning-rl-guide/preference-dpo-orpo-and-kto
+
+## Đọc tiếp
+
+- [Tiết kiệm VRAM khi chạy RL](/reinforcement-learning/memory-efficient) — trang kế tiếp: vì sao RL tốn bộ nhớ GPU và cách Unsloth giảm mức tốn đó.
+- [Nên chọn SFT, DPO hay GRPO](/reinforcement-learning/#chon-phuong-phap) — đối chiếu lại DPO với SFT và GRPO trước khi bắt tay vào train.
+- [Train bằng GRPO](/reinforcement-learning/grpo) — hướng còn lại khi bạn viết được reward function cho tác vụ.

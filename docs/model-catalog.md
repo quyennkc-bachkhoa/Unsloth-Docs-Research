@@ -1,9 +1,17 @@
 ---
-title: Model catalog
+title: Danh sách model hỗ trợ
 description: Bảng tra các họ model tiêu biểu mà Unsloth cung cấp (Qwen, Gemma, gpt-oss, DeepSeek, GLM, Kimi, Nemotron, Mistral, Granite, Llama), kèm yêu cầu bộ nhớ và khả năng fine-tune theo docs.
 ---
 
-# Model catalog
+# Danh sách model hỗ trợ
+
+Trang này giúp bạn tra nhanh các họ model Unsloth cung cấp, mỗi model cần bao nhiêu bộ nhớ và có fine-tune được không. Đọc xong, bạn chọn được model vừa với máy và mục tiêu của mình.
+
+::: tip Tóm tắt
+- **Dùng khi:** Bạn cần chọn model để chạy hoặc fine-tune và muốn biết nó có vừa GPU/RAM của mình không.
+- **Kết quả:** Bảng 13 họ model tiêu biểu kèm kiến trúc, yêu cầu bộ nhớ, khả năng fine-tune theo docs, và gợi ý cách chọn.
+- **Nên biết trước:** Ký hiệu "35B-A3B", tổng tham số và tham số kích hoạt: [Dense & MoE](/kien-thuc-nen/dense-va-moe). Vì sao model 27B cần khoảng 17 GB: [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho). 4-bit, 8-bit, BF16, NVFP4, MXFP4, `UD-Q4_K_XL`: [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa). Temperature, top_p, top_k: [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling). Context window: [Token & context](/kien-thuc-nen/token-va-context). LoRA, QLoRA: [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora). GRPO: [RL & preference](/kien-thuc-nen/rl-va-preference).
+:::
 
 ::: warning Dữ liệu có hạn dùng
 Dữ liệu truy cập ngày **2026-09-24**. Catalog thay đổi nhanh: model mới ra, quant mới được thêm, số liệu bộ nhớ được cập nhật lại. Trước khi tải, bạn luôn nên đối chiếu với [Unsloth Model Catalog gốc](https://unsloth.ai/docs/get-started/unsloth-model-catalog) và trang hướng dẫn của từng model.
@@ -20,12 +28,6 @@ Trang này chọn ra 13 họ model có trang hướng dẫn riêng. Với mỗi 
 ## Cách đọc bảng
 
 Mục này giải thích các cột và ký hiệu trong bảng model. Bạn nên đọc trước để hiểu con số bộ nhớ đang nói về loại bộ nhớ nào.
-
-::: tip Kiến thức nền
-- "35B-A3B", "tổng tham số" và "tham số kích hoạt" nghĩa là gì? Xem [Dense & MoE](/kien-thuc-nen/dense-va-moe).
-- "27B" nghĩa là gì, vì sao model 27B cần khoảng 17 GB? Xem [Tham số & bộ nhớ](/kien-thuc-nen/tham-so-va-bo-nho).
-- 4-bit, 8-bit, BF16, NVFP4, MXFP4, `UD-Q4_K_XL` là gì? Xem [Độ chính xác & lượng tử hóa](/kien-thuc-nen/do-chinh-xac-va-luong-tu-hoa).
-:::
 
 Quy ước trong bảng:
 
@@ -107,7 +109,7 @@ Catalog **không** có nhóm FP8 riêng. Trang Gemma 4 và GLM-5.3 có nhắc th
 Mỗi họ model bên dưới được thu gọn. Bấm vào tên họ model để mở phần chi tiết: các bản, context, sampling, bộ nhớ và chỗ docs chưa thống nhất.
 
 :::: details Qwen3.8
-Qwen3.8 là họ model mới nhất của Qwen trong catalog, gồm 27B, 2.4T-A95B và Max. [Nhận định] Bản 27B chạy được trên máy cá nhân; bản 2.4T cần máy rất nhiều RAM.
+Qwen3.8 là họ model mới nhất của Qwen trong catalog, gồm 27B, 2.4T-A95B và Max. **[Nhận định]** Bản 27B chạy được trên máy cá nhân; bản 2.4T cần máy rất nhiều RAM.
 
 - **Bản 27B:** có vision và reasoning. Đây là model **hybrid thinking**, tức có cả chế độ thinking và non-thinking. GGUF dùng Unsloth Dynamic V3.0.
 - **Bản 2.4T-A95B:** là model **thinking-only**. Bản đầy đủ cần 4.9 TB; bản Dynamic 1-bit còn 397 GB.
@@ -120,10 +122,6 @@ Thông số chính:
   - Non-thinking: `temperature=0.7, top_p=0.80, top_k=20, presence_penalty=1.5`.
 - Có `reasoning_effort` (`xhigh` mặc định, `medium`, `low`, none) và "Preserve Thinking" (giữ thinking trace của lượt trước).
 - Phần cứng: 27B 4-bit chạy trên 16–19 GB VRAM (RTX 5080, 4090) hoặc Mac 24 GB RAM. Bản NVFP4 chạy trên 24 GB VRAM và cần GPU Blackwell.
-
-::: tip Kiến thức nền
-Temperature, top_p, top_k là gì? Xem [Suy luận & sampling](/kien-thuc-nen/suy-luan-va-sampling). Context window: xem [Token & context](/kien-thuc-nen/token-va-context).
-:::
 
 ::: warning Docs chưa thống nhất
 | Thông số | Chỗ A | Chỗ B |
@@ -197,7 +195,7 @@ Gemma 4 là model hybrid thinking, hỗ trợ hơn 140 ngôn ngữ, có cả den
 ::::
 
 :::: details gpt-oss
-gpt-oss gồm hai model mở của OpenAI (Apache 2.0): gpt-oss-20b và gpt-oss-120b. Cả hai đều là MoE, chuyên về reasoning và function calling. [Nhận định] Đây là họ có số liệu fine-tune khá đầy đủ trong docs.
+gpt-oss gồm hai model mở của OpenAI (Apache 2.0): gpt-oss-20b và gpt-oss-120b. Cả hai đều là MoE, chuyên về reasoning và function calling. **[Nhận định]** Đây là họ có số liệu fine-tune khá đầy đủ trong docs.
 
 Unsloth đã sửa lỗi chat template (định dạng Harmony) và hỗ trợ ba cách fine-tune: QLoRA, LoRA BF16 và RL (GRPO).
 
@@ -209,10 +207,6 @@ Unsloth đã sửa lỗi chat template (định dạng Harmony) và hỗ trợ b
   - Các cách train khác (upcast lên bf16) cần tối thiểu 65 GB VRAM cho bản 20b.
 - Dataset: muốn giữ khả năng reasoning thì trộn ít nhất 75% mẫu reasoning và 25% mẫu không reasoning.
 - Phần cứng: trọng số gốc ở MXFP4. Trên GPU cũ như T4 (không hỗ trợ bfloat16), Unsloth dùng float32 để tránh tràn số.
-
-::: tip Kiến thức nền
-QLoRA, LoRA là gì? Xem [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora). GRPO: xem [RL & preference](/kien-thuc-nen/rl-va-preference).
-:::
 
 ::: warning Docs chưa thống nhất
 | Thông số | Chỗ A | Chỗ B |
@@ -289,7 +283,7 @@ Kimi K3 là model **thinking-only**: luôn bật `preserve_thinking`, mặc đ�
 ::::
 
 :::: details NVIDIA Nemotron 3
-Nemotron 3 là họ model của NVIDIA, hướng đến coding, math và agent. Bản nhỏ nhất vừa GPU Colab miễn phí khi fine-tune. [Nhận định] Vì vậy đây là lựa chọn dễ thử cho người mới.
+Nemotron 3 là họ model của NVIDIA, hướng đến coding, math và agent. Bản nhỏ nhất vừa GPU Colab miễn phí khi fine-tune. **[Nhận định]** Vì vậy đây là lựa chọn dễ thử cho người mới.
 
 Họ này gồm Nano-4B, Nano-30B-A3B và Super-120B-A12B, context 1M. Docs gọi Nano-4B là "hybrid MoE". Unsloth hỗ trợ fine-tune mọi model Nemotron, gồm cả Super và Nano, và hỗ trợ RL qua NeMo Gym.
 
@@ -426,6 +420,10 @@ Mục này gom các gợi ý chọn model rải rác trong docs thành một dan
 
 **[Nhận định]** Nếu mục tiêu là fine-tune, bạn nên ưu tiên model mà trang docs có notebook hoặc số VRAM cho training cụ thể (gpt-oss, Nemotron 3, Qwen3-VL, Granite 4.1, DeepSeek-OCR 2), thay vì model chỉ có hướng dẫn chạy.
 
-Xem tiếp: [Inference](/inference/), [Fine-tuning](/fine-tuning/), [Cài đặt](/cai-dat).
-
 **Nguồn:** https://unsloth.ai/docs/get-started/unsloth-model-catalog, https://unsloth.ai/docs/models/tutorials, https://unsloth.ai/docs/models/qwen3.5, https://unsloth.ai/docs/models/gemma-4, https://unsloth.ai/docs/models/ibm-granite-4.1, https://unsloth.ai/docs/models/tutorials/llama-4-how-to-run-and-fine-tune
+
+## Đọc tiếp
+
+- [Fine-tuning](/fine-tuning/) — Chọn được model rồi thì học cách train thêm cho model đó.
+- [Chạy model và gọi API](/inference/) — Tải và chạy model đã chọn trong Studio hoặc qua API.
+- [Cài đặt và phần cứng](/cai-dat) — Kiểm tra máy của bạn có đủ GPU, RAM cho model đã chọn không.
