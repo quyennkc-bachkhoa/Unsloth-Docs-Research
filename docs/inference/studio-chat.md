@@ -58,7 +58,7 @@ Trang Chat không chỉ để hỏi đáp. Model còn được chạy code, đ�
 | Thêm file làm context | Đính kèm PDF, ảnh chụp màn hình, DOCX… File được xử lý ngay trên máy |
 | Model Arena | So sánh 2 model cạnh nhau với cùng prompt, ví dụ base model và LoRA adapter sau fine-tune. Hiện Studio nạp lần lượt từng model. Chạy song song "đang được phát triển" |
 | Multi-GPU | Máy có nhiều GPU thì Chat tự dùng hết khi inference |
-| Connect Providers | Dùng model cloud hoặc model server trong cùng giao diện (xem trang [Connections](/inference/connections)) |
+| Connect Providers | Dùng model server local (llama.cpp, vLLM, Ollama), hoặc model cloud, trong cùng giao diện (xem trang [Connections](/inference/connections)) |
 
 Unsloth có công bố kết quả thử nghiệm với `unsloth/Qwen3.5-4B-GGUF (UD-Q4_K_XL)`, khi bật web search, code execution và thinking:
 

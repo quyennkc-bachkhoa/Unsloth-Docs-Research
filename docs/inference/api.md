@@ -5,30 +5,59 @@ description: "Endpoint, port, API key, ví dụ curl, Python với OpenAI SDK v�
 
 # API tương thích OpenAI và Anthropic
 
-Unsloth mở model đang nạp thành một API giống hệt API của OpenAI và Anthropic. Code đã viết cho hai hãng đó chạy được với model local, chỉ cần đổi địa chỉ và key.
+Khi bạn nạp một model trong Unsloth, Unsloth có thể mở model đó thành một API. Từ đó, code Python, lệnh `curl` hay coding agent như Claude Code gửi câu hỏi tới model trên máy bạn, giống như gửi tới OpenAI hoặc Anthropic.
 
-## Endpoint, port và API key
+Điểm tiện nhất: API này dùng **đúng định dạng** request và response của OpenAI và Anthropic. Code bạn đã viết cho hai hãng đó chạy được với model local. Bạn chỉ cần đổi địa chỉ và key.
 
-Unsloth nói "hai phương ngữ" trên **cùng một port**. Cả hai đều hỗ trợ streaming (trả kết quả từng phần), tool calling và ảnh đầu vào:
+**[Nhận định]** Nếu bạn quen FastAPI: hãy hình dung Unsloth là một app có sẵn các route `POST /v1/...`, kèm dependency kiểm tra Bearer token. Client chỉ cần đổi `base_url` và `api_key`. Schema request và response giữ nguyên như khi gọi OpenAI hoặc Anthropic thật. Bạn không phải tự viết server bọc model.
 
-| Endpoint | Tương thích với | Dùng từ |
-| --- | --- | --- |
-| `POST /v1/messages` | Anthropic Messages API | Claude Code, Anthropic SDK, OpenClaw |
-| `POST /v1/chat/completions` | OpenAI Chat Completions API | OpenAI SDK, opencode, Cursor, Continue, Cline, Open WebUI, curl |
-| `POST /v1/responses` | OpenAI Responses API | Codex và các client OpenAI đời mới |
-| `GET /v1/models` | OpenAI models list | Liệt kê model đang nạp (lấy `id` để điền vào trường model) |
+Để gọi API, bạn cần ba thứ: **API key**, **địa chỉ** (base URL, gồm port) và **tên model**. Các mục dưới đi lần lượt từng thứ, rồi đến ví dụ gọi thật.
 
-::: warning Docs chưa thống nhất
-Các trang docs liệt kê endpoint không giống nhau:
+## Lấy API key
 
-- Bảng "Endpoints" của [basics/api](https://unsloth.ai/docs/basics/api) chỉ có `POST /v1/messages`, `POST /v1/chat/completions`, `GET /v1/models`. Bảng này không có `/v1/responses`. Nhưng phần mở đầu của cùng trang lại ghi "OpenAI-compatible `/v1/chat/completions` and **`/v1/responses`**".
-- [integrations/connect-curl-and-http-to-unsloth](https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth) có ví dụ riêng cho `/v1/responses`. [basics/codex](https://unsloth.ai/docs/basics/codex) cũng dùng endpoint `/v1/responses`.
+API key là chuỗi bí mật dạng `sk-unsloth-…`. Mọi request phải gửi kèm key này trong header:
 
-Dòng `/v1/responses` trong bảng trên được tổng hợp từ hai trang sau.
-:::
+```
+Authorization: Bearer sk-unsloth-…
+```
 
-- **Port:** xem hộp bên dưới. Các ví dụ trên trang này dùng `8888` như trong docs.
-- **API key:** mọi request cần header `Authorization: Bearer sk-unsloth-…`.
+Thiếu header hoặc sai key, Unsloth trả về `401 Unauthorized`. Request dùng key đã bị thu hồi cũng nhận `401 Unauthorized`.
+
+Có hai cách lấy key.
+
+**Cách 1: tạo trong giao diện Studio.**
+
+1. Bấm avatar **Unsloth** ở góc dưới bên trái sidebar.
+2. Vào **Settings** → **API**.
+3. Nhập một tên dễ nhớ, ví dụ `claude-code-macbook`. Đặt hạn dùng nếu muốn.
+4. Bấm **Create** rồi **chép key ngay**. Unsloth chỉ lưu hash của key nên sẽ không hiển thị lại.
+
+**Cách 2: dùng lệnh `unsloth run`.** Lệnh này nạp model, tự tạo API key, rồi in địa chỉ endpoint và key ra console:
+
+```bash
+unsloth run --model unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL
+```
+
+Tên model trong lệnh viết được theo ba cách, kết quả như nhau:
+
+```bash
+# Combined: repo and quantization variant in one string (recommended — shortest)
+unsloth run --model unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL
+
+# Separate: repo and variant as two flags (the older style, still works)
+unsloth run --model unsloth/gemma-4-26B-A4B-it-GGUF --gguf-variant UD-Q4_K_XL
+
+# Using -hf / --hf-repo (matches llama.cpp's spelling, handy if you're coming from there)
+unsloth run -hf unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL
+```
+
+**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
+
+## Tìm địa chỉ API
+
+Địa chỉ API có dạng `http://localhost:<port>`. `localhost` là chính máy bạn; port là "cổng" mà Unsloth mở ra để nhận request. Các ví dụ trên trang này dùng port `8888` như trong docs.
+
+Docs không thống nhất port mặc định là bao nhiêu (xem hộp bên dưới). Cách chắc chắn nhất: nhìn dòng endpoint URL mà `unsloth run` in ra console.
 
 ::: warning Docs chưa thống nhất
 Mỗi trang docs ghi port và base URL mặc định của API Unsloth một kiểu:
@@ -45,41 +74,37 @@ Mỗi trang docs ghi port và base URL mặc định của API Unsloth một ki�
 Cách chắc chắn để biết port: `unsloth run` in endpoint URL ra console ([basics/api](https://unsloth.ai/docs/basics/api)).
 :::
 
-Có hai cách lấy API key. Cách thứ nhất là tạo trong giao diện:
+**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
 
-1. Bấm avatar **Unsloth** ở góc dưới bên trái sidebar.
-2. Vào **Settings** → **API**.
-3. Nhập một tên dễ nhớ, ví dụ `claude-code-macbook`. Đặt hạn dùng nếu muốn.
-4. Bấm **Create** rồi **chép key ngay**. Unsloth chỉ lưu hash của key nên sẽ không hiển thị lại.
+## Chọn endpoint
 
-Request dùng key đã bị thu hồi sẽ nhận `401 Unauthorized`.
+Endpoint là đường dẫn cụ thể trên địa chỉ API, mỗi đường dẫn nhận một kiểu request. Unsloth có hai "phương ngữ": một theo định dạng của Anthropic, một theo định dạng của OpenAI. Cả hai chạy trên **cùng một port**. Bạn chọn endpoint theo công cụ đang dùng:
 
-Cách thứ hai là dùng `unsloth run`. Lệnh này nạp model, tự tạo API key, rồi in endpoint và key ra console:
+| Endpoint | Tương thích với | Dùng từ |
+| --- | --- | --- |
+| `POST /v1/messages` | Anthropic Messages API | Claude Code, Anthropic SDK, OpenClaw |
+| `POST /v1/chat/completions` | OpenAI Chat Completions API | OpenAI SDK, opencode, Cursor, Continue, Cline, Open WebUI, curl |
+| `POST /v1/responses` | OpenAI Responses API | Codex và các client OpenAI đời mới |
+| `GET /v1/models` | OpenAI models list | Liệt kê model đang nạp (lấy `id` để điền vào trường model) |
 
-```bash
-unsloth run --model unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL
-```
+Cả hai phương ngữ đều hỗ trợ streaming (trả kết quả từng phần trong lúc model đang sinh), tool calling và ảnh đầu vào.
 
-Bạn có thể viết tên model theo ba cách, kết quả như nhau:
+::: warning Docs chưa thống nhất
+Các trang docs liệt kê endpoint không giống nhau:
 
-```bash
-# Combined: repo and quantization variant in one string (recommended — shortest)
-unsloth run --model unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL
+- Bảng "Endpoints" của [basics/api](https://unsloth.ai/docs/basics/api) chỉ có `POST /v1/messages`, `POST /v1/chat/completions`, `GET /v1/models`. Bảng này không có `/v1/responses`. Nhưng phần mở đầu của cùng trang lại ghi "OpenAI-compatible `/v1/chat/completions` and **`/v1/responses`**".
+- [integrations/connect-curl-and-http-to-unsloth](https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth) có ví dụ riêng cho `/v1/responses`. [basics/codex](https://unsloth.ai/docs/basics/codex) cũng dùng endpoint `/v1/responses`.
 
-# Separate: repo and variant as two flags (the older style, still works)
-unsloth run --model unsloth/gemma-4-26B-A4B-it-GGUF --gguf-variant UD-Q4_K_XL
-
-# Using -hf / --hf-repo (matches llama.cpp's spelling, handy if you're coming from there)
-unsloth run -hf unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL
-```
-
-**[Nhận định]** Nếu bạn quen FastAPI: hãy hình dung Unsloth là một app có sẵn các route `POST /v1/...`, kèm dependency kiểm tra Bearer token. Client chỉ cần đổi `base_url` và `api_key`. Schema request và response giữ nguyên như khi gọi OpenAI hoặc Anthropic thật. Bạn không phải tự viết server bọc model.
+Dòng `/v1/responses` trong bảng trên được tổng hợp từ hai trang sau.
+:::
 
 **Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
 
-## Ví dụ curl
+## Gửi request thử bằng curl
 
-Liệt kê model đang nạp:
+Có key và địa chỉ rồi, bạn thử gọi API bằng `curl` trong terminal. Trong các lệnh dưới, thay `sk-unsloth-xxxxxxxxxxxx` bằng key của bạn.
+
+**Bước 1: hỏi xem model nào đang nạp.** Kết quả trả về trường `id`. Đó chính là tên model bạn điền vào trường `model` ở các request sau.
 
 ```bash
 curl http://localhost:8888/v1/models \
@@ -109,7 +134,9 @@ Model ID là giá trị Unsloth trả về và bạn cần điền vào trườn
 Các trang đều khuyên gọi `GET /v1/models` và chép nguyên trường `id`.
 :::
 
-Chat Completions (OpenAI):
+**Bước 2: gửi một câu hỏi.** Chọn một trong các endpoint dưới đây.
+
+Theo định dạng OpenAI (Chat Completions):
 
 ```bash
 curl http://localhost:8888/v1/chat/completions \
@@ -121,20 +148,7 @@ curl http://localhost:8888/v1/chat/completions \
   }'
 ```
 
-Streaming: thêm `"stream": true`. Response khi đó chuyển sang SSE (Server-Sent Events, luồng sự kiện `text/event-stream`). Thêm `-N` để curl in ra ngay, không gom vào bộ đệm:
-
-```bash
-curl -N http://localhost:8888/v1/chat/completions \
-  -H "Authorization: Bearer sk-unsloth-xxxxxxxxxxxx" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "qwen-local",
-    "messages": [{"role": "user", "content": "Write a haiku about locally-run LLMs."}],
-    "stream": true
-  }'
-```
-
-Anthropic Messages. Ở endpoint này `max_tokens` là **bắt buộc**. Ở `/v1/chat/completions` thì trường này tùy chọn:
+Theo định dạng Anthropic (Messages). Lưu ý: endpoint này **bắt buộc** có `max_tokens`, còn `/v1/chat/completions` thì không.
 
 ```bash
 curl http://localhost:8888/v1/messages \
@@ -147,7 +161,7 @@ curl http://localhost:8888/v1/messages \
   }'
 ```
 
-Responses (OpenAI Responses API):
+Theo định dạng OpenAI Responses API:
 
 ```bash
 curl http://localhost:8888/v1/responses \
@@ -159,7 +173,20 @@ curl http://localhost:8888/v1/responses \
   }'
 ```
 
-Bạn cũng ghi đè được tham số sinh cho từng request. Giá trị ghi trong request được ưu tiên hơn giá trị mặc định của server:
+**Nhận câu trả lời từng phần (streaming).** Mặc định, API đợi model sinh xong mới trả toàn bộ câu trả lời. Muốn thấy chữ hiện dần như khi chat, thêm `"stream": true`. Response khi đó chuyển sang SSE (Server-Sent Events, luồng sự kiện `text/event-stream`). Thêm `-N` để curl in ra ngay, không gom vào bộ đệm:
+
+```bash
+curl -N http://localhost:8888/v1/chat/completions \
+  -H "Authorization: Bearer sk-unsloth-xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen-local",
+    "messages": [{"role": "user", "content": "Write a haiku about locally-run LLMs."}],
+    "stream": true
+  }'
+```
+
+**Chỉnh tham số sinh cho một request.** Bạn đặt `temperature`, `top_p`, `max_tokens` ngay trong request. Giá trị trong request được ưu tiên hơn giá trị mặc định của server:
 
 ```bash
 curl http://localhost:8888/v1/chat/completions \
@@ -179,21 +206,27 @@ curl http://localhost:8888/v1/chat/completions \
   }'
 ```
 
-Thinking là chế độ model "suy nghĩ" trước khi trả lời. Chế độ này bật mặc định. Muốn tắt, gửi `enable_thinking: false` trong request.
+**Tắt chế độ thinking.** Thinking là chế độ model "suy nghĩ" trước khi trả lời, và được bật mặc định. Muốn tắt, gửi `enable_thinking: false` trong request.
 
 **Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
 
-## Python: OpenAI SDK
+## Gọi từ Python
 
-Đặt key vào biến môi trường để không phải dán thẳng key vào code:
+Trong Python, bạn không cần tự viết request HTTP. Hãy dùng thư viện chính thức của OpenAI hoặc Anthropic, chỉ đổi địa chỉ và key sang Unsloth.
+
+Trước hết, đặt key vào biến môi trường để không phải dán thẳng key vào code:
 
 ```bash
 export UNSLOTH_STUDIO_AUTH_TOKEN=sk-unsloth-xxxxxxxxxxxx
 ```
 
+### Với OpenAI SDK
+
 ```bash
 pip install openai
 ```
+
+Tạo client. Chú ý `base_url` **có** đuôi `/v1`:
 
 ```python
 import os
@@ -205,6 +238,8 @@ client = OpenAI(
 )
 ```
 
+Gửi câu hỏi và in câu trả lời:
+
 ```python
 response = client.chat.completions.create(
     model="default",                               # the name you gave the model in unsloth or default
@@ -215,7 +250,7 @@ response = client.chat.completions.create(
 print(response.choices[0].message.content)
 ```
 
-Streaming:
+Streaming, in từng phần câu trả lời ngay khi nhận được:
 
 ```python
 stream = client.chat.completions.create(
@@ -230,13 +265,16 @@ for chunk in stream:
             print(delta, end="", flush=True)
 ```
 
-**Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
-
-## Python: Anthropic SDK
+### Với Anthropic SDK
 
 ```bash
 pip install anthropic
 ```
+
+Tạo client. Có hai điểm khác OpenAI SDK:
+
+- `base_url` **không có** `/v1`, vì SDK tự thêm vào.
+- Key đi qua `default_headers`; còn `api_key` chỉ cần một giá trị bất kỳ, miễn không rỗng.
 
 ```python
 import os
@@ -260,20 +298,24 @@ message = client.messages.create(
 print(message.content[0].text)
 ```
 
-Chọn SDK nào:
+### Chọn SDK nào
 
-- **OpenAI SDK** nếu code của bạn đã phụ thuộc gói `openai`, hoặc bạn muốn dùng `tools`/`tool_choice` kiểu OpenAI, hoặc cần Responses API.
+- **OpenAI SDK** nếu code của bạn đã dùng gói `openai`, nếu bạn muốn dùng `tools`/`tool_choice` kiểu OpenAI, hoặc cần Responses API.
 - **Anthropic SDK** nếu bạn đã dùng gói `anthropic`, hoặc thích định dạng tool `input_schema` và kiểu sự kiện streaming của Anthropic.
 
 Bạn có thể dùng cả hai trong một project với cùng một key.
 
-API còn hỗ trợ ảnh đầu vào (vision). Khi đó model phải là multimodal. API cũng hỗ trợ structured output qua `response_format` với JSON Schema. Đặt `strict: True` để ép output đúng schema ngay lúc decode. Chi tiết xem ở trang nguồn Python SDK.
+Ngoài chat bằng chữ, API còn nhận ảnh đầu vào (vision), nếu model là multimodal. API cũng hỗ trợ structured output: bạn gửi `response_format` kèm JSON Schema, đặt `strict: True`, và model buộc phải trả về đúng schema ngay lúc decode. Chi tiết xem ở trang nguồn Python SDK.
 
 **Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth
 
-## Cấu hình server và truy cập từ máy khác
+## Mở API cho máy khác
 
-- Mặc định Unsloth chỉ nhận kết nối từ chính máy đang chạy nó. Muốn máy khác trong LAN kết nối được, bind vào `0.0.0.0`:
+Mặc định Unsloth chỉ nhận kết nối từ chính máy đang chạy nó. Mục này dành cho khi bạn muốn laptop, điện thoại hay server khác gọi được vào model.
+
+### Trong cùng mạng LAN
+
+Chạy Unsloth với `-H 0.0.0.0` (gọi là "bind vào `0.0.0.0`"). Khi đó mọi thiết bị trong mạng LAN đều kết nối được:
 
 ```bash
 # Allow LAN devices to connect
@@ -283,12 +325,22 @@ unsloth run \
   -p 8888
 ```
 
-- **Chính sách server-side tools.** Server-side tools là công cụ do Unsloth tự chạy, như web search, code execution… Mặc định của chúng tùy địa chỉ bind:
-  - Trên `127.0.0.1`: mặc định **bật**.
-  - Trên `0.0.0.0` hoặc địa chỉ không phải loopback: mặc định **tắt**. Lý do: nếu API key bị lộ trên một server mở ra mạng, người khác có thể chạy code tùy ý trên máy bạn.
-  - Ép bật hoặc tắt bằng `--enable-tools` / `--disable-tools`. Trên `0.0.0.0`, `--enable-tools` sẽ hỏi xác nhận y/N. Thêm `--yes`/`-y` để bỏ qua câu hỏi này.
-  - Request không thể vượt chính sách này bằng `enable_tools=true`.
-- **Truy cập từ xa qua Internet:** chạy `unsloth studio --secure`. Unsloth vẫn bind localhost, nhưng mở thêm một URL HTTPS Cloudflare miễn phí. SSE không đi qua được Cloudflare quick tunnel, nên bạn cần đặt `stream: false`. Trường hợp này server bind localhost nhưng vẫn truy cập được từ Internet. Docs không nói chính sách server-side tools áp dụng ra sao lúc đó: **cần kiểm tra lại**.
+### Qua Internet
+
+Chạy `unsloth studio --secure`. Unsloth vẫn chỉ nghe trên máy bạn (localhost), nhưng mở thêm một URL HTTPS miễn phí qua Cloudflare để truy cập từ bất kỳ đâu.
+
+Lưu ý: streaming (SSE) không đi qua được Cloudflare quick tunnel, nên bạn cần đặt `stream: false`.
+
+### Server-side tools khi mở ra mạng
+
+Server-side tools là các công cụ do chính Unsloth chạy trên máy bạn, như web search, code execution… Chúng hữu ích khi dùng một mình, nhưng nguy hiểm khi mở ra mạng: nếu API key bị lộ, người khác có thể chạy code tùy ý trên máy bạn. Vì vậy mặc định của chúng phụ thuộc địa chỉ bind:
+
+- Bind `127.0.0.1` (chỉ máy bạn): mặc định **bật**.
+- Bind `0.0.0.0` hoặc địa chỉ không phải loopback (mở ra mạng): mặc định **tắt**.
+
+Bạn ép bật hoặc tắt bằng `--enable-tools` / `--disable-tools`. Trên `0.0.0.0`, `--enable-tools` sẽ hỏi xác nhận y/N; thêm `--yes`/`-y` để bỏ qua câu hỏi. Một request không thể tự vượt chính sách này bằng `enable_tools=true`.
+
+Với `--secure`, server bind localhost nhưng vẫn truy cập được từ Internet. Docs không nói chính sách server-side tools áp dụng ra sao lúc đó: **cần kiểm tra lại**.
 
 ::: warning Docs chưa thống nhất
 Server-side tools "bật mặc định" hay "phải tự bật"? Các trang mô tả khác nhau:
@@ -303,9 +355,13 @@ Server-side tools "bật mặc định" hay "phải tự bật"? Các trang mô 
 
 Ví dụ LAN trong [basics/claude-code](https://unsloth.ai/docs/basics/claude-code) dùng `-H 0.0.0.0` mà không có `--disable-tools`; ví dụ LAN trong [integrations/opencode](https://unsloth.ai/docs/integrations/opencode) có `--disable-tools`.
 :::
-- **API monitor:** mọi request dùng API key đều hiện trong Studio, ở panel góc màn hình và trang **Settings → API Monitor**. Mỗi request có:
-  - prompt và response;
-  - số token, time-to-first-token, throughput;
-  - lỗi, và **Context used**.
+
+### Theo dõi request
+
+Mọi request dùng API key đều hiện trong Studio: ở panel góc màn hình, và ở trang **Settings → API Monitor**. Mỗi request có:
+
+- prompt và response;
+- số token, time-to-first-token, throughput;
+- lỗi, và **Context used**.
 
 **Nguồn:** https://unsloth.ai/docs/basics/api, https://unsloth.ai/docs/integrations/connect-curl-and-http-to-unsloth, https://unsloth.ai/docs/integrations/connect-python-sdk-to-unsloth

@@ -1,40 +1,20 @@
 ---
 title: "Connections"
-description: "Dùng model của OpenAI, Anthropic, OpenRouter hoặc llama.cpp, vLLM, Ollama trong giao diện Unsloth."
+description: "Nối model server local (llama.cpp, vLLM, Ollama) vào giao diện Unsloth; nhà cung cấp cloud chỉ nói qua."
 ---
 
-# Connections: nhà cung cấp API và model server
+# Connections: nối model server local vào Unsloth
 
-Connections cho bạn dùng model không chạy trong Unsloth, ngay trong giao diện chat của Unsloth. Bạn vẫn gắn được bộ công cụ của Unsloth cho các model này: web search, code execution, deep research. Có hai nhóm kết nối: nhà cung cấp cloud và model server bạn tự chạy.
+Connections cho bạn dùng model không nạp trực tiếp trong Unsloth, ngay trong giao diện chat của Unsloth. Trọng tâm của trang này là **model server bạn tự chạy trên máy**: llama.cpp, vLLM, Ollama. Bạn vẫn gắn được bộ công cụ của Unsloth cho các model này: web search, code execution, deep research.
 
-| Kết nối | Loại | Cần gì | Base URL mẫu | Model xuất hiện ở |
+| Model server | Đặc điểm | Cần key? | Base URL mẫu | Model xuất hiện ở |
 | --- | --- | --- | --- | --- |
-| OpenAI (cả ChatGPT/Codex subscription) | Cloud | API key từ OpenAI dashboard | (không cần) | **Connected** |
-| Anthropic | Cloud | API key từ Anthropic Console | (không cần) | **Connected** |
-| OpenRouter | Cloud, nhiều model qua 1 key | API key OpenRouter | (không cần) | **Connected** |
-| llama.cpp (`llama-server`) | Model server | Key chỉ khi server chạy với `--api-key` | `http://localhost:8080/v1` | **Connected** / **External** (nguồn ghi không thống nhất) |
-| vLLM | Model server, throughput cao | Key chỉ khi chạy với `--api-key` | `http://localhost:8000/v1` | **Connected** |
-| Ollama | Model server đơn giản | Thường không cần key | `http://localhost:11434` hoặc `http://localhost:11434/v1` | **Connected** |
-
-## Các bước với nhà cung cấp cloud
-
-1. Tạo API key trên dashboard của nhà cung cấp.
-2. Trong Unsloth: **Settings** → **Connections** → **Add Connection**.
-3. Chọn nhà cung cấp, dán API key.
-4. Bấm **Reload Models** để lấy danh sách model mà tài khoản được dùng. Chọn model muốn bật rồi lưu.
-5. Chọn model trong dropdown **Select Model**, ở nhóm **Connected**.
-
-Với OpenRouter, nếu **Load Models** không trả về model bạn cần, hãy nhập tay model ID, ví dụ:
-
-```
-openai/gpt-5.5 
-anthropic/claude-sonnet-4.6 
-google/gemini-3-pro
-```
-
-**Nguồn:** https://unsloth.ai/docs/integrations/connections, https://unsloth.ai/docs/integrations/connections/openai, https://unsloth.ai/docs/integrations/connections/anthropic-claude, https://unsloth.ai/docs/integrations/connections/openrouter, https://unsloth.ai/docs/integrations/connections/connect-llama.cpp-to-unsloth-run-ggufs-with-llama-server, https://unsloth.ai/docs/integrations/connections/vllm, https://unsloth.ai/docs/integrations/connections/ollama
+| llama.cpp (`llama-server`) | Chạy GGUF, nhẹ | Chỉ khi server chạy với `--api-key` | `http://localhost:8080/v1` | **Connected** / **External** (nguồn ghi không thống nhất) |
+| vLLM | Throughput cao, cần GPU | Chỉ khi chạy với `--api-key` | `http://localhost:8000/v1` | **Connected** |
+| Ollama | Đơn giản, dễ cài | Thường không cần | `http://localhost:11434` hoặc `http://localhost:11434/v1` | **Connected** |
 
 ## Các bước với model server
+
 
 Bạn cần khởi động server trước, rồi mới thêm kết nối trong Unsloth.
 
@@ -107,17 +87,16 @@ Hai trang ghi Base URL của Ollama khi thêm vào Connections khác nhau:
 | Model mẫu | `qwen3:14b` | `qwen3.6:35b-a3b`; model ID nhập tay ví dụ `qwen3.6` |
 :::
 
-**Nguồn:** https://unsloth.ai/docs/integrations/connections, https://unsloth.ai/docs/integrations/connections/openai, https://unsloth.ai/docs/integrations/connections/anthropic-claude, https://unsloth.ai/docs/integrations/connections/openrouter, https://unsloth.ai/docs/integrations/connections/connect-llama.cpp-to-unsloth-run-ggufs-with-llama-server, https://unsloth.ai/docs/integrations/connections/vllm, https://unsloth.ai/docs/integrations/connections/ollama
+**Nguồn:** https://unsloth.ai/docs/integrations/connections, https://unsloth.ai/docs/integrations/connections/connect-llama.cpp-to-unsloth-run-ggufs-with-llama-server, https://unsloth.ai/docs/integrations/connections/vllm, https://unsloth.ai/docs/integrations/connections/ollama
 
 ## Tính năng đi kèm
 
-Khi dùng model qua Connections, bạn có thêm các tính năng sau:
+- **Prompt caching:** tái dùng phần đầu giống nhau của những prompt dài để giảm độ trễ. Với llama.cpp, caching bật mặc định. Muốn tắt, thêm `--no-cache-prompt` khi khởi động `llama-server`. Chỉnh ở mục **Prompt caching** trong side panel.
 
-- **Prompt caching:** tái dùng phần đầu giống nhau của những prompt dài, để giảm độ trễ và chi phí. Hỗ trợ OpenAI, Anthropic, llama.cpp. Chỉnh ở mục **Prompt caching** trong side panel. Với llama.cpp, caching bật mặc định. Muốn tắt, thêm `--no-cache-prompt` khi khởi động `llama-server`.
-- **Code execution phía nhà cung cấp:**
-  - Anthropic dùng Code execution tool của Claude.
-  - OpenAI dùng container tái sử dụng. Bạn tạo, xóa, chọn container trong **Code Execution** settings. Ở thread mới, chọn lại cùng container để giữ file và trạng thái.
-- **Web search & Thinking phía nhà cung cấp:** hỗ trợ model của OpenAI, Anthropic, OpenRouter, Mistral, Gemini, Kimi. Nút **Think** đổi theo model: có model chỉ bật tắt, có model cho chọn mức reasoning effort.
-- **Image generation:** có nút "Edit Image" và nút tải ảnh ở độ phân giải gốc.
+**Nguồn:** https://unsloth.ai/docs/integrations/connections
 
-**Nguồn:** https://unsloth.ai/docs/integrations/connections, https://unsloth.ai/docs/integrations/connections/openai, https://unsloth.ai/docs/integrations/connections/anthropic-claude, https://unsloth.ai/docs/integrations/connections/openrouter, https://unsloth.ai/docs/integrations/connections/connect-llama.cpp-to-unsloth-run-ggufs-with-llama-server, https://unsloth.ai/docs/integrations/connections/vllm, https://unsloth.ai/docs/integrations/connections/ollama
+## Nhà cung cấp cloud (nói qua)
+
+Connections cũng nhận model cloud của **OpenAI, Anthropic, OpenRouter**: tạo API key ở dashboard của hãng, vào **Settings → Connections → Add Connection**, dán key, bấm **Reload Models** rồi chọn model ở nhóm **Connected**. Với các model này, Unsloth dùng code execution, web search và thinking của chính nhà cung cấp. Phần này nằm ngoài trọng tâm local, chi tiết xem nguồn.
+
+**Nguồn:** https://unsloth.ai/docs/integrations/connections/openai, https://unsloth.ai/docs/integrations/connections/anthropic-claude, https://unsloth.ai/docs/integrations/connections/openrouter
