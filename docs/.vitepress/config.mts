@@ -137,6 +137,19 @@ const kienThucNenSidebar = [
   }
 ]
 
+const baiToanSidebar = [
+  {
+    text: 'Bài toán 2×L40S',
+    items: [
+      { text: 'Đề bài và đáp án nhanh', link: '/bai-toan/' },
+      { text: 'Chọn model cho tiếng Việt', link: '/bai-toan/chon-model' },
+      { text: 'Fine-tune bằng Unsloth', link: '/bai-toan/fine-tune' },
+      { text: 'Dữ liệu văn bản hành chính', link: '/bai-toan/van-ban-hanh-chinh' },
+      { text: 'Host model trên máy chủ', link: '/bai-toan/hosting' }
+    ]
+  }
+]
+
 export default defineConfig({
   title: 'Unsloth Research',
   description: 'Nghiên cứu Unsloth — chạy và fine-tune LLM local, viết bằng tiếng Việt',
@@ -174,11 +187,13 @@ export default defineConfig({
   },
   themeConfig: {
     nav: [
-      { text: 'Unsloth', link: '/', activeMatch: '^/(?!kien-thuc-nen/)' },
-      { text: 'Kiến thức nền LLM', link: '/kien-thuc-nen/', activeMatch: '^/kien-thuc-nen/' }
+      { text: 'Unsloth', link: '/', activeMatch: '^/(?!kien-thuc-nen/|bai-toan/)' },
+      { text: 'Kiến thức nền LLM', link: '/kien-thuc-nen/', activeMatch: '^/kien-thuc-nen/' },
+      { text: 'Bài toán 2×L40S', link: '/bai-toan/', activeMatch: '^/bai-toan/' }
     ],
     sidebar: {
       '/kien-thuc-nen/': kienThucNenSidebar,
+      '/bai-toan/': baiToanSidebar,
       '/': unslothSidebar
     },
     search: {

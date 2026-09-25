@@ -103,6 +103,14 @@ const nen = [
   }
 ]
 
+const baiToan = [
+  { t: 'Đề bài và đáp án nhanh', d: 'Máy 2×L40S 96 GB làm được gì, trả lời gọn 4 câu hỏi', l: '/bai-toan/' },
+  { t: 'Chọn model cho tiếng Việt', d: 'Benchmark tiếng Việt, ứng viên vừa 96 GB', l: '/bai-toan/chon-model' },
+  { t: 'Fine-tune bằng Unsloth', d: 'Fine-tune để làm gì, khi nào nên, các bước', l: '/bai-toan/fine-tune' },
+  { t: 'Dữ liệu văn bản hành chính', d: 'Thể thức theo Nghị định 30, nguồn dữ liệu, lưu ý pháp lý', l: '/bai-toan/van-ban-hanh-chinh' },
+  { t: 'Host model trên máy chủ', d: 'vLLM, llama.cpp, Ollama trên 2 GPU', l: '/bai-toan/hosting' }
+]
+
 const steps = [
   { t: 'Đọc kiến thức nền', d: 'Nhóm A và B trước khi cài' },
   { t: 'Cài đặt Unsloth', d: 'Chọn Desktop, Studio hoặc Core' },
@@ -123,6 +131,7 @@ const steps = [
       <div class="rh-actions">
         <a class="rh-btn rh-btn-primary" :href="withBase('/tong-quan')">Đọc tổng quan Unsloth</a>
         <a class="rh-btn" :href="withBase('/kien-thuc-nen/')">Học kiến thức nền trước</a>
+        <a class="rh-btn" :href="withBase('/bai-toan/')">Giải bài toán 2×L40S</a>
       </div>
     </header>
 
@@ -140,6 +149,19 @@ const steps = [
           </dd>
         </div>
       </dl>
+    </section>
+
+    <section class="rh-case" aria-labelledby="rh-case-h">
+      <h2 id="rh-case-h" class="rh-h2">Bài toán thực tế: tiếng Việt trên 2×L40S</h2>
+      <p class="rh-note">
+        Máy chủ 2 card L40S (tổng 96 GB VRAM). Chọn model hợp tiếng Việt, fine-tune cho văn bản hành chính nhà nước,
+        rồi host cho cả đơn vị dùng.
+      </p>
+      <ul>
+        <li v-for="i in baiToan" :key="i.l">
+          <a :href="withBase(i.l)"><span class="rh-t">{{ i.t }}</span><span class="rh-d">{{ i.d }}</span></a>
+        </li>
+      </ul>
     </section>
 
     <section class="rh-routes" aria-label="Mục lục">
@@ -376,12 +398,20 @@ const steps = [
   margin-bottom: 72px;
 }
 
+.rh-case {
+  border-top: 2px solid var(--ink);
+  padding-top: 28px;
+  margin-bottom: 72px;
+}
+
+.rh-case ul,
 .rh-route ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+.rh-case li a,
 .rh-route li a {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
@@ -401,6 +431,7 @@ const steps = [
   color: var(--ink-3);
 }
 
+.rh-case li a:hover .rh-t,
 .rh-route li a:hover .rh-t {
   color: var(--vp-c-brand-1);
 }
@@ -480,7 +511,8 @@ const steps = [
 }
 
 @media (max-width: 480px) {
-  .rh-route li a {
+  .rh-case li a,
+.rh-route li a {
     grid-template-columns: 1fr;
     gap: 2px;
   }
