@@ -17,7 +17,7 @@ Trang này trả lời câu hỏi "hiện tại model nào tốt nhất, phù h�
 Số liệu tra ngày **2026-09-25**. Bảng xếp hạng thay đổi mỗi khi có model mới. Trước khi chốt, hãy mở lại các bảng xếp hạng dưới đây.
 :::
 
-## Đáp án ngắn
+## Trả lời ngắn
 
 **[Nhận định]** Chọn một trong hai, tốt nhất là thử cả hai trên dữ liệu thật của đơn vị:
 
@@ -38,6 +38,10 @@ Hiện chỉ **SEA-HELM** (của AI Singapore) có điểm tiếng Việt cho c�
 
 ### SEA-HELM, điểm tiếng Việt
 
+**SEA-HELM là gì:** bộ đánh giá LLM cho các ngôn ngữ Đông Nam Á (Filipino, Indonesia, Tamil, Thái, Việt). Tác giả bài báo SEA-HELM thuộc AI Singapore, Đại học Quốc gia Singapore và Center for Research on Foundation Models (CRFM) của Stanford. Bài báo ghi SEA-HELM "has been recently integrated with HELM". Điểm tiếng Việt là điểm gộp từ 8 nhóm bài test (liệt kê bên dưới bảng).
+
+![Bảng điểm tiếng Việt SEA-HELM, model open-weight ≤200B, chụp 26/09/2026](/images/tro-ly-van-ban/sea-helm-vi.png)
+
 **[Nguồn ngoài]** Bảng VI cập nhật ngày 18/09/2026, trích các model open-weight:
 
 | Model | Cỡ | Điểm VI | Khoảng tin cậy 95% |
@@ -47,14 +51,20 @@ Hiện chỉ **SEA-HELM** (của AI Singapore) có điểm tiếng Việt cho c�
 | Qwen 3.6 | 27B | **76.12** | −1.46 / +1.39 |
 | SEA-LION v4.5 (nền Qwen) | 27B | 73.85 | −1.40 / +1.40 |
 | Muse Glimmer (Meta) | 30B | 73.52 | −1.47 / +1.38 |
-| SEA-LION v4.8 (nền Nemotron) | 120B MoE | 70.36 | |
-| gpt-oss | 120B MoE | 69.81 | |
-| Mistral Medium 3.5 | 128B | 68.82 | |
-| Nemotron 3.5 Lightning | 30B MoE | 60.97 | |
+| SEA-LION v4.8 (nền Nemotron) | 120B MoE | 70.36 | −1.65 / +1.67 |
+| gpt-oss | 120B MoE | 69.81 | −1.69 / +1.59 |
+| Mistral Medium 3.5 | 128B | 68.82 | −1.47 / +1.43 |
+| SEA-LION v4.8 (nền Nemotron) | 30B MoE | 64.86 | −1.67 / +1.63 |
+| Nemotron 3.5 Lightning | 30B MoE | 60.97 | −1.55 / +1.52 |
 
-- **[Nhận định]** Ba model đầu chênh nhau chưa tới 1 điểm, nằm trong khoảng tin cậy, nên thực chất là **ngang nhau**. Đừng chọn chỉ vì đứng thứ nhất.
+- Ba model đầu chênh nhau chưa tới 1 điểm, khoảng tin cậy 95% của cả ba chồng lên nhau.
 - SEA-LION v4.5 tinh chỉnh cho Đông Nam Á nhưng lại **thấp hơn** chính model nền Qwen 3.6 của nó.
-- SEA-HELM đo năng lực chung: NLP cổ điển, chat, làm theo chỉ dẫn, ngôn ngữ và văn hóa, an toàn. Nó không đo văn bản hành chính.
+- SEA-HELM đo năng lực chung qua 8 nhóm: hiểu ngôn ngữ, suy luận, sinh văn bản, làm theo chỉ dẫn, hội thoại nhiều lượt, kiến thức, văn hóa, an toàn. Nó không đo văn bản hành chính.
+
+**Về nguồn:**
+- Bảng do AI Products Team của AI Singapore vận hành. Trang bảng xếp hạng ghi AI Singapore là chương trình quốc gia do National Research Foundation hỗ trợ, đặt tại Đại học Quốc gia Singapore. Phương pháp công bố trong bài báo SEA-HELM (arXiv 2502.14301), mã đánh giá công khai.
+- Mỗi điểm là trung bình 2.000 lần bootstrap, kèm khoảng tin cậy 95%.
+- AI Singapore cũng là bên phát triển các model SEA-LION có trong bảng.
 
 ### VMLU
 
@@ -70,9 +80,9 @@ Hiện chỉ **SEA-HELM** (của AI Singapore) có điểm tiếng Việt cho c�
 - **VLegal-Bench** (CMC, arXiv 2512.14554) có 10.450 mẫu, 22 tác vụ pháp luật tiếng Việt, nhưng chỉ đo các model đời 2024–2025. Model tụt mạnh ở tác vụ khó: 16/23 model đạt 0 điểm ở phát hiện mâu thuẫn giữa quy định.
 - **VLSP 2025 LegalSLM** giới hạn model tối đa 4B tham số.
 
-**Không tìm được benchmark nào đo soạn thảo hoặc tóm tắt văn bản hành chính nhà nước.** Đơn vị cần tự làm bộ đánh giá, xem [Dữ liệu văn bản hành chính](/bai-toan/van-ban-hanh-chinh).
+**Không tìm được benchmark nào đo soạn thảo hoặc tóm tắt văn bản hành chính nhà nước.** Đơn vị cần tự làm bộ đánh giá, xem [Tìm và chuẩn bị dữ liệu](/tro-ly-van-ban/van-ban-hanh-chinh).
 
-**Nguồn:** https://leaderboard.sea-lion.ai/, https://leaderboard.sea-lion.ai/detailed/VI, https://vmlu.ai/leaderboard, https://www.nrl.ai/en/bench, https://arxiv.org/html/2512.14554v5, https://vlsp.org.vn/vlsp2025/eval/legalSLM
+**Nguồn:** https://leaderboard.sea-lion.ai/, https://leaderboard.sea-lion.ai/detailed/VI, https://arxiv.org/abs/2502.14301, https://vmlu.ai/leaderboard, https://www.nrl.ai/en/bench, https://arxiv.org/html/2512.14554v5, https://vlsp.org.vn/vlsp2025/eval/legalSLM
 
 ## Model "chuyên tiếng Việt" thì sao
 
@@ -120,7 +130,7 @@ Cả hai ứng viên chính đều chạy được trên một card và fine-tun
 | Qwen3.5-122B-A10B | Không khuyên dùng | 256 GB | **Không vừa** |
 
 - Qwen3.6 không có số riêng, trang docs Qwen3.6 trỏ về hướng dẫn Qwen3.5.
-- Chia model qua 2 card khi fine-tune: xem [Fine-tune bằng Unsloth](/bai-toan/fine-tune).
+- Chia model qua 2 card khi fine-tune: xem [Fine-tune bằng Unsloth](/tro-ly-van-ban/fine-tune).
 
 ::: warning Docs chưa thống nhất: có nên QLoRA với Qwen
 | Trang | Ghi |
@@ -157,12 +167,12 @@ Hai yếu tố này ít được nhắc nhưng ảnh hưởng tới chi phí và
 - SEA-LION v4.5: MIT.
 - CMC-AI-Legal-32B: cc-by-nc-nd-4.0 (phi thương mại, không phái sinh).
 
-**[Nhận định]** Apache 2.0 và MIT cho phép fine-tune và dùng nội bộ. Với cơ quan nhà nước, còn cần xét quy định về nguồn gốc model và an ninh dữ liệu. Phần này nằm ngoài phạm vi nghiên cứu, xem thêm [Dữ liệu văn bản hành chính](/bai-toan/van-ban-hanh-chinh).
+**[Nhận định]** Apache 2.0 và MIT cho phép fine-tune và dùng nội bộ. Với cơ quan nhà nước, còn cần xét quy định về nguồn gốc model và an ninh dữ liệu. Phần này nằm ngoài phạm vi nghiên cứu, xem thêm [Tìm và chuẩn bị dữ liệu](/tro-ly-van-ban/van-ban-hanh-chinh).
 
 **Nguồn:** https://huggingface.co/Qwen/Qwen3.6-27B, https://huggingface.co/Qwen/Qwen3.8-27B, https://ai.google.dev/gemma/docs/core/model_card_4, https://huggingface.co/meta-models/Muse-Glimmer-30B, https://huggingface.co/aisingapore/Qwen-SEA-LION-v4.5-27B-IT, https://huggingface.co/CMC-OPENAI/CMC-AI-Legal-32B
 
 ## Đọc tiếp
 
-- [Fine-tune bằng Unsloth](/bai-toan/fine-tune) — trang kế tiếp: dùng model đã chọn để train với dữ liệu của đơn vị.
+- [Fine-tune bằng Unsloth](/tro-ly-van-ban/fine-tune) — trang kế tiếp: dùng model đã chọn để train với dữ liệu của đơn vị.
 - [Danh sách model hỗ trợ](/model-catalog) — bảng đầy đủ các họ model Unsloth cung cấp.
-- [Host model trên máy chủ](/bai-toan/hosting) — model 27–35B phục vụ được bao nhiêu người trên 96 GB.
+- [Host model trên máy chủ](/tro-ly-van-ban/hosting) — model 27–35B phục vụ được bao nhiêu người trên 96 GB.

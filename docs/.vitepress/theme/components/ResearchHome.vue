@@ -103,12 +103,12 @@ const nen = [
   }
 ]
 
-const baiToan = [
-  { t: 'Đề bài và đáp án nhanh', d: 'Máy 2×L40S 96 GB làm được gì, trả lời gọn 4 câu hỏi', l: '/bai-toan/' },
-  { t: 'Chọn model cho tiếng Việt', d: 'Benchmark tiếng Việt, ứng viên vừa 96 GB', l: '/bai-toan/chon-model' },
-  { t: 'Fine-tune bằng Unsloth', d: 'Fine-tune để làm gì, khi nào nên, các bước', l: '/bai-toan/fine-tune' },
-  { t: 'Dữ liệu văn bản hành chính', d: 'Thể thức theo Nghị định 30, nguồn dữ liệu, lưu ý pháp lý', l: '/bai-toan/van-ban-hanh-chinh' },
-  { t: 'Host model trên máy chủ', d: 'vLLM, llama.cpp, Ollama trên 2 GPU', l: '/bai-toan/hosting' }
+const troLyVanBan = [
+  { t: 'Tổng quan và kết luận nhanh', d: 'Máy 2×L40S 96 GB làm được gì, kết luận gọn 4 câu hỏi', l: '/tro-ly-van-ban/' },
+  { t: 'Chọn model cho tiếng Việt', d: 'Benchmark tiếng Việt, ứng viên vừa 96 GB', l: '/tro-ly-van-ban/chon-model' },
+  { t: 'Fine-tune bằng Unsloth', d: 'Fine-tune để làm gì, khi nào nên, các bước', l: '/tro-ly-van-ban/fine-tune' },
+  { t: 'Tìm và chuẩn bị dữ liệu', d: 'Tìm dataset trên Hugging Face, kiểm tra trước khi dùng, lưu ý pháp lý', l: '/tro-ly-van-ban/van-ban-hanh-chinh' },
+  { t: 'Host model trên máy chủ', d: 'vLLM, llama.cpp, Ollama trên 2 GPU', l: '/tro-ly-van-ban/hosting' }
 ]
 
 const steps = [
@@ -131,7 +131,7 @@ const steps = [
       <div class="rh-actions">
         <a class="rh-btn rh-btn-primary" :href="withBase('/tong-quan')">Đọc tổng quan Unsloth</a>
         <a class="rh-btn" :href="withBase('/kien-thuc-nen/')">Học kiến thức nền trước</a>
-        <a class="rh-btn" :href="withBase('/bai-toan/')">Giải bài toán 2×L40S</a>
+        <a class="rh-btn" :href="withBase('/tro-ly-van-ban/')">Dựng trợ lý văn bản hành chính</a>
       </div>
     </header>
 
@@ -152,13 +152,13 @@ const steps = [
     </section>
 
     <section class="rh-case" aria-labelledby="rh-case-h">
-      <h2 id="rh-case-h" class="rh-h2">Bài toán thực tế: tiếng Việt trên 2×L40S</h2>
+      <h2 id="rh-case-h" class="rh-h2">Ứng dụng thực tế: trợ lý văn bản hành chính tiếng Việt</h2>
       <p class="rh-note">
         Máy chủ 2 card L40S (tổng 96 GB VRAM). Chọn model hợp tiếng Việt, fine-tune cho văn bản hành chính nhà nước,
         rồi host cho cả đơn vị dùng.
       </p>
       <ul>
-        <li v-for="i in baiToan" :key="i.l">
+        <li v-for="i in troLyVanBan" :key="i.l">
           <a :href="withBase(i.l)"><span class="rh-t">{{ i.t }}</span><span class="rh-d">{{ i.d }}</span></a>
         </li>
       </ul>

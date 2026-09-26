@@ -137,15 +137,15 @@ const kienThucNenSidebar = [
   }
 ]
 
-const baiToanSidebar = [
+const troLyVanBanSidebar = [
   {
-    text: 'Bài toán 2×L40S',
+    text: 'Trợ lý văn bản hành chính',
     items: [
-      { text: 'Đề bài và đáp án nhanh', link: '/bai-toan/' },
-      { text: 'Chọn model cho tiếng Việt', link: '/bai-toan/chon-model' },
-      { text: 'Fine-tune bằng Unsloth', link: '/bai-toan/fine-tune' },
-      { text: 'Dữ liệu văn bản hành chính', link: '/bai-toan/van-ban-hanh-chinh' },
-      { text: 'Host model trên máy chủ', link: '/bai-toan/hosting' }
+      { text: 'Tổng quan và kết luận nhanh', link: '/tro-ly-van-ban/' },
+      { text: 'Chọn model cho tiếng Việt', link: '/tro-ly-van-ban/chon-model' },
+      { text: 'Fine-tune bằng Unsloth', link: '/tro-ly-van-ban/fine-tune' },
+      { text: 'Tìm và chuẩn bị dữ liệu', link: '/tro-ly-van-ban/van-ban-hanh-chinh' },
+      { text: 'Host model trên máy chủ', link: '/tro-ly-van-ban/hosting' }
     ]
   }
 ]
@@ -187,13 +187,13 @@ export default defineConfig({
   },
   themeConfig: {
     nav: [
-      { text: 'Unsloth', link: '/', activeMatch: '^/(?!kien-thuc-nen/|bai-toan/)' },
+      { text: 'Unsloth', link: '/', activeMatch: '^/(?!kien-thuc-nen/|tro-ly-van-ban/)' },
       { text: 'Kiến thức nền LLM', link: '/kien-thuc-nen/', activeMatch: '^/kien-thuc-nen/' },
-      { text: 'Bài toán 2×L40S', link: '/bai-toan/', activeMatch: '^/bai-toan/' }
+      { text: 'Trợ lý văn bản hành chính', link: '/tro-ly-van-ban/', activeMatch: '^/tro-ly-van-ban/' }
     ],
     sidebar: {
       '/kien-thuc-nen/': kienThucNenSidebar,
-      '/bai-toan/': baiToanSidebar,
+      '/tro-ly-van-ban/': troLyVanBanSidebar,
       '/': unslothSidebar
     },
     search: {

@@ -1,25 +1,25 @@
 ---
 title: Fine-tune bằng Unsloth
-description: "Fine-tune mang lại gì cho bài toán văn bản hành chính, khi nào nên dùng, kết hợp với RAG thế nào, và cách chạy Unsloth trên 2×L40S."
+description: "Fine-tune mang lại gì cho việc soạn văn bản hành chính, khi nào nên dùng, kết hợp với RAG thế nào, và cách chạy Unsloth trên 2×L40S."
 ---
 
 # Fine-tune bằng Unsloth
 
-Trang này trả lời hai câu: **fine-tune để làm gì** trong bài toán văn bản hành chính, và **làm thế nào** với Unsloth trên máy 2×L40S. Các bước chi tiết đã có ở phần [Fine-tuning](/fine-tuning/). Trang này chỉ nối chúng lại theo đúng bài toán và dẫn link tới từng bước.
+Trang này trả lời hai câu: **fine-tune để làm gì** khi soạn văn bản hành chính, và **làm thế nào** với Unsloth trên máy 2×L40S. Các bước chi tiết đã có ở phần [Fine-tuning](/fine-tuning/). Trang này chỉ nối chúng lại theo đúng dự án này và dẫn link tới từng bước.
 
 ::: tip Tóm tắt
 - **Dùng khi:** đã chọn được model nền và muốn model viết đúng văn phong, thể thức và nghiệp vụ của đơn vị.
 - **Kết quả:** biết phần nào nên giao cho fine-tune, phần nào cho RAG, và có lộ trình 6 bước kèm cấu hình cho 1 hoặc 2 card L40S.
-- **Nên biết trước:** [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen), [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora), [Chọn model cho tiếng Việt](/bai-toan/chon-model).
+- **Nên biết trước:** [Quá trình huấn luyện](/kien-thuc-nen/qua-trinh-huan-luyen), [LoRA & QLoRA](/kien-thuc-nen/lora-va-qlora), [Chọn model cho tiếng Việt](/tro-ly-van-ban/chon-model).
 :::
 
 ## Fine-tune mang lại gì
 
 Fine-tune là **dạy thêm** cho một model có sẵn bằng ví dụ của chính đơn vị. Model đã biết tiếng Việt từ trước. Fine-tune dạy nó **viết như cán bộ văn thư của đơn vị viết**.
 
-Docs Unsloth nêu ba mục tiêu của fine-tuning: cập nhật kiến thức, tùy biến hành vi (giọng điệu, phong cách) và tối ưu cho một tác vụ cụ thể. Ghép vào bài toán văn bản hành chính:
+Docs Unsloth nêu ba mục tiêu của fine-tuning: cập nhật kiến thức, tùy biến hành vi (giọng điệu, phong cách) và tối ưu cho một tác vụ cụ thể. Áp vào văn bản hành chính:
 
-| Mục tiêu theo docs | Trong bài toán này | Ví dụ |
+| Mục tiêu theo docs | Với văn bản hành chính | Ví dụ |
 | --- | --- | --- |
 | Tùy biến hành vi | Văn phong công vụ: trang trọng, ngắn gọn, không cảm xúc | Viết "Đề nghị các đơn vị khẩn trương triển khai…" thay vì văn nói |
 | Tối ưu cho tác vụ | Đúng thể thức, đúng cấu trúc từng loại văn bản | Công văn có đủ số ký hiệu, trích yếu, "Kính gửi", nơi nhận |
@@ -62,12 +62,12 @@ Mỗi bước dẫn tới trang chi tiết đã có trên website.
 
 | Bước | Làm gì | Đọc |
 | --- | --- | --- |
-| 1. Chọn model | Qwen3.6/3.8-27B hoặc Gemma 4 31B | [Chọn model cho tiếng Việt](/bai-toan/chon-model), [Chọn cách train và model](/fine-tuning/chon-cach-train) |
-| 2. Chuẩn bị dữ liệu | Gom văn bản mẫu, đổi thành cặp "yêu cầu → văn bản" dạng hội thoại | [Dữ liệu văn bản hành chính](/bai-toan/van-ban-hanh-chinh), [Định dạng dữ liệu](/du-lieu/dinh-dang), [Chat template](/du-lieu/chat-template) |
+| 1. Chọn model | Qwen3.6/3.8-27B hoặc Gemma 4 31B | [Chọn model cho tiếng Việt](/tro-ly-van-ban/chon-model), [Chọn cách train và model](/fine-tuning/chon-cach-train) |
+| 2. Chuẩn bị dữ liệu | Gom văn bản mẫu, đổi thành cặp "yêu cầu → văn bản" dạng hội thoại | [Tìm và chuẩn bị dữ liệu](/tro-ly-van-ban/van-ban-hanh-chinh), [Định dạng dữ liệu](/du-lieu/dinh-dang), [Chat template](/du-lieu/chat-template) |
 | 3. Cấu hình | LoRA rank, learning rate, số epoch | [Chọn hyperparameter](/fine-tuning/hyperparameter) |
 | 4. Train | Studio (không code) hoặc Core (script) | [Quy trình từng bước](/fine-tuning/quy-trinh) |
 | 5. Đánh giá | Eval loss, và **quan trọng hơn** là cán bộ nghiệp vụ chấm bài | [Đánh giá và overfitting](/fine-tuning/danh-gia) |
-| 6. Export và host | merged 16-bit cho vLLM, GGUF cho Ollama | [Xuất file GGUF](/export-deploy/gguf), [Host model trên máy chủ](/bai-toan/hosting) |
+| 6. Export và host | merged 16-bit cho vLLM, GGUF cho Ollama | [Xuất file GGUF](/export-deploy/gguf), [Host model trên máy chủ](/tro-ly-van-ban/hosting) |
 
 Với dữ liệu hội thoại, nên **chỉ tính loss trên câu trả lời** (phần văn bản model viết ra), không tính trên yêu cầu. Xem [Chỉ train trên câu trả lời](/du-lieu/chat-template#chi-train-tren-cau-tra-loi).
 
@@ -134,14 +134,14 @@ Fine-tune tốn công chuẩn bị dữ liệu và đánh giá. Nên thử cách
 ::: warning Lỗi thường gặp
 - Train quá nhiều epoch trên ít dữ liệu, model chép lại nguyên văn bản mẫu. Xem [Đánh giá và overfitting](/fine-tuning/danh-gia).
 - Dùng sai chat template lúc chạy so với lúc train, model trả lời lộn xộn. Docs Unsloth nhấn mạnh đây là lỗi hay gặp nhất khi đem model sang Ollama.
-- Để lọt dữ liệu cá nhân hoặc tài liệu mật vào dataset. Xem [Dữ liệu văn bản hành chính](/bai-toan/van-ban-hanh-chinh).
+- Để lọt dữ liệu cá nhân hoặc tài liệu mật vào dataset. Xem [Tìm và chuẩn bị dữ liệu](/tro-ly-van-ban/van-ban-hanh-chinh).
 :::
 
 **Nguồn:** https://unsloth.ai/docs/basics/inference-and-deployment/saving-to-ollama, https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/faq-+-is-fine-tuning-right-for-me
 
 ## Đọc tiếp
 
-- [Dữ liệu văn bản hành chính](/bai-toan/van-ban-hanh-chinh) — trang kế tiếp: làm dataset từ văn bản của đơn vị.
+- [Tìm và chuẩn bị dữ liệu](/tro-ly-van-ban/van-ban-hanh-chinh) — trang kế tiếp: tìm dataset trên Hugging Face.
 - [Quy trình từng bước](/fine-tuning/quy-trinh) — chi tiết từng bước trong Studio và Core.
 - [Kỹ thuật nâng cao](/fine-tuning/mo-rong) — multi-GPU, continued pretraining.
-- [Host model trên máy chủ](/bai-toan/hosting) — đem model đã train đi phục vụ người dùng.
+- [Host model trên máy chủ](/tro-ly-van-ban/hosting) — đem model đã train đi phục vụ người dùng.
